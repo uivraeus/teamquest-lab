@@ -1,2 +1,3 @@
 # teamquest-lab
-aka mini-GDQ / BAT
+Work in progress
+
