@@ -1,0 +1,155 @@
+/*Use CSS variables instead of hardcoded constants to enable dynamic themes (at some point) */
+:root {
+  --color-bkg-default: rgb(255, 255, 255);
+  --color-bkg-info: rgb(245, 250, 200);
+  --color-bkg-btn-default: rgb(245, 245, 245);
+  --color-bkg-btn-hover: rgb(233, 236, 245);
+  --color-bkg-btn-focus: rgb(220, 225, 235);
+  --color-bkg-btn-accent: rgb(33, 60, 119);
+  --color-bkg-btn-accent-hover: rgb(58, 85, 143);
+  --color-fg-btn-hover: rgb(33, 60, 119);
+  --color-fg-btn-focus: rgb(30, 55, 110);
+  --color-fg-btn-disabled: rgb(128, 128, 128);
+  --color-border: rgb(128,128,128);
+  --color-border-accent: rgb(61, 76, 141);
+  --color-heading: rgb(0, 0, 0);
+  --color-text: rgb(0, 0, 0);
+  --color-text-inverted: rgb(255,255,255);
+  --color-text-disabled: rgb(128, 128, 128);
+  --color-text-error: rgb(196, 0, 0);
+  --color-text-data: rgb(36, 63, 145);
+  --color-link: rgb(2, 34, 116);
+  --color-link-focus: rgb(40, 98, 245);
+  --color-link-hover: rgb(3, 65, 223);
+  --color-result-void: rgb(192,192,192);
+  --color-result-a: rgb(160,128,70);
+  --color-result-b: rgb(128,160,70);
+  --color-result-c: rgb(70,160,128);
+  --color-result-d: rgb(70,128,160);
+  --font-big:  calc(17px + 2.7vw); 
+  --font-medium: calc(11px + 2.7vw);
+  --font-small: calc(8px + 2.2vw);
+}
+
+@media screen and (min-width: 590px) {
+  :root {
+    --font-big:  33px; 
+    --font-medium: 26px;
+    --font-small: 21px;
+  }
+}
+
+/* Explicit for the App component */
+.App {
+  text-align: left;
+  background-color: var(--color-bkg-default);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  margin: 0 auto;
+}
+
+.App-content {
+  display: flex;
+  flex-direction: column;
+  width: 96%;
+  margin: 0 auto;
+}
+
+/* Helper classes for the entire application
+ * =========================================
+ */
+
+.App input.app-input {
+  color: var(--color-text-data);
+  text-align: left;
+  padding: .3em;
+  border: 1px solid var(--color-border);
+}
+
+/* General styles for basic elements, applicable to the entire application
+ * =======================================================================
+ */
+
+.App input {
+  outline: none;
+}
+
+.App input:focus {
+  border: 1px solid var(--color-border-accent);
+}
+
+h1,h2,h3,h4  {
+  color: var(--color-heading)
+}
+
+h1,h2 {
+  font-size: var(--font-big);
+  margin-top: .5rem;
+  margin-bottom: 2rem;
+}
+
+h3 {
+  font-size: var(--font-medium);
+  margin-top: 1em;
+  margin-bottom: 0;
+}
+
+h4 {
+  font-size: var(--font-small);
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+p {
+  font-size: var(--font-small);
+  color: var(--color-text);
+  margin-top: 0;
+  margin-bottom: 5px;
+}
+
+code {
+  color: var(--color-text-data)
+}
+
+label, input, legend, button {
+  font-size: var(--font-small);
+}
+
+.App a:not(.style-override) {
+  font-size: var(--font-small);
+  color: var(--color-link);
+}
+
+.App a:not(.style-override):visited {
+  color: var(--color-link);
+}
+
+@media (hover: hover) {
+  .App a:not(.style-override):hover {
+    color:var(--color-link-hover);
+  }  
+}
+
+.App a:not(.style-override):focus {
+  color: var(--color-link-focus);
+  border: none; /*1px dotted var(--color-border);*/
+}
+
+
+
+/* Remove the "spinner" effect for number-input
+ * (browser specific: this is from https://www.w3schools.com/howto/howto_css_hide_arrow_number.asp)
+ */
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+/* Firefox */
+input[type=number] {
+  -moz-appearance:textfield;
+}
+

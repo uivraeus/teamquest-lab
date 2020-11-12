@@ -1,0 +1,74 @@
+.SurveyItem {
+  display: flex;
+  width: 96%;
+  justify-content: space-between;
+  margin-bottom: 1em;
+}
+
+/* "Info"; The left part 
+ * -----------------------------------------------------
+ *  Indicator (circle)  Date (heading)
+ *                      #responders and completion level
+ */ 
+.SurveyItem-info {
+  display: flex;
+}
+
+/* The indicator and the coloring of it */
+.SurveyItem-indicator {
+  width: 4vw;
+  height: 4vw;
+  max-width: 1.3em;
+  max-height: 1.3em;
+  margin: .3em;
+  margin-right: .5em;
+  padding: 0;
+  border-radius: 50%;
+  border: none;
+  color: rgba(0,0,0,0); /* only show the border */
+}
+
+.SurveyItem-ongoing-too-few {
+  background-color: rgb(235,235,0);
+}
+
+.SurveyItem-ongoing-some {
+  background-color: yellowgreen;
+}
+
+.SurveyItem-complete {
+  background-color: darkgreen;
+}
+
+.SurveyItem-complete-some {
+  background-color: green;
+}
+
+.SurveyItem-terminated {
+  background-color: grey;
+}
+
+/* The creation date and other details */
+.SurveyItem-info-details {
+  display: flex;
+  flex-direction: column;
+}
+
+.SurveyItem-info-details > h4 {
+  margin: 0;
+}
+
+
+/* "Edit"; The right part 
+ * ----------------------
+ *  <Icon> <Icon> ...
+ */ 
+
+.SurveyItem-edit {
+  display: flex;
+  align-items: center;
+}
+
+.SurveyItem-edit > button {
+  margin-left: .5em;
+}

@@ -1,0 +1,11 @@
+.UserSettings {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items:flex-end;
+}
+
+.UserSettings > p {
+    color: var(--color-text-inverted);
+}
+

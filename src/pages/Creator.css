@@ -1,0 +1,23 @@
+.Creator {
+  display: flex;
+  flex-direction: column;
+}
+
+.Creator > ul {
+  margin: 0;
+  padding-left: 1em;
+}
+
+.Creator li {
+  margin: 0 0 1em 0;
+  list-style-type: none;
+}
+
+.Creator-link {
+  display: flex;
+  align-items: center;
+}
+
+.Creator-link > p {
+  margin-left: 1em;
+}
