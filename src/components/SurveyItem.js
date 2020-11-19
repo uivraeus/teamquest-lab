@@ -35,15 +35,15 @@ const SurveyItem = ({ surveyMeta, onShare, onEdit, onDelete }) => {
       </div>
       <div className="SurveyItem-edit">
         { onShare ? 
-          <AppBtn onClick={() => onShare(surveyMeta.id)}>
+          <AppBtn onClick={() => onShare(surveyMeta)}>
             <ShareIcon />
           </AppBtn> : null }
         { onEdit ? 
-          <AppBtn onClick={() => onEdit(surveyMeta.id)}>
+          <AppBtn onClick={() => onEdit(surveyMeta)}>
             <EditIcon />
           </AppBtn> : null }
         { onDelete ?
-          <AppBtn onClick={() => onDelete(surveyMeta.id)}>
+          <AppBtn onClick={() => onDelete(surveyMeta)}>
             <TrashIcon />
           </AppBtn> : null }
       </div>

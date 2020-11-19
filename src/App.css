@@ -17,6 +17,7 @@
   --color-text-inverted: rgb(255,255,255);
   --color-text-disabled: rgb(128, 128, 128);
   --color-text-error: rgb(196, 0, 0);
+  --color-text-warning: rgb(160, 87, 3);
   --color-text-data: rgb(36, 63, 145);
   --color-link: rgb(2, 34, 116);
   --color-link-focus: rgb(40, 98, 245);

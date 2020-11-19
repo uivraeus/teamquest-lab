@@ -2,9 +2,10 @@ import React, { useEffect, useState } from 'react';
 import AppBtn from "../components/AppBtn"
 import Teams from "../components/Teams";
 import SurveyItem from "../components/SurveyItem";
+import useAppContext from "../hooks/AppContext"
 import useTeamTracker from "../hooks/TeamTracker";
+import useOwnedTeams from "../hooks/OwnedTeams";
 import { CompLev } from '../helpers/survey';
-import { auth } from "../services/firebase";
 import { Link, useHistory, useParams } from "react-router-dom";
 
 import { ReactComponent as ResultsIcon } from "../icons/analysis.svg";
@@ -13,42 +14,67 @@ import "./SurveyCatalog.css";
 
 
 const SurveyCatalog = () => {
-  const [user, setUser] = useState(null);
+  const { queryConfirm, showAlert, user } = useAppContext();
   const history = useHistory();
   const { teamId } = useParams();
-  
-  let { surveys, readError } = useTeamTracker(teamId || null);
+  const ownedTeams = useOwnedTeams();
 
+  //The output from TeamTracker is not "access protected" in any way
+  //(unauthenticated users must be able to follow a team's result)
+  //But it would be very confusing to allow showing another user's catalog
+  //here so ensure that the team is actually "owned" by the current user.
+  //(Any attempts to modify/discard surveys would in the end fail due to
+  //access permissions in the backend anyway)
+  const [validatedTeamId, setValidatedTeamId] = useState(null);
   useEffect(() => {
-    const u = auth().currentUser;
-    setUser(u);
-  }, []);
+    if (ownedTeams && ownedTeams.teams && teamId) {
+      if (ownedTeams.teams.map((t) => t.id).includes(teamId)) {
+        setValidatedTeamId(teamId);  
+      } else {
+        showAlert("Invalid URL", "It looks like you tried to access a team you are not the owner of");
+        //Why SetTimeout?
+        //Because of crappy setTimeout in Teams... in case of only
+        //one team with "auto-selection" I might get a onTeamSelect
+        //call delayed by a setTimeout inside Teams (TODO: fix that!)
+        setTimeout(() => history.push("/"), 0);
+      }
+    }
+      
+    if (ownedTeams && ownedTeams.readError && showAlert) {
+      showAlert("User configuration error", "Could not derive user's team ownership", "Error", ownedTeams.readError);
+    }
+  },[teamId, ownedTeams, showAlert, history]);
+
+  let { surveys, readError } = useTeamTracker(validatedTeamId);
 
   const onTeamsSelect = (id) => {
     history.push(`/creator/tracker/${id}`);
   }
 
-  const onShare = (surveyId) => {
-    history.push(`/creator/info/${surveyId}`);
+  const onShare = ({ id }) => {
+    history.push(`/creator/info/${id}`);
   };
 
-  const onEdit = (surveyId) => {
-    console.log("TODO: Edit survey settings", surveyId);
+  const onEdit = ({ id }) => {
+    showAlert("TODO", "Add support for editing ongoing surveys");
   }
 
-  const onDelete  = (surveyId) => {
-    console.log("TODO: Delete (discard?) survey", surveyId);
+  const onDelete  = ({ id, createTime }) => {
+    const dateStr = new Date(createTime).toLocaleDateString();
+    queryConfirm("Delete survey", `Are you sure you want to delete the survey from ${dateStr}?`, confirmed => {
+      if (confirmed) {
+        showAlert("TODO", `Delete/Discard surveys with id: ${id}`);
+      }
+    });
   }
 
-  const pathR = `/results/${teamId}`;
+  const pathR = `/results/${validatedTeamId}`;
   const onResults = () => {
     history.push(pathR);
   }
 
-  //"early exit"
-  if (!user) {
-    return (<p>Loading user...</p>)
-  }
+  //"early exit" (Routing helpers shall ensure that user is always defined though...)
+  if (!user) (<></>)
 
   //Sort the surveys according to their completion status
   //Here it makes most sense to present newest surveys first
@@ -62,7 +88,7 @@ const SurveyCatalog = () => {
   return (
     <div className="SurveyCatalog">
       <h1>Survey catalog</h1>
-      <Teams user={user} enableEdit={false} onSelected={onTeamsSelect} extSelection={teamId} />
+      <Teams user={user} enableEdit={false} onSelected={onTeamsSelect} extSelection={validatedTeamId} />
       {surveys ? (<>
         <div className="SurveyCatalog-result-link">
           <div>
@@ -102,7 +128,7 @@ const SurveyCatalog = () => {
               </li>
             )
           })}</ul> : <p><em>No discarded surveys</em></p>}
-      </>) : teamId ?
+      </>) : validatedTeamId ?
        <p><em>Loading surveys...</em></p> : null}
       {readError ? <p><em>{readError}</em></p> : null}
     </div>

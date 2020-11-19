@@ -1,0 +1,36 @@
+.Alert-Heading {
+  display: flex;
+  align-items: center;
+  margin-bottom: .5em;
+}
+.Alert-Heading > svg {
+  min-width: 2em;
+  min-width: 2em;
+}
+
+.Alert-Heading > h4 {
+  margin: 0;
+  margin-left: .5em;
+}
+
+.AlertModal > .AppBtn {
+  margin-top: .5em;
+}
+
+.Alert-CodeBlock {
+  margin: 1em 0;
+  padding: .5em;
+  border: 1px solid var(--color-border-accent);
+}
+
+.Alert-Info svg {
+  fill: var(--color-bkg-btn-accent);
+}
+
+.Alert-Warning svg {
+  fill: var(--color-text-warning);
+}
+
+.Alert-Error svg {
+  fill: var(--color-text-error);
+}

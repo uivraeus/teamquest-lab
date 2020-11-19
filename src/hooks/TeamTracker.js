@@ -52,6 +52,8 @@ function useTeamTracker(teamId) {
         console.log(e);
         setReadError(e.message);
       }
+    } else {
+      setSurveys(null);
     }
 
     return () => {

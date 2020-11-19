@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { db } from "../services/firebase";
 import AppBtn from "./AppBtn";
 import NewTeam from "./NewTeam";
 import RadioLabel from "./RadioLabel";
+import useOwnedTeams from "../hooks/OwnedTeams";
 
 import { ReactComponent as NewTeamIcon } from "../icons/newteam.svg";
 
@@ -11,38 +11,7 @@ import "./Teams.css";
 //"user" always valid here (parent's responsibility)
 const Teams = ({ user, enableEdit=true, onSelected, extSelection = null }) => {
   //Defined teams (as read from database)
-  const [teams, setTeams] = useState(null);
-  const [readError, setReadError] = useState(null);
-  useEffect(() => {
-    //console.log("Subscribe to teams data for", user.email);
-    let ref = null;
-    let onNewData = null;
-    ref = db.ref(`teams/${user.uid}/teams`).orderByChild("alias");
-    setReadError(null);
-    try {
-      onNewData = ref.on("value", (snapshot) => {
-        //For some reason this callback is called twice when a new item is added
-        //Just accept that and code accordingly...
-        let dbTeams = [];
-        snapshot.forEach((snap) => {
-          dbTeams.push({ id: snap.key, ...snap.val() });
-        });
-        //console.log("new 'teams' received, last:", !dbTeams.length ? "<none>" : dbTeams[dbTeams.length - 1].alias);
-        setTeams(dbTeams);
-      });
-    } catch (e) {
-      console.log(e);
-      setReadError(e.message);
-    }
-
-    // Return what to do when "un-mounting"
-    return () => {
-      if (ref) {
-        //console.log("ref.off: ", onNewData ? "callback" : "all callbacks");
-        if (onNewData) ref.off("value", onNewData);
-      }
-    };
-  }, [user]);
+  const { teams, readError } = useOwnedTeams();
 
   //We're using a "controlled input" for the team selection
   const [selected, setSelected] = useState(null);

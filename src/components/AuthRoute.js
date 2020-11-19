@@ -1,11 +1,15 @@
 import React from 'react';
+import useAppContext from '../hooks/AppContext'
 import { Route, Redirect } from 'react-router-dom'
 
-const PrivateRoute = ({ component: Component, authenticated, ...rest }) => {
+
+const PrivateRoute = ({ component: Component, ...rest }) => {
+    const { user } = useAppContext();
+
     return (
         <Route
             {...rest}
-            render={(props) => authenticated === true
+            render={(props) => !!user
                 ? <Component {...props} />
                 : <Redirect to={{ pathname: '/start', state: { from: props.location } }} />
             }
@@ -13,11 +17,13 @@ const PrivateRoute = ({ component: Component, authenticated, ...rest }) => {
     )           
 }
 
-const PublicRoute = ({ component: Component, authenticated, ...rest }) => {
+const PublicRoute = ({ component: Component, ...rest }) => {
+    const { user } = useAppContext();
+    
     return (
         <Route
             {...rest}
-            render={(props) => authenticated === false
+            render={(props) => !user
                 ? <Component {...props} />
                 : <Redirect to='/creator/main' />
             }

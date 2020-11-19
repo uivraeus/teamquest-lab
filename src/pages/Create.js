@@ -1,13 +1,13 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import SurveySetup from "../components/SurveySetup";
 import Teams from "../components/Teams";
-import { auth } from "../services/firebase";
+import useAppContext from "../hooks/AppContext";
 import { useHistory } from "react-router-dom";
 
 import "./Create.css";
 
 const Create = () => {
-  const [user, setUser] = useState(null);
+  const { user } = useAppContext();
   const [selectedTeamId, setSelectedTeamId] = useState(null);
 
   const history = useHistory();
@@ -16,27 +16,18 @@ const Create = () => {
     history.push(`/creator/info/${surveyId}`);
   };
 
-  useEffect(() => {
-    const u = auth().currentUser;
-    setUser(u);
-
-    // Return what to do when "un-mounting"
-    return () => {
-      //TBD
-    };
-  }, []); //run once (~did mount) //TODO! check if this is the "correct way"
+  //Routing helpers shall ensure that we never end up here with user==null, but...
+  if (!user) return (<></>);
 
   return (
     <div className="Create">
-      {user ? (
-        <>
-          <h1>Run a new survey</h1>
-          <Teams user={user} onSelected={setSelectedTeamId} />
-          {selectedTeamId ? (
-            <SurveySetup teamId={selectedTeamId} onCreated={surveyCreated} />
-          ) : null}
-        </>
-      ) : null}
+      <>
+        <h1>Run a new survey</h1>
+        <Teams user={user} onSelected={setSelectedTeamId} />
+        {selectedTeamId ? (
+          <SurveySetup teamId={selectedTeamId} onCreated={surveyCreated} />
+        ) : null}
+      </>
     </div>
   );
 };

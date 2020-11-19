@@ -1,22 +1,12 @@
-import React, { useEffect, useState } from 'react';
-import { auth } from "../services/firebase";
+import React from 'react';
+import useAppContext from '../hooks/AppContext'
 import UserSettings from './UserSettings';
 import { Link } from 'react-router-dom';
 
 import './AppHeader.css';
 
-const AppHeader = ( { authenticated }) => {
-  const [user, setUser] = useState(null);
-
-  useEffect(() => {
-    const u = auth().currentUser;
-    setUser(u);
-
-    // Return what to do when "un-mounting"
-    return () => {
-      //TBD
-    };
-  }, [authenticated]);
+const AppHeader = () => {
+  const { user } = useAppContext();
 
   return (
       <header className="AppHeader">
