@@ -9,7 +9,7 @@ const Run = () => {
   const { surveyId } = useParams();
   
   //Questions are read from data backend (at mount) and answers written to it (at Submit)
-  const [questions, setQuestions] = useState(null);
+  const [questionsHandle, setQuestionsHandle] = useState(null); //both questions and answer options
   const [readError, setReadError] = useState(null);
   const [submitted, setSubmitted] = useState(false); //TBD: Really needed?
   const [writeError, setWriteError] = useState(null);
@@ -35,7 +35,7 @@ const Run = () => {
         setSurveyOpen(false);
       } else {
         loadQuestions(surveyObject).then( dbQuestions => {
-          setQuestions(dbQuestions);
+          setQuestionsHandle(dbQuestions);
 
           //For now we don't subscribe to any changes, just assume
           //that the survey closes according to the current status
@@ -98,8 +98,8 @@ const Run = () => {
           <p>Thank you for participating!</p>
           : !surveyOpen ?
             <p>This survey is closed</p>
-            : questions ?
-                <AnswerNav questions={questions} onSubmitAnswers={onSubmitAnswers} />              
+            : questionsHandle ?
+                <AnswerNav questionsHandle={questionsHandle} onSubmitAnswers={onSubmitAnswers} />              
               : <p>Loading...</p>      
         }
         {(submitted || !surveyOpen) && teamId  ?
