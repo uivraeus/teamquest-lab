@@ -1,7 +1,7 @@
 /*Use CSS variables instead of hardcoded constants to enable dynamic themes (at some point) */
 :root {
   --color-bkg-default: rgb(255, 255, 255);
-  --color-bkg-info: rgb(245, 250, 200);
+  --color-bkg-info: rgba(248, 248, 0, .07);
   --color-bkg-btn-default: rgb(245, 245, 245);
   --color-bkg-btn-hover: rgb(233, 236, 245);
   --color-bkg-btn-focus: rgb(220, 225, 235);
@@ -93,7 +93,7 @@ h1,h2 {
 
 h3 {
   font-size: var(--font-medium);
-  margin-top: 1em;
+  margin-top: .5em;
   margin-bottom: 0;
 }
 
@@ -138,6 +138,11 @@ label, input, legend, button {
   border: none; /*1px dotted var(--color-border);*/
 }
 
+/* General-purpose "no line break"-span
+ */
+ .App span.NoBreak {
+  white-space: nowrap;
+ }
 
 
 /* Remove the "spinner" effect for number-input

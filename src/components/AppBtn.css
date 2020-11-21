@@ -14,6 +14,7 @@ button.AppBtn {
  @media (hover: hover) {
   button.AppBtn:hover:enabled {
     background-color: var(--color-bkg-btn-hover);
+    transition: all .3s;
   }  
 }
 
@@ -23,6 +24,7 @@ button.AppBtn:focus {
 
 button.AppBtn:active {
   transform: scale(.9);
+  transition: all .2s;
 }
 
 button.AppBtn:disabled {
@@ -102,6 +104,7 @@ button.AppBtn-svg > svg {
   
   button.AppBtn-svg:hover:enabled > svg {
       margin: 0;
+      transition: all .3s;
   }   
 }
 
