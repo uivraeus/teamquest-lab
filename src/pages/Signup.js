@@ -74,7 +74,7 @@ const Signup = () => {
   const { status, pending, error } = deriveStatus();
   return (
     <div className="Signup">
-      <h1>Sign up to mini-GDQ tool</h1>
+      <h1>Sign up for Mini-TMQ tool</h1>
       <h3>Register a creator account</h3>
       <p className={error ? "error-response" : null}>{status}</p>
 

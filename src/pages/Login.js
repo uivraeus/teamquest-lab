@@ -42,7 +42,7 @@ const Login = () => {
 
   return (
     <div className="Login">
-      <h1>Login to mini-GDQ tool</h1>
+      <h1>Login to Mini-TMQ tool</h1>
       <p className={response ? "error-response" : null}>{status}</p>
 
       <form onSubmit={handleLogin}>

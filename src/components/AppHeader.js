@@ -10,7 +10,7 @@ const AppHeader = () => {
 
   return (
       <header className="AppHeader">
-        <Link className="style-override" to="/start">mini-GDQ</Link>
+        <Link className="style-override" to="/start">Mini-TMQ</Link>
         {user ? <UserSettings user={user} /> : null}
       </header>
       

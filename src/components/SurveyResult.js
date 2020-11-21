@@ -6,10 +6,10 @@ import "./SurveyResult.css";
 const SurveyResult = ({ resultData, colors, labels }) => {
   const data = resultData || [0, 0, 0, 0];
   const descriptions = [
-    "How well the members cooperate",
-    "The teams ability to resolve conflicts and do a lot of other stuff",
-    "How productive the team is",
-    "The maturity of the the team",
+    "This is the forming stage of a team",
+    "This is the storming stage of a team",
+    "This is the norming stage of a team",
+    "This is the performing stage of a team",
   ];
 
   const descrClassName = "SurveyResult-description" + (resultData ? "" : " disabled")
@@ -22,8 +22,8 @@ const SurveyResult = ({ resultData, colors, labels }) => {
           color={colors[index]}
         />
         <div className={descrClassName}>
-          <span><p><em>{labels[index]}</em></p></span>
-          <p><em>{descriptions[index]}</em></p>
+          <span><p>{labels[index]}</p></span>
+          <p>{descriptions[index]}</p>
         </div>
       </div>
     ))}

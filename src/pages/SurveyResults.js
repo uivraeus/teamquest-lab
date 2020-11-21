@@ -1,11 +1,14 @@
 import React from "react";
+import AppBtn from "../components/AppBtn"
 import { CompLev } from "../helpers/survey";
 import SurveyResult from "../components/SurveyResult";
 import ResultsChart from "../components/ResultsChart";
 import useTeamResults from "../hooks/TeamResults";
 import { useParams } from "react-router-dom";
 
-//import './SurveyResults.css';
+import { ReactComponent as InfoIcon } from "../icons/info.svg";
+
+import './SurveyResults.css';
 
 const SurveyResults = () => {
   const { teamId } = useParams();
@@ -16,8 +19,14 @@ const SurveyResults = () => {
   //colors are defined here (or at least which css-variables that hold them)
   const colors = ["a", "b", "c", "d"].map(c => `var(--color-result-${c})`);
 
-  //These are really TBD...
-  const labels = ["CategoryA", "CategoryB", "CategoryC", "CategoryD"];
+  const labels = [
+    "Dependency and Inclusion",
+    "Counter-Dependency and Fight",
+    "Trust and Structure",
+    "Work and Productivity"
+  ];
+
+  const toolboxUrl = "https://en.wikipedia.org/wiki/Knitting";
 
   //Derive information/text to render for the "latest result"
   //TODO: replace with "selected" instead of "latest" ?
@@ -45,7 +54,7 @@ const SurveyResults = () => {
 
   return (
     <div className="SurveyResults">
-      <h4>Latest survey</h4>
+      <h3>Latest survey</h3>
       {analysisError ? (
         <p>{analysisError}</p>
       ) : (
@@ -62,13 +71,24 @@ const SurveyResults = () => {
                     colors = {colors}
                     labels = {labels}
                   />
+                  <div className="SurveyResults-tooltip">
+                    <form action={toolboxUrl}>
+                      <AppBtn type="submit">
+                        <InfoIcon />
+                      </AppBtn>
+                    </form>
+                    <p>
+                      Learn more about the <a href={toolboxUrl}>Toolbox</a> for working
+                      with each team maturity profile
+                    </p>
+                  </div>
                 </>
               ) : (
                 <em>No surveys found</em>
               )}
               {results.length > 1 ? (
                 <>
-                  <h4>Team history</h4>
+                  <h3>Team history</h3>
                   <ResultsChart
                     results={results}
                     maxVal={10}

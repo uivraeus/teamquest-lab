@@ -32,7 +32,7 @@ const Creator = () => {
       <Switch>
         <Route exact path={`${path}/main`}>
           <div className="Creator">
-            <h1>mini-GDQ Creator</h1>
+            <h1>Mini-TMQ Creator</h1>
             <ul>
               <li>
                 <div className="Creator-link">
@@ -47,7 +47,7 @@ const Creator = () => {
                   <AppBtn onClick={() => goTo(pathMonitor)}>
                     <SurveyMonIcon />
                   </AppBtn>
-                  <p><Link to={pathMonitor}>Monitor</Link> previously created surveys</p>
+                  <p><Link to={pathMonitor}>Monitor</Link> and manage previously created surveys</p>
                 </div>
               </li>
               <li>
