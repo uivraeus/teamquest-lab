@@ -81,7 +81,7 @@ export const cancelAll = (teamId, dbDataRef) => {
 //General survey questions loader (based on question-set ID found in meta-data)
 export const loadQuestions = async (surveyObject) => {
   let questions = [];
-  
+  let answerOptions = [];
   try {
     //First get the applicable question-set ID for this survey run
     if (!surveyObject.meta.hasOwnProperty('questionsId'))
@@ -91,20 +91,30 @@ export const loadQuestions = async (surveyObject) => {
     //Then read the actual questions for this question-set ID
     //Firebase only use "objects", i.e. not "arrays". But there should be one key for
     //each index in the intended array (not very robust parsing here).
-    const snapshot = await db.ref(`question-sets/${questionsId}/questions`).orderByKey().once("value");
-    const numQuestions = snapshot.numChildren();
+    const snapshot = await db.ref(`question-sets/${questionsId}`).orderByKey().once("value");
+    // {questions, answers}
+    if (!(snapshot.hasChild("questions") && snapshot.hasChild("answers")))
+      throw new Error("Question handle doesn't include questions and answers");
+    const numQuestions = snapshot.child("questions").numChildren();
     if (!numQuestions)
       throw new Error(`No questions found for question-set id: ${questionsId}.`);
-    snapshot.forEach((snap) => {
+    const numAnswers = snapshot.child("answers").numChildren();
+    if (numAnswers !== 5)
+      throw new Error(`Unexpected number of answers found for question-set id: ${questionsId} (${numAnswers})`);
+      
+    snapshot.child("questions").forEach((snap) => {
       questions.push(snap.val());
+    });
+    snapshot.child("answers").forEach((snap) => {
+      answerOptions.push(snap.val());
     });    
   } catch (e) {
     const errMsg = "Could not load questions from database.";
     console.log(errMsg, e);
     throw new Error(errMsg);
   }
-
-  return questions;
+  
+  return {questions, answerOptions};
 }
 
 //Get the offset [ms] between local and server time (according to Firebase)

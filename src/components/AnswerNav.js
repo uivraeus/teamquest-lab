@@ -5,22 +5,15 @@ import { ReactComponent as LeftIcon } from "../icons/left-arrow.svg";
 
 import './AnswerNav.css';
 
-//TBD: provided by parent? (read from data backend?)
-const answerOptions = [
-  "I fully agree",
-  "I kind of agree",
-  "Yeah, I guess...",
-  "Not entirely",
-  "Absolutely not!",
-];
-
-
 /* TODO/TBD: 
  * The tab/keyboard navigation is a bit "off" here w.r.t focus etc. Maybe good to revise it with inspiration
  * from this article: https://www.w3.org/TR/wai-aria-practices/examples/radio/radio-1/radio-1.html
  */ 
 
-const AnswerNav = ({ questions, onSubmitAnswers }) => {
+const AnswerNav = ({ questionsHandle, onSubmitAnswers }) => {
+  const questions = questionsHandle.questions;
+  const answerOptions = questionsHandle.answerOptions;
+
   const [answers, setAnswers] = useState(Array(questions.length).fill(-1)); // -1 corresponds to "unanswered";
   const [current, setCurrent] = useState(0); // start with first question
 
