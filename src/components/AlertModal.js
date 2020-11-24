@@ -46,7 +46,7 @@ const AlertModal = ({ alert, onClose = () => {} }) => {
       <div className={alertTypeClass}>
         <div className="Alert-Heading">
           <WarningIcon />
-          <h4>{content.heading}</h4>
+          <h3>{content.heading}</h3>
         </div>
         <p>{content.text}</p>
         {content.code.length ? (

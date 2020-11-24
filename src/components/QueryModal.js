@@ -45,7 +45,7 @@ const QueryModal = ({ query, onClose = () => {} }) => {
   return (
     <Modal open={!!query} onClose={() => onResponse(false)} closeOnOverlayClick={false} center>
       <div className="QueryModal">
-        <h4>{content.heading}</h4>
+        <h3>{content.heading}</h3>
         <p>{content.text}</p>
         <AppBtn
               text={positiveText}

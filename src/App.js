@@ -1,9 +1,9 @@
 //3rd-party
 import React from 'react';
-import useAppContext from './hooks/AppContext'
 import { Route, Redirect, Switch } from 'react-router-dom'
 
 //My routes and stuff
+import useAppContext from './hooks/AppContext'
 import AppHeader from './components/AppHeader'
 import { PrivateRoute, PublicRoute} from './components/AuthRoute';
 import Login from './pages/Login';

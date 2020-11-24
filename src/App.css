@@ -1,7 +1,7 @@
 /*Use CSS variables instead of hardcoded constants to enable dynamic themes (at some point) */
 :root {
   --color-bkg-default: rgb(255, 255, 255);
-  --color-bkg-info: rgba(248, 248, 0, .07);
+  --color-bkg-info: rgb(248, 248, 248);
   --color-bkg-btn-default: rgb(245, 245, 245);
   --color-bkg-btn-hover: rgb(233, 236, 245);
   --color-bkg-btn-focus: rgb(220, 225, 235);
@@ -11,10 +11,11 @@
   --color-fg-btn-focus: rgb(30, 55, 110);
   --color-fg-btn-disabled: rgb(128, 128, 128);
   --color-border: rgb(128,128,128);
+  --color-border-light: rgb(200,200,200);
   --color-border-accent: rgb(61, 76, 141);
-  --color-heading: rgb(0, 0, 0);
   --color-text: rgb(0, 0, 0);
   --color-text-inverted: rgb(255,255,255);
+  --color-text-info: rgb(63,63,63);
   --color-text-disabled: rgb(128, 128, 128);
   --color-text-error: rgb(196, 0, 0);
   --color-text-warning: rgb(160, 87, 3);
@@ -49,6 +50,7 @@
   flex-direction: column;
   width: 100%;
   margin: 0 auto;
+  color: var(--color-text); /* affects text, e.g. <p>'s in app */
 }
 
 .App-content {
@@ -81,10 +83,6 @@
   border: 1px solid var(--color-border-accent);
 }
 
-h1,h2,h3,h4  {
-  color: var(--color-heading)
-}
-
 h1,h2 {
   font-size: var(--font-big);
   margin-top: .5rem;
@@ -94,18 +92,21 @@ h1,h2 {
 h3 {
   font-size: var(--font-medium);
   margin-top: .5em;
-  margin-bottom: 0;
+  margin-bottom: .5em;
 }
 
 h4 {
   font-size: var(--font-small);
   margin-top: 0;
-  margin-bottom: 0;
+  margin-bottom: .5em;
 }
 
-p {
+h1,h2,h3,h4 {
+  font-weight: 300;
+}
+
+p:not(.style-override) {
   font-size: var(--font-small);
-  color: var(--color-text);
   margin-top: 0;
   margin-bottom: 5px;
 }

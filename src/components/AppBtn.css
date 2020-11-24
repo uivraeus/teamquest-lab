@@ -93,6 +93,7 @@ button.AppBtn-svg {
 
 button.AppBtn-svg > svg {
   margin: .1em;
+  fill: var(--color-text-info);
 }
 
 @media (hover: hover) {
