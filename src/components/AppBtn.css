@@ -87,6 +87,8 @@ button.AppBtn-svg {
   background-color: rgba(0,0,0,0); /* transparent */
   width: 2em;
   height: 2em;
+  min-width: 2em;
+  min-height: 2em;
   padding:0;
   border: none;
 }
