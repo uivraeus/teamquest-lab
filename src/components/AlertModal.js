@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import AppBtn from "./AppBtn";
 import { Modal } from "react-responsive-modal";
 
+import { ReactComponent as InfoIcon } from "../icons/info.svg";
 import { ReactComponent as WarningIcon } from "../icons/warning.svg";
 
 //use default class names and styling, with a few overrides
@@ -45,7 +46,7 @@ const AlertModal = ({ alert, onClose = () => {} }) => {
     >
       <div className={alertTypeClass}>
         <div className="Alert-Heading">
-          <WarningIcon />
+          {content.type === Alert.INFO ? <InfoIcon/> : <WarningIcon />}
           <h3>{content.heading}</h3>
         </div>
         <p>{content.text}</p>

@@ -24,7 +24,7 @@
 }
 
 .Alert-Info svg {
-  fill: var(--color-bkg-btn-accent);
+  fill: var(--color-text-info);
 }
 
 .Alert-Warning svg {
