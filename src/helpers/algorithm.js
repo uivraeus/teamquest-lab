@@ -22,7 +22,7 @@ const analyze = (responses) => {
 
     let catSum = [0,0,0,0];
     r.forEach((v, i) => {
-      if (v >= nV) {
+      if (!Number.isInteger(v) || v >= nV) {
         throw new Error("Unexpected answers: " + v);
       }
       // very temporary "algorithm" ...
