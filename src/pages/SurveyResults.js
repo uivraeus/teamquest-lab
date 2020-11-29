@@ -56,7 +56,7 @@ const SurveyResults = () => {
     <div className="SurveyResults">
       <h3>Latest survey</h3>
       {analysisError ? (
-        <p>{analysisError}</p>
+        <p><em>Could not obtain any results</em></p>
       ) : (
         <>
           {!results ? (

@@ -1,4 +1,6 @@
 import { useEffect, useState } from 'react';
+import analyze from '../helpers/algorithm';
+import useAppContext from "../hooks/AppContext"
 import useTeamTracker from "./TeamTracker";
 import { CompLev } from "../helpers/survey";
 
@@ -21,21 +23,16 @@ function useTeamResults(teamId) {
   const [ {results, latestResult}, setResults] = useState({ results: null, latestResult: null });
   const [analysisError, setAnalysisError] = useState(null);
 
+  const {showAlert} = useAppContext();
+
   useEffect(() => {
     if (surveys && surveys.length && !readError) {
       try {
         //Filter out the surveys for which we will derive and present the results
         const validSurveys = surveys.filter(isValidForAnalysis);
 
-        //Fake some analysis result (TODO: replace with actual computation)
-        const dummyRandom = () => Math.floor(Math.random() * 10) + 1;
-        const newResults = validSurveys.map((survey, ix) => {
-          const analysis = [
-            dummyRandom(),
-            dummyRandom(),
-            dummyRandom(),
-            ix % 11,
-          ];
+        const newResults = validSurveys.map((survey) => {
+          const analysis = analyze(survey.respHandle.responses);
           return { meta: survey.meta, analysis };
         });
 
@@ -50,8 +47,7 @@ function useTeamResults(teamId) {
         setAnalysisError(null);
 
       } catch (e) {
-        console.log("Corrupted survey data?", e);
-        setAnalysisError(e.message);
+        setAnalysisError(`Corrupted survey data? ${e.message}`);
         setResults({ results: null, latestResult: null });
       }
     } else {
@@ -61,6 +57,13 @@ function useTeamResults(teamId) {
       setResults({ results: null, latestResult: null });
     }
   }, [surveys, readError]);
+
+  //Alert on error
+  useEffect( () => {
+    if (analysisError && showAlert) {
+      showAlert("Error analyzing team results", analysisError, "Error");
+    }
+  }, [analysisError, showAlert])
 
   return {results, latestResult, analysisError }
 }
