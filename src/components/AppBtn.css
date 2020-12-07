@@ -29,7 +29,8 @@ button.AppBtn:active {
 
 button.AppBtn:disabled {
   background-color: var(--color-bkg-btn-default);
-  color: var(--color-text-disabled);
+  color: var(--color-fg-btn-disabled);
+  border: 1px solid var(--color-text-disabled);
 }
 
 /* Overrides/additions for special attention button */
@@ -44,9 +45,9 @@ button.AppBtn-accent {
   }  
 }
 
-/* .button.AppBtn-accent:focus {
-  TBD/TODO
-} */
+button.AppBtn-accent:focus {
+  border: 1px solid var(--color-border-accent);
+}
 
 /* .App button.app-accented-btn:disabled {
   TBD/TODO
@@ -112,8 +113,11 @@ button.AppBtn-svg > svg {
 }
 
 button.AppBtn-svg:focus {
-  fill: var(--color-fg-btn-focus);
   border: none;
+}
+
+button.AppBtn-svg:focus > svg {
+  fill: var(--color-fg-btn-focus);
 }
 
 button.AppBtn-svg:focus:enabled > svg {
@@ -122,6 +126,7 @@ button.AppBtn-svg:focus:enabled > svg {
 
 button.AppBtn-svg:disabled {
   background-color: rgba(0,0,0,0);
+  border: none;
 }
 
 button.AppBtn-svg:disabled > svg {

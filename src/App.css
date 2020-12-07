@@ -8,15 +8,15 @@
   --color-bkg-btn-accent: rgb(33, 60, 119);
   --color-bkg-btn-accent-hover: rgb(58, 85, 143);
   --color-fg-btn-hover: rgb(33, 60, 119);
-  --color-fg-btn-focus: rgb(30, 55, 110);
-  --color-fg-btn-disabled: rgb(128, 128, 128);
+  --color-fg-btn-focus: rgb(30, 58, 124);
+  --color-fg-btn-disabled: rgb(220, 220, 220);
   --color-border: rgb(128,128,128);
   --color-border-light: rgb(200,200,200);
   --color-border-accent: rgb(61, 76, 141);
   --color-text: rgb(0, 0, 0);
   --color-text-inverted: rgb(255,255,255);
   --color-text-info: rgb(63,63,63);
-  --color-text-disabled: rgb(128, 128, 128);
+  --color-text-disabled: rgb(196, 196, 196);
   --color-text-error: rgb(196, 0, 0);
   --color-text-warning: rgb(160, 87, 3);
   --color-text-data: rgb(36, 63, 145);
