@@ -10,10 +10,11 @@ import "./RadioLabel.css";
  * That will have to do for now
  */
 
-const RadioLabel = ({ name, value, text, checked, onChange, disabled=false }) => {
+const RadioLabel = React.forwardRef(({ name, value, text, checked, onChange, disabled=false }, ref) => {
   return (
     <label className="RadioLabel">
       <input
+        ref={ref}
         type="radio"
         value={value}
         name={name}
@@ -26,6 +27,6 @@ const RadioLabel = ({ name, value, text, checked, onChange, disabled=false }) =>
       <br />
     </label>
   );
-};
+});
 
 export default RadioLabel;
