@@ -45,7 +45,7 @@ const Start = () => {
       </div>
       <div className="Start-account-info">
         <p>
-          <Link to="/login">Login</Link> to initiate and manage your team's
+          <Link to="/login">Login</Link> to manage your team's
           surveys.
         </p>
         <p>

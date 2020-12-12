@@ -10,6 +10,10 @@
   margin-bottom: 1.5em;
 }
 
+.TextBlockItem:last-child {
+  margin-bottom: .5em;
+}
+
 .TextBlockItem-circle {
   width: .8em;
   height: .8em;

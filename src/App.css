@@ -31,6 +31,7 @@
   --font-big:  calc(17px + 2.7vw); 
   --font-medium: calc(11px + 2.7vw);
   --font-small: calc(8px + 2.2vw);
+  --height-header: 3.188em; /* best value ever */
 }
 
 @media screen and (min-width: 590px) {
@@ -58,6 +59,8 @@
   flex-direction: column;
   width: 96%;
   margin: 0 auto;
+  margin-top: var(--height-header);
+  transition: margin-top .3s ease-in-out;
 }
 
 /* Helper classes for the entire application
