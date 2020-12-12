@@ -103,7 +103,7 @@ const Run = () => {
               : <p>Loading...</p>      
         }
         {(submitted || !surveyOpen) && teamId  ?
-          <p>Go to the <Link to={`/results/${teamId}`}>Results and History</Link> page to see your team's status</p>
+          <p>Visit the <Link to={`/results/${teamId}`}>Results and History</Link> page to see your team's status</p>
           : null
         }
       </>} 
