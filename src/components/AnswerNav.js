@@ -18,6 +18,7 @@ const AnswerNav = ({ questionsHandle, onSubmitAnswers }) => {
   const [current, setCurrent] = useState(0); // start with first question
 
   //References to DOM elements for controlling focus and arrow-key navigation
+  //(unconditionally assigned when rendering, no need for null checks)
   const refPrev = useRef(null);
   const refNext = useRef(null);
   const refFirstRadio = useRef(null);
@@ -28,20 +29,15 @@ const AnswerNav = ({ questionsHandle, onSubmitAnswers }) => {
   const allowPrev = current > 0;
   const allowNext = current < answers.length - 1 && answers[current] !== -1; //no sneak peaks
 
-  //Helpers for auto-moving focus in an "intelligent" fashion
-  const focusOnFirstInput = () => {
-    refFirstRadio && refFirstRadio.current && refFirstRadio.current.focus();
+  //Helpers for me being paranoid (almost certain these are not necessary)
+  const setFocus = (ref) => {
+    ref.current && ref.current.focus();
   }
-  const focusOnLastInput = () => {
-    refLastRadio && refLastRadio.current && refLastRadio.current.focus();
+  const isActiveButton = (ref) => {
+    return (ref.current && ref.current.isActiveElement) ? 
+      ref.current.isActiveElement() : false;
   }
-  const focusOnPrev = () => {
-    refPrev && refPrev.current && refPrev.current.focus();
-  }
-  const focusOnNext = () => {
-    refNext && refNext.current && refNext.current.focus();
-  }  
-  
+
   //My hack to distinguish between selection(/answer) change based on
   //explicit (mouse) clicking and up/down-keys
   const [keyUpDownPressed, setKeyUpDownPressed] = useState(false);
@@ -56,7 +52,8 @@ const AnswerNav = ({ questionsHandle, onSubmitAnswers }) => {
     if (!keyUpDownPressed) {
       //typical "click on answer" case
       if (current < answers.length - 1) {
-        setTimeout(focusOnNext, 0); //have to let the re-rendering enable the button first
+        //Can't set focus when the button is still disabled. Have to let re-rendering enable it first
+        setTimeout(() => setFocus(refNext), 0);
       }
     } else {
       setKeyUpDownPressed(false);
@@ -74,9 +71,9 @@ const AnswerNav = ({ questionsHandle, onSubmitAnswers }) => {
       setCurrent(current - 1);
     }
     if (current > 1) {
-      focusOnPrev();
+      setFocus(refPrev);
     } else {
-      focusOnNext();
+      setFocus(refNext);
     }
   };
 
@@ -87,50 +84,47 @@ const AnswerNav = ({ questionsHandle, onSubmitAnswers }) => {
     if (current < questions.length - 2) {
       const nextUnanswered = answers[current + 1] === -1;
       if (!nextUnanswered) {
-        focusOnNext();
+        setFocus(refNext);
       }
     } else {
-      focusOnPrev();
+      setFocus(refPrev);
     }
   };
 
   const onKeyDown = (e) => {
-    if (refPrev && refPrev.current && refNext && refNext.current) { //just in case...
-    
-      if (e.keyCode === 38 || e.keyCode === 40) {
-        //up or down arrow key
-        setKeyUpDownPressed(true);
-        if (refPrev.current.isActiveElement() || refNext.current.isActiveElement()) {
-          if (e.keyCode === 38) {
-            //arrow-up, while prev or next is selected -> move focus to last radio input
-            focusOnLastInput();
-          } else {
-            //arrow-down -> focus on first instead
-            focusOnFirstInput();
-          }
+    if (e.keyCode === 38 || e.keyCode === 40) {
+      //up or down arrow key
+      setKeyUpDownPressed(true);
+      if (isActiveButton(refPrev) || isActiveButton(refNext)) {
+        if (e.keyCode === 38) {
+          //arrow-up, while prev or next is selected -> move focus to last radio input
+          setFocus(refLastRadio);
+        } else {
+          //arrow-down -> focus on first instead
+          setFocus(refFirstRadio);
+        }
+      }
+    } else {
+      setKeyUpDownPressed(false);
+    }
+
+    if (e.keyCode === 37 || e.keyCode === 39) {
+      //left or right arrow key
+      e.preventDefault();
+      //Default behavior is to navigate between questions. The exceptions are:
+      //- When Prev-button is focused, "Right" moves focus to Next-button
+      //- and vice versa for the Next/"Left" case
+      if (e.keyCode === 39) {
+        if (isActiveButton(refPrev)) {
+          setFocus(refNext);
+        } else if (allowNext) {
+          onNext();
         }
       } else {
-        setKeyUpDownPressed(false);
-      }
-
-      if (e.keyCode === 37 || e.keyCode === 39) {
-        //left or right arrow key
-        e.preventDefault();
-        //Default behavior is to navigate between questions. The exceptions are:
-        //- When Prev-button is focused, "Right" moves focus to Next-button
-        //- and vice versa for the Next/"Left" case
-        if (e.keyCode === 39) {
-          if (refPrev.current.isActiveElement()) {
-            focusOnNext();
-          } else if (allowNext) {
-            onNext();
-          }
-        } else {
-          if (refNext.current.isActiveElement()) {
-            focusOnPrev();
-          } else if (allowPrev) {
-            onPrev();
-          }
+        if (isActiveButton(refNext)) {
+          setFocus(refPrev);
+        } else if (allowPrev) {
+          onPrev();
         }
       }
     }

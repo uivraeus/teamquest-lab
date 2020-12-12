@@ -22,7 +22,7 @@ const AppBtn = React.forwardRef(({ text, children, kind, type, name, id, role, d
   const internalRef = useRef();
   useImperativeHandle(ref, () => ({
     focus: () => {
-      internalRef.current.focus(); // TBD... Risk of accessing undefined?
+      internalRef.current && internalRef.current.focus();
     },
     isActiveElement: () => {
       return internalRef.current === document.activeElement;
@@ -32,9 +32,8 @@ const AppBtn = React.forwardRef(({ text, children, kind, type, name, id, role, d
   //Internal click handle that will "un-focus" the button
   //TODO: even more tricks?
   const clickWrapper = (e) => {
-    if (internalRef && internalRef.current) {
-      internalRef.current.blur();
-    }
+    internalRef.current && internalRef.current.blur();
+    
     //Forward the actual processing for this click
     if (onClick) {
       onClick(e);
