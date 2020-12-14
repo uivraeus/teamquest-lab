@@ -78,6 +78,32 @@ export const cancelAll = (teamId, dbDataRef) => {
   }
 };
 
+//Derive latest set of questions
+//returns (promise of) {id, num}
+export const getLatestQuestionSet = async () => {
+  try {
+    const snapshot = await db
+      .ref("question-sets")
+      .orderByChild("createTime")
+      .limitToLast(1)
+      .once("value");
+
+    if (snapshot.numChildren() !== 1)
+      throw new Error("No valid question-set found");
+
+    let retVal = {}
+    snapshot.forEach((snap) => {
+      retVal = { id: snap.key, num: snap.child("questions").numChildren() };
+    });
+
+    return retVal;
+  } catch (e) {
+    const errMsg = "Could not load question set from database.";
+    console.log(errMsg, e);
+    throw new Error(errMsg);
+  }
+}
+
 //General survey questions loader (based on question-set ID found in meta-data)
 export const loadQuestions = async (surveyObject) => {
   let questions = [];
@@ -192,7 +218,7 @@ export const getResponses = (surveyObject) => {
   //Don't bother to check too much in advance. Try parsing and do one
   //final check of the end result
   try {
-    const ansPerRsp = (lenPerRsp - 2) / 2; //two characters per answer + 2
+    const ansPerRsp = (lenPerRsp - 2) / 2; //two characters per answer + 2, see createSurvey()
     const min = minLen / lenPerRsp;
     const max = maxLen / lenPerRsp;
 
@@ -311,5 +337,33 @@ export const getMeta = (surveyObj, respHandle = null) => {
     const errMsg = `Could not derive survey meta data`;
     console.log(errMsg, e);
     throw new Error(errMsg);    
+  }
+}
+
+
+//Create a new survey based on the latest set of questions
+//returns (promise of) surveyId
+export const createSurvey = async (teamId, minAnswers, maxAnswers, hoursOpen) => {
+  try {
+    const questions = await getLatestQuestionSet();
+    
+    //To make validation rules simpler the various "len" entires are in #characters (when stored)
+    //E.g. for 3 questions the answer may be ",[1,4,2]" (i.e. length 8)
+    const lenIncrement = questions.num * 2 + 2;
+    const minLenAnswers = minAnswers * lenIncrement;
+    const maxLenAnswers = maxAnswers * lenIncrement;
+    const result = await db.ref(`surveys`).push({
+      meta: {
+        ...{ teamId, minLenAnswers, maxLenAnswers, lenIncrement, hoursOpen },
+        createTime: { ".sv": "timestamp" },
+        questionsId: questions.id,
+      },
+    });
+    
+    return result.key;
+  } catch (e) {
+    const errMsg = "Could not create survey. " + e.message;
+    console.log(errMsg, e);
+    throw new Error(errMsg);
   }
 }
