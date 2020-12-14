@@ -51,6 +51,7 @@ const SurveyInfo = () => {
   } else {
     return (
       <div className="SurveyInfo">
+        <h3>Survey Information</h3>
         <p>Please find the questionnaire at the following URL:</p>
         <div className="SurveyInfo-url">
           <div className="SurveyInfo-url-content">

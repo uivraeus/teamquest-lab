@@ -1,17 +1,16 @@
-import React, { useEffect, useState } from 'react';
-import AppBtn from "../components/AppBtn"
+import React, { useEffect, useState } from "react";
+import AppBtn from "../components/AppBtn";
 import Teams from "../components/Teams";
 import SurveyItem from "../components/SurveyItem";
-import useAppContext from "../hooks/AppContext"
+import useAppContext from "../hooks/AppContext";
 import useTeamTracker from "../hooks/TeamTracker";
 import useOwnedTeams from "../hooks/OwnedTeams";
-import { CompLev } from '../helpers/survey';
+import { CompLev } from "../helpers/survey";
 import { Link, useHistory, useParams } from "react-router-dom";
 
 import { ReactComponent as ResultsIcon } from "../icons/analysis.svg";
 
 import "./SurveyCatalog.css";
-
 
 const SurveyCatalog = () => {
   const { queryConfirm, showAlert, user } = useAppContext();
@@ -29,9 +28,12 @@ const SurveyCatalog = () => {
   useEffect(() => {
     if (ownedTeams && ownedTeams.teams && teamId) {
       if (ownedTeams.teams.map((t) => t.id).includes(teamId)) {
-        setValidatedTeamId(teamId);  
+        setValidatedTeamId(teamId);
       } else {
-        showAlert("Invalid URL", "It looks like you tried to access a team you are not the owner of");
+        showAlert(
+          "Invalid URL",
+          "It looks like you tried to access a team you are not the owner of"
+        );
         //Why SetTimeout?
         //Because of crappy setTimeout in Teams... in case of only
         //one team with "auto-selection" I might get a onTeamSelect
@@ -39,17 +41,22 @@ const SurveyCatalog = () => {
         setTimeout(() => history.push("/"), 0);
       }
     }
-      
+
     if (ownedTeams && ownedTeams.readError && showAlert) {
-      showAlert("User configuration error", "Could not derive user's team ownership", "Error", ownedTeams.readError);
+      showAlert(
+        "User configuration error",
+        "Could not derive user's team ownership",
+        "Error",
+        ownedTeams.readError
+      );
     }
-  },[teamId, ownedTeams, showAlert, history]);
+  }, [teamId, ownedTeams, showAlert, history]);
 
   let { surveys, readError } = useTeamTracker(validatedTeamId);
 
   const onTeamsSelect = (id) => {
     history.push(`/creator/tracker/${id}`);
-  }
+  };
 
   const onShare = ({ id }) => {
     history.push(`/creator/info/${id}`);
@@ -57,82 +64,142 @@ const SurveyCatalog = () => {
 
   const onEdit = ({ id }) => {
     showAlert("TODO", "Add support for editing ongoing surveys");
-  }
+  };
 
-  const onDelete  = ({ id, createTime }) => {
+  const onDelete = ({ id, createTime }) => {
     const dateStr = new Date(createTime).toLocaleDateString();
-    queryConfirm("Delete survey", `Are you sure you want to delete the survey from ${dateStr}?`, confirmed => {
-      if (confirmed) {
-        showAlert("TODO", `Delete/Discard surveys with id: ${id}`);
+    queryConfirm(
+      "Delete survey",
+      `Are you sure you want to delete the survey from ${dateStr}?`,
+      (confirmed) => {
+        if (confirmed) {
+          showAlert("TODO", `Delete/Discard surveys with id: ${id}`);
+        }
       }
-    });
-  }
+    );
+  };
 
   const pathR = `/results/${validatedTeamId}`;
   const onResults = () => {
     history.push(pathR);
-  }
+  };
 
   //"early exit" (Routing helpers shall ensure that user is always defined though...)
-  if (!user) (<></>)
+  if (!user) <></>;
 
   //Sort the surveys according to their completion status
   //Here it makes most sense to present newest surveys first
-  const ongoing = surveys && surveys.filter( s => s.meta.ongoing ).reverse();
-  const completed  = surveys && surveys.filter (s =>
-    (!s.meta.ongoing && s.meta.compLev !== CompLev.TOO_FEW)).reverse();
-  const discarded = surveys && surveys.filter(s => (!s.meta.ongoing && (
-    (s.meta.compLev === CompLev.TOO_FEW) ||
-    (s.meta.compLev === CompLev.CANCELED)))).reverse();
+  const ongoing = surveys && surveys.filter((s) => s.meta.ongoing).reverse();
+  const completed =
+    surveys &&
+    surveys
+      .filter((s) => !s.meta.ongoing && s.meta.compLev !== CompLev.TOO_FEW)
+      .reverse();
+  const discarded =
+    surveys &&
+    surveys
+      .filter(
+        (s) =>
+          !s.meta.ongoing &&
+          (s.meta.compLev === CompLev.TOO_FEW ||
+            s.meta.compLev === CompLev.CANCELED)
+      )
+      .reverse();
 
   return (
     <div className="SurveyCatalog">
       <h1>Survey catalog</h1>
-      <Teams user={user} enableEdit={false} onSelected={onTeamsSelect} extSelection={validatedTeamId} />
-      {surveys ? (<>
-        <div className="SurveyCatalog-result-link">
-          <div>
-            <AppBtn onClick={onResults}>
-              <ResultsIcon />
-            </AppBtn>
+      <Teams
+        user={user}
+        enableEdit={false}
+        onSelected={onTeamsSelect}
+        extSelection={validatedTeamId}
+      />
+      {surveys ? (
+        <>
+          <div className="SurveyCatalog-result-link">
+            <div>
+              <AppBtn onClick={onResults}>
+                <ResultsIcon />
+              </AppBtn>
+            </div>
+            <p>
+              The <Link to={pathR}>analysis result page</Link> for this team is
+              continuously updated when new responses are received.
+            </p>
           </div>
-          <p>The <Link to={pathR}>analysis result page</Link> for this team is continuously updated when new responses are received.</p>
-        </div>  
-        <h3>Ongoing surveys</h3>
-        {ongoing.length ?
-          <ul> {
-            ongoing.map( s => {
-            return (
-              <li key={s.meta.id}>
-                <SurveyItem surveyMeta={s.meta} onShare={onShare} onEdit={onEdit} onDelete={onDelete}/>
-              </li>
-            )
-          })}</ul> : <p><em>No ongoing surveys</em></p>}
-        <h3>Completed surveys</h3>
-        {completed.length ?
-          <ul> {
-            completed.map( s => {
-            return (
-              <li key={s.meta.id}>
-                <SurveyItem surveyMeta={s.meta} onDelete={onDelete}/>
-              </li>
-            )
-          })}</ul> : <p><em>No completed surveys</em></p>}
-        <h3>Discarded or never completed surveys</h3>
-        {discarded.length ?
-          <ul> {
-            discarded.map( s => {
-            return (
-              <li key={s.meta.id}>
-                <SurveyItem surveyMeta={s.meta} />
-              </li>
-            )
-          })}</ul> : <p><em>No discarded surveys</em></p>}
-      </>) : validatedTeamId ?
-       <p><em>Loading surveys...</em></p> : null}
-      {readError ? <p><em>{readError}</em></p> : null}
+          <h3>Ongoing surveys</h3>
+          {ongoing.length ? (
+            <ul>
+              {" "}
+              {ongoing.map((s) => {
+                return (
+                  <li key={s.meta.id}>
+                    <SurveyItem
+                      surveyMeta={s.meta}
+                      onShare={onShare}
+                      onEdit={onEdit}
+                      onDelete={onDelete}
+                    />
+                  </li>
+                );
+              })}
+            </ul>
+          ) : (
+            <p>
+              <em>No ongoing surveys</em>
+            </p>
+          )}
+          <h3>Completed surveys</h3>
+          {completed.length ? (
+            <ul>
+              {" "}
+              {completed.map((s) => {
+                return (
+                  <li key={s.meta.id}>
+                    <SurveyItem surveyMeta={s.meta} onDelete={onDelete} />
+                  </li>
+                );
+              })}
+            </ul>
+          ) : (
+            <p>
+              <em>No completed surveys</em>
+            </p>
+          )}
+
+          {discarded.length ? (
+            <>
+              <h3>Never completed surveys</h3>
+              <ul>
+                {" "}
+                {discarded.map((s) => {
+                  return (
+                    <li key={s.meta.id}>
+                      <SurveyItem
+                        surveyMeta={s.meta}
+                        onEdit={onEdit}
+                        onDelete={onDelete}
+                      />
+                    </li>
+                  );
+                })}
+              </ul>
+            </>
+          ) : null}
+        </>
+      ) : validatedTeamId ? (
+        <p>
+          <em>Loading surveys...</em>
+        </p>
+      ) : null}
+      {readError ? (
+        <p>
+          <em>{readError}</em>
+        </p>
+      ) : null}
     </div>
   );
-}
+};
 
 export default SurveyCatalog;
