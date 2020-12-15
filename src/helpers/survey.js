@@ -367,3 +367,18 @@ export const createSurvey = async (teamId, minAnswers, maxAnswers, hoursOpen) =>
     throw new Error(errMsg);
   }
 }
+
+
+//Delete (purge) an existing survey from the database
+//NOTE: there is no "undo" for this
+export const deleteSurvey = async (surveyId) => {
+  try {
+    const result = await db.ref(`surveys/${surveyId}`).remove();
+    console.log("result:", result);
+    return result;
+  } catch (e) {
+    const errMsg = "Could not delete survey. " + e.message;
+    console.log(errMsg, e);
+    throw new Error(errMsg);
+  }
+}

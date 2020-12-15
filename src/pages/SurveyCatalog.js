@@ -5,7 +5,7 @@ import SurveyItem from "../components/SurveyItem";
 import useAppContext from "../hooks/AppContext";
 import useTeamTracker from "../hooks/TeamTracker";
 import useOwnedTeams from "../hooks/OwnedTeams";
-import { CompLev } from "../helpers/survey";
+import { CompLev, deleteSurvey } from "../helpers/survey";
 import { Link, useHistory, useParams } from "react-router-dom";
 
 import { ReactComponent as ResultsIcon } from "../icons/analysis.svg";
@@ -73,7 +73,14 @@ const SurveyCatalog = () => {
       `Are you sure you want to delete the survey from ${dateStr}?`,
       (confirmed) => {
         if (confirmed) {
-          showAlert("TODO", `Delete/Discard surveys with id: ${id}`);
+          deleteSurvey(id)
+          .then((r) => {
+            console.log("then r:", r);
+          })
+          .catch((r) => {
+            console.log("catch, r:", r);
+            showAlert("Data backend error", r.message, "Error");
+          });
         }
       }
     );
