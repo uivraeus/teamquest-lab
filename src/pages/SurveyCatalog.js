@@ -73,9 +73,10 @@ const SurveyCatalog = () => {
       `Are you sure you want to delete the survey from ${dateStr}?`,
       (confirmed) => {
         if (confirmed) {
+          //TODO/TBD: need for some "spinner" or other blocking wait until done?
           deleteSurvey(id)
           .then((r) => {
-            console.log("then r:", r);
+            //nothing to do here (yet), the result from deleteSurvey is empty anyway
           })
           .catch((r) => {
             console.log("catch, r:", r);

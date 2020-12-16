@@ -374,7 +374,6 @@ export const createSurvey = async (teamId, minAnswers, maxAnswers, hoursOpen) =>
 export const deleteSurvey = async (surveyId) => {
   try {
     const result = await db.ref(`surveys/${surveyId}`).remove();
-    console.log("result:", result);
     return result;
   } catch (e) {
     const errMsg = "Could not delete survey. " + e.message;
