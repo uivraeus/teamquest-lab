@@ -40,12 +40,17 @@ const Run = () => {
           //For now we don't subscribe to any changes, just assume
           //that the survey closes according to the current status
           const timeLeft = Math.max(0, getTimeLeft(surveyObject));
-          const idTimeout = setTimeout( () => {
-            setSurveyOpen(false);
-            setIdCloseTimeout(null);//trigger (dummy) clear now, i.e. not at some later moment.
-          }, timeLeft);
-          setIdCloseTimeout(idTimeout);
-          //console.log("Question loaded", Math.round(timeLeft/60000), "minutes left until survey closes");        
+          //2147483647 (576h or 24 days) is the actual max for setTimeout but our numeric precision is not very good
+          //at that range anyway so to make things a bit more deterministic (I think) and skip it completely if it is
+          //more than 24h (86393109 ms) 
+          if (timeLeft < 86393109) {
+            const idTimeout = setTimeout( () => {
+              setSurveyOpen(false);
+              setIdCloseTimeout(null);//trigger (dummy) clear now, i.e. not at some later moment.
+            }, timeLeft);
+            setIdCloseTimeout(idTimeout);
+            //console.log("Question loaded", Math.round(timeLeft/60000), "minutes left until survey closes");
+          }
         }).catch( e => setReadError(e.message));
       }                           
     }).catch( e => {
