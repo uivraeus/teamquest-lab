@@ -30,7 +30,7 @@ const SurveyItem = ({ surveyMeta, onShare, onEdit, onDelete }) => {
         <div className={statusName}>+</div>
         <div className="SurveyItem-info-details">
           <h4>{dateStr}</h4>
-          <p>{`${cL}, (${surveyMeta.numResponders})`}</p>
+          <p>{`${cL} (${surveyMeta.numResponders})`}</p>
         </div>
       </div>
       <div className="SurveyItem-edit">
