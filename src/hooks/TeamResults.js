@@ -54,7 +54,7 @@ function useTeamResults(teamId) {
       if (readError) {
         setAnalysisError(`Error reading raw survey data: ${readError}`);
       }
-      setResults({ results: null, latestResult: null });
+      setResults({ results: [], latestResult: null });
     }
   }, [surveys, readError]);
 
