@@ -301,8 +301,13 @@ export const getCompLev = (surveyObj, respHandle = null) => {
         level = CompLev.SOME;
       }
     } else {
-      //Explicitly cancelled
-      level = CompLev.CANCELED;
+      if (respHandle.responses.length === respHandle.max) {
+        //Explicitly "completed"
+        level = CompLev.ALL;
+      } else {
+        //Explicitly cancelled
+        level = CompLev.CANCELED;
+      }
     }
   } catch(e) {
     const errMsg = `Could not determine completion level`;
@@ -373,10 +378,70 @@ export const createSurvey = async (teamId, minAnswers, maxAnswers, hoursOpen) =>
 //NOTE: there is no "undo" for this
 export const deleteSurvey = async (surveyId) => {
   try {
-    const result = await db.ref(`surveys/${surveyId}`).remove();
-    return result;
+    await db.ref(`surveys/${surveyId}`).remove();
   } catch (e) {
     const errMsg = "Could not delete survey. " + e.message;
+    console.log(errMsg, e);
+    throw new Error(errMsg);
+  }
+}
+
+//Update the hoursOpen attribute (disregard previous settings)
+export const setClosingTime = async (surveyId, createTime, hoursFromNow) => {
+  try {
+    const offset = await getServerTimeOffset();
+    const closingTime = (new Date()).getTime() + offset + (hoursFromNow * 3600000);
+    const newHoursOpen = (closingTime - createTime) / 3600000;
+    await db.ref(`surveys/${surveyId}/meta/hoursOpen`).set(newHoursOpen);
+  } catch (e) {
+    const errMsg = "Could not update survey. " + e.message;
+    console.log(errMsg, e);
+    throw new Error(errMsg);
+  }
+}
+
+//Allow for more responders by increasing the maxLenAnswers attribute
+export const addResponders = async (surveyId, numAdditional) => {
+  //TODO/TBD: improve access rules for entire meta sub-object to allow for
+  //a single "transaction" on it (avoid separate readout of lenIncrement)
+  try {
+    //First get the lenIncrement
+    const snapshot = await db.ref(`surveys/${surveyId}/meta/lenIncrement`).once('value');
+    const lenIncrement = snapshot.val();
+
+    //Now use a transaction to ensure atomic update
+    await db.ref(`surveys/${surveyId}/meta/maxLenAnswers`).transaction(prev => 
+      prev + (lenIncrement * numAdditional));
+  } catch (e) {
+    const errMsg = "Could not update survey. " + e.message;
+    console.log(errMsg, e);
+    throw new Error(errMsg);
+  }
+}
+
+//Indicate survey as "completed" by closing it immediately and adjusting maxLenAnswers attribute
+export const markCompleted = async (surveyId) => {
+  //TODO/TBD: improve access rules for entire meta sub-object to allow for
+  //a single "transaction" on it (avoid sequence of write/read/write)
+  try {
+    //First close the survey to avoid additional updates
+    await db.ref(`surveys/${surveyId}/meta/hoursOpen`).set(0);
+    
+    //Get the current number of responders
+    const surveyObject = await load(surveyId);
+    const currentLen = surveyObject.responses.length;
+    
+    //Then update the expected maximum according the current value
+    if (currentLen >= surveyObject.meta.minLenAnswers) {
+      await db.ref(`surveys/${surveyId}/meta/maxLenAnswers`).set(currentLen);
+    } else {
+      //Doesn't make sense to have a "max" set to less than "min". The completed survey
+      //will not be "good enough" for deriving any result anyway so just let it be.
+      //I.e. this will be a kind of "discard" operation rather than "complete".
+    }
+
+  } catch (e) {
+    const errMsg = "Could not update survey. " + e.message;
     console.log(errMsg, e);
     throw new Error(errMsg);
   }

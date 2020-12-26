@@ -1,0 +1,22 @@
+.SurveyEditModal {
+  width: 512px; /*max, will be less if required */
+}
+
+.SurveyEditModal-attributes {
+  margin-top: 1em;
+}
+
+.SurveyEditModal-attributes:disabled {
+  color: var(--color-text-disabled);
+  border: 1px solid var(--color-fg-btn-disabled)
+}
+
+.SurveyEditModal-attributes > * {
+  margin-top: 1em;
+}
+
+.SurveyEditModal-control {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 1.3em;
+}

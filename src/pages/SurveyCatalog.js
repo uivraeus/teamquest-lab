@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import AppBtn from "../components/AppBtn";
 import Teams from "../components/Teams";
+import SurveyEditModal from "../components/SurveyEditModal";
 import SurveyItem from "../components/SurveyItem";
 import useAppContext from "../hooks/AppContext";
 import useTeamTracker from "../hooks/TeamTracker";
@@ -62,8 +63,31 @@ const SurveyCatalog = () => {
     history.push(`/creator/info/${id}`);
   };
 
+  /* Edit button sets ID, which is used to set "meta" via effect to ensure
+   * consistency if "surveys" is updated ("meta" drives the edit modal)
+   */
+  const [editSurveyId, setEditSurveyId] = useState(null);
+  const [editSurveyMeta, setEditSurveyMeta] = useState(null);
   const onEdit = ({ id }) => {
-    showAlert("TODO", "Add support for editing ongoing surveys");
+    setEditSurveyId(id);
+  };
+
+  useEffect(() => {
+    let editMeta = null;
+    if (surveys && editSurveyId) {
+      const meta = surveys.filter((s) => s.meta.id === editSurveyId).map((s) => s.meta);
+      if (meta.length > 0) {
+        editMeta = meta[0];
+      } else {
+        console.log(`Can't find survey with id ${editSurveyId} for editing`);
+        setEditSurveyId(null);
+      }
+    }
+    setEditSurveyMeta(editMeta);
+  }, [surveys, editSurveyId]);
+  
+  const onEditClose = () => {
+    setEditSurveyId(null); //Id=null -> meta=null
   };
 
   const onDelete = ({ id, createTime }) => {
@@ -165,7 +189,10 @@ const SurveyCatalog = () => {
               {completed.map((s) => {
                 return (
                   <li key={s.meta.id}>
-                    <SurveyItem surveyMeta={s.meta} onDelete={onDelete} />
+                    <SurveyItem
+                      surveyMeta={s.meta}
+                      onEdit={onEdit}
+                      onDelete={onDelete} />
                   </li>
                 );
               })}
@@ -195,6 +222,7 @@ const SurveyCatalog = () => {
               </ul>
             </>
           ) : null}
+          <SurveyEditModal meta={editSurveyMeta} onClose={onEditClose}/>
         </>
       ) : validatedTeamId ? (
         <p>
