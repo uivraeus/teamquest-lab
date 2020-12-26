@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import AppBtn from "../components/AppBtn";
-import { load } from "../helpers/survey";
+import { getClosingTime, load } from "../helpers/survey";
 import { Link, useParams } from "react-router-dom";
 import { ReactComponent as CopyIcon } from "../icons/copy.svg";
 import QRCode from "qrcode.react";
@@ -37,6 +37,10 @@ const SurveyInfo = () => {
   const fullUrlQ = `${myHost}/run/${surveyId}`;
   const pathR =
     `/results` + (surveyObject ? `/${surveyObject.meta.teamId}` : ``);
+  let closingTimeStr = "";
+  if (surveyObject) {
+    closingTimeStr = (new Date(getClosingTime(surveyObject))).toLocaleString();
+  } 
 
   const onCopy = async (e) => {
     try {
@@ -52,7 +56,8 @@ const SurveyInfo = () => {
     return (
       <div className="SurveyInfo">
         <h3>Survey Information</h3>
-        <p>Please find the questionnaire at the following URL:</p>
+        <p>This survey is open until {closingTimeStr}</p>
+        <p>Access the questionnaire at the following URL:</p>
         <div className="SurveyInfo-url">
           <div className="SurveyInfo-url-content">
             <a href={fullUrlQ}>{fullUrlQ}</a>

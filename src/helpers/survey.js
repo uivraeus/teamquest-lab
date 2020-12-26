@@ -180,6 +180,17 @@ export const pushResponse = async (surveyId, answers) => {
   }
 }
 
+//Derive closing time
+export const getClosingTime = (surveyObject) => {
+  try {
+    return (surveyObject.meta.hoursOpen * 3600000) + surveyObject.meta.createTime
+  } catch (e) {
+    const errMsg = "Could not derive closing time for survey";
+    console.log(errMsg);
+    throw new Error(errMsg);
+  }
+}
+
 //Check how much time [ms] is left before the survey closes
 export const getTimeLeft = (surveyObject, sTimeOffset = 0) => {
     let timeLeft = 0;
@@ -189,7 +200,7 @@ export const getTimeLeft = (surveyObject, sTimeOffset = 0) => {
       //First check if it has been closed/terminated "manually"
       if (meta.hoursOpen) {
         //Compare current time with survey config
-        const closingTime = (meta.hoursOpen * 3600000) + meta.createTime;
+        const closingTime = getClosingTime(surveyObject);
         const now = (new Date()).getTime() + sTimeOffset;
         timeLeft = closingTime - now;
         //console.log("getTimeLeft: closingTime:",closingTime, "now:",now, "timeLeft:", timeLeft);
@@ -331,9 +342,11 @@ export const getMeta = (surveyObj, respHandle = null) => {
     const meta = {
       id: surveyObj.id,
       createTime: surveyObj.meta.createTime,
+      closingTime: getClosingTime(surveyObj), 
       compLev: getCompLev(surveyObj, respHandle),
       ongoing: isOpen(surveyObj),
-      numResponders: respHandle.responses.length
+      numResponders: respHandle.responses.length,
+      maxNumResponders: respHandle.max
     }
 
     return { meta, respHandle };

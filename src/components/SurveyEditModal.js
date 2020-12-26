@@ -21,16 +21,20 @@ const SurveyEditModal = ({ meta, onClose }) => {
   const [hours, setHours] = useState(null);
   const [addResp, setAddResp] = useState(null);
 
-  //Modal's state (based on "meta" prop)
-  const [editMeta, setEditMeta] = useState(null);
-  const [editing, setEditing] = useState(false);
+//Modal's state, taking freezing of info during fade-out into account
+const [editMeta, setEditMeta] = useState(null);
+const [editing, setEditing] = useState(false);
+const [fadingOut, setFadingOut] = useState(false);
+const [infoFields, setInfoFields] = useState(["","",""]);
 
   const { showAlert } = useAppContext();
 
-  const onClosing = (...args) => {
-    setEditing(false); //prevent further updates
-    onClose();
-  };
+  const onClosing = () => {
+    //prevent further updates
+   setFadingOut(true);
+   setEditing(false);
+   onClose();
+ };
 
   useEffect(() => {
     if (!meta) {
@@ -39,14 +43,23 @@ const SurveyEditModal = ({ meta, onClose }) => {
     }
 
     setEditMeta(meta);
-    if (meta) {
+    if (meta && !fadingOut) {
       setEditing(true);
+      
+      const dateStr = "Edit survey from " + new Date(meta.createTime).toLocaleDateString();  
+      const currentOpenStatus = "Survey " +
+          (meta.ongoing
+            ? `closes at ${new Date(meta.closingTime).toLocaleString()}`
+            : "is currently closed");
+      const currentNumResponders = `Configured for max ${meta.maxNumResponders} responders`;
+      setInfoFields([dateStr,currentOpenStatus, currentNumResponders]);      
     }
-  }, [meta]);
+  }, [meta, fadingOut]);
 
   useEffect(() => {
     if (editMeta && meta && editMeta.id !== meta.id) {
       //Weird misuse case? Suddenly we're editing a different survey -> bail out
+      setFadingOut(false);
       setEditing(false);
       setEditMeta(null);
       showAlert(
@@ -67,6 +80,7 @@ const SurveyEditModal = ({ meta, onClose }) => {
           "Info"
         );
       } else {
+        setFadingOut(true);
         setEditing(false);
         if (editMeta) {
           try {
@@ -93,10 +107,7 @@ const SurveyEditModal = ({ meta, onClose }) => {
     onClosing();
   };
 
-  //Actual rendering
-  const dateStr = editMeta
-    ? new Date(editMeta.createTime).toLocaleDateString()
-    : "";
+  //Rendering helpers
   const anyChange = !!complete || !!hours || !!addResp;
   const allowComplete = editMeta && editMeta.compLev === CompLev.SOME;
   return (
@@ -106,8 +117,11 @@ const SurveyEditModal = ({ meta, onClose }) => {
       closeOnOverlayClick={false}
       center
       classNames={{ modal: "SurveyEditModal" }}
+      onAnimationEnd={()=>setFadingOut(false)}
     >
-      <h3>Edit survey: {dateStr}</h3>
+      <h3>{infoFields[0]}</h3>
+      <p>{infoFields[1]}</p>
+      <p>{infoFields[2]}</p>
       <CheckboxLabel
         name="complete"
         value={complete}
