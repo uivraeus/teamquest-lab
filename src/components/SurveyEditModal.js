@@ -1,9 +1,14 @@
-import React, { useEffect, useState } from 'react';
-import AppBtn from './AppBtn';
-import CheckboxLabel from './CheckboxLabel';
-import OptionalNumInput from './OptionalNumInput';
+import React, { useEffect, useState } from "react";
+import AppBtn from "./AppBtn";
+import CheckboxLabel from "./CheckboxLabel";
+import OptionalNumInput from "./OptionalNumInput";
 import useAppContext from "../hooks/AppContext";
-import { addResponders, CompLev, markCompleted, setClosingTime } from "../helpers/survey";
+import {
+  addResponders,
+  CompLev,
+  markCompleted,
+  setClosingTime,
+} from "../helpers/survey";
 import { Modal } from "react-responsive-modal";
 
 //use default class names and styling, with a few overrides
@@ -37,7 +42,6 @@ const SurveyEditModal = ({ meta, onClose }) => {
     if (meta) {
       setEditing(true);
     }
-  
   }, [meta]);
 
   useEffect(() => {
@@ -45,31 +49,43 @@ const SurveyEditModal = ({ meta, onClose }) => {
       //Weird misuse case? Suddenly we're editing a different survey -> bail out
       setEditing(false);
       setEditMeta(null);
-      showAlert("Change of survey state", "Aborting edit due to unexpected change of survey state","Warning");
+      showAlert(
+        "Change of survey state",
+        "Aborting edit due to unexpected change of survey state",
+        "Warning"
+      );
     }
     //TODO: add detection of concurrent edit or other "critical" meta update
   }, [meta, editMeta, showAlert]);
-  
+
   const onApply = async () => {
     if (editing) {
-      setEditing(false);
-      if (editMeta) {
-        try {
-          if (complete) {
-            await markCompleted(editMeta.id);
-          } else {
-            if (hours) {
-              await setClosingTime(editMeta.id, editMeta.createTime, hours);
+      if (addResp && !hours && editMeta && !editMeta.ongoing) {
+        showAlert(
+          "Invalid edit",
+          "This survey is not open. Add more hours to it if you want to add more responders",
+          "Info"
+        );
+      } else {
+        setEditing(false);
+        if (editMeta) {
+          try {
+            if (complete) {
+              await markCompleted(editMeta.id);
+            } else {
+              if (hours) {
+                await setClosingTime(editMeta.id, editMeta.createTime, hours);
+              }
+              if (addResp) {
+                await addResponders(editMeta.id, addResp);
+              }
             }
-            if (addResp) {
-              await addResponders(editMeta.id, addResp);
-            }
+          } catch (e) {
+            console.log(e);
           }
-        } catch (e) {
-          console.log(e);
-        }        
+        }
+        onClosing();
       }
-      onClosing();
     }
   };
 
@@ -78,7 +94,9 @@ const SurveyEditModal = ({ meta, onClose }) => {
   };
 
   //Actual rendering
-  const dateStr = editMeta ? new Date(editMeta.createTime).toLocaleDateString() : "";
+  const dateStr = editMeta
+    ? new Date(editMeta.createTime).toLocaleDateString()
+    : "";
   const anyChange = !!complete || !!hours || !!addResp;
   const allowComplete = editMeta && editMeta.compLev === CompLev.SOME;
   return (
@@ -101,16 +119,16 @@ const SurveyEditModal = ({ meta, onClose }) => {
       <fieldset className="SurveyEditModal-attributes" disabled={complete}>
         <legend>Possible updates</legend>
         <OptionalNumInput
-          description = "Update remaining time"
-          unitLabel = "hours (from now)"
-          onChange = {(value) => setHours(value)}
-          disabled = {complete}
+          description="Update remaining time"
+          unitLabel="hours (from now)"
+          onChange={(value) => setHours(value)}
+          disabled={complete}
         />
         <OptionalNumInput
-          description = "Allow for more responders"
-          unitLabel = "additional responders"
-          onChange = {(value) => setAddResp(value)}
-          disabled = {complete}
+          description="Allow for more responders"
+          unitLabel="additional responders"
+          onChange={(value) => setAddResp(value)}
+          disabled={complete}
         />
       </fieldset>
       <div className="SurveyEditModal-control">
@@ -127,9 +145,9 @@ const SurveyEditModal = ({ meta, onClose }) => {
           disabled={!editing}
           onClick={onCancel}
         />
-      </div>      
+      </div>
     </Modal>
   );
-}
+};
 
 export default SurveyEditModal;
