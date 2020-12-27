@@ -5,7 +5,7 @@ import { Link, Redirect, Route, Switch, useHistory, useRouteMatch } from 'react-
 //My sub-routes and stuff
 import SurveyInfo from './SurveyInfo';
 import Create from './Create';
-import Settings from './Settings';
+import Manage from './Manage';
 import SurveyCatalog from './SurveyCatalog'; 
 
 
@@ -20,7 +20,7 @@ const Creator = () => {
   const { path } = useRouteMatch();
   const pathNew = `${path}/new`;
   const pathMonitor = `${path}/tracker`;
-  const pathSettings = `${path}/settings`;
+  const pathManage = `${path}/manage`;
 
   const history = useHistory();
   const goTo = (path) => {
@@ -52,20 +52,20 @@ const Creator = () => {
               </li>
               <li>
                 <div className="Creator-link">
-                  <AppBtn onClick={() => goTo(pathSettings)}>
+                  <AppBtn onClick={() => goTo(pathManage)}>
                     <SettingsIcon />
                   </AppBtn>
-                  <p><Link to={pathSettings}>Manage</Link> your account and associated teams</p>
+                  <p><Link to={pathManage}>Manage</Link> your account and associated teams</p>
                 </div>
               </li>
             </ul>    
           </div>
         </Route>
-        <Route path={`${path}/new`} component={Create}></Route>
-        <Route exact path={`${path}/tracker`} component={SurveyCatalog}></Route>
-        <Route path={`${path}/tracker/:teamId`} component={SurveyCatalog}></Route>
+        <Route path={pathNew} component={Create}></Route>
+        <Route exact path={pathMonitor} component={SurveyCatalog}></Route>
+        <Route path={`${pathMonitor}/:teamId`} component={SurveyCatalog}></Route>
         <Route path={`${path}/info/:surveyId`} component={SurveyInfo}></Route>
-        <Route exact path={`${path}/settings`} component={Settings}></Route>
+        <Route exact path={pathManage} component={Manage}></Route>
         <Redirect from={`${path}/`} to={`${path}/main`} />
       </Switch>
     </>
