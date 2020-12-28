@@ -1,9 +1,10 @@
 import React, { useState } from "react";
 import AppBtn from "./AppBtn";
+import useAppContext from "../hooks/AppContext"
+
+import { checkNewName, createNewTeam } from "../helpers/team";
 import { ReactComponent as CancelIcon } from "../icons/cancel.svg";
 import { ReactComponent as ConfirmIcon } from "../icons/confirmation.svg";
-
-import { db } from "../services/firebase";
 
 import "./NewTeam.css";
 
@@ -11,8 +12,8 @@ import "./NewTeam.css";
 const NewTeam = ({ user, oldTeamNames, onDone }) => {
   // Add a new team
   const [name, setName] = useState("");
-  const [writeError, setWriteError] = useState(null);
-  
+  const {showAlert} = useAppContext();
+
   const editTeamName = (e) => {
     setName(e.target.value);
   };
@@ -20,21 +21,11 @@ const NewTeam = ({ user, oldTeamNames, onDone }) => {
   const addNewTeam = async (e) => {
     e.preventDefault();
     try {
-      setWriteError(null);
-      if (!isNaN(name)) throw new Error("Team name can't be a number"); //also checked in backend
-      if (oldTeamNames.includes(name))
-        throw new Error("Team name already exists"); //no unique-check in backend :-/
-
-      await db.ref(`teams/${user.uid}/teams`).push({
-        alias: name,
-        createTime: { ".sv": "timestamp" }, //server-side timestamp generation
-      });
-
+      await createNewTeam(user, name, oldTeamNames);
       setName("");
       if (onDone) onDone();
     } catch (e) {
-      console.log(e);
-      setWriteError(e.message);
+      showAlert("Data backend error", e.message, "Error");
     }
   };
 
@@ -51,7 +42,7 @@ const NewTeam = ({ user, oldTeamNames, onDone }) => {
     }
   }
 
-  const confirmDisabled = (name.length === 0) || oldTeamNames.includes(name);
+  const confirmDisabled = !checkNewName(name, oldTeamNames);
   
   return (
     <div className="NewTeam">
@@ -71,12 +62,6 @@ const NewTeam = ({ user, oldTeamNames, onDone }) => {
           </AppBtn>
         </div>
       </form>
-      {writeError ? (
-        <>
-          <hr></hr>
-          <p>{writeError}</p>
-        </>
-      ) : null}
     </div>
   );
 };
