@@ -1,0 +1,52 @@
+/* .TeamAdmin {
+  border: 1px dotted blue;
+} */
+
+/* This styling is very much (implicitly) tied to the Teams styling
+ * The idea is to provide a "drop down" under the Teams component
+ * which would probably be more robust if these two components were
+ * styled by some common rules. As it is now, any adjustment of the
+ * Teams styling might have consequences for how well the styling
+ * here works.
+ */
+.TeamAdmin-operations {
+  display: flex;
+  flex-direction: column;
+  margin-top: .7em;
+  margin-left: 1.6em;
+  border-left: 1px solid var(--color-border);
+  transition: max-height .6s ease-in-out;
+  max-height: 0;
+  overflow: hidden;
+}
+
+.TeamAdmin-operations-active {
+  max-height: 100vh;
+}
+
+.TeamAdmin-operations > ul {
+  margin: 0;
+  padding-left: .7em;
+}
+
+.TeamAdmin-operations li {
+  margin: 1em 0 .5em 0;
+  list-style-type: none;
+}
+
+.TeamAdmin-operations li:first-child {
+  margin-top: 0;
+}
+
+.TeamAdmin-operations li:last-child {
+  margin-bottom: 0;
+}
+
+.TeamAdmin-operation {
+  display: flex;
+  align-items: center;
+}
+
+.TeamAdmin-operation > p {
+  margin-left: .5em;
+}
