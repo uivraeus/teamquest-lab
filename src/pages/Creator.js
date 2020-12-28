@@ -7,7 +7,8 @@ import SurveyInfo from './SurveyInfo';
 import Create from './Create';
 import Manage from './Manage';
 import SurveyCatalog from './SurveyCatalog'; 
-
+import ChangePassword from './ChangePassword';
+import TerminateAccount from './TerminateAccount';
 
 import AppBtn from "../components/AppBtn";
 import { ReactComponent as SurveyNewIcon } from "../icons/survey-new.svg";
@@ -21,6 +22,8 @@ const Creator = () => {
   const pathNew = `${path}/new`;
   const pathMonitor = `${path}/tracker`;
   const pathManage = `${path}/manage`;
+  const pathPassword = `${path}/password`;
+  const pathTerminate = `${path}/terminate`;
 
   const history = useHistory();
   const goTo = (path) => {
@@ -66,6 +69,8 @@ const Creator = () => {
         <Route path={`${pathMonitor}/:teamId`} component={SurveyCatalog}></Route>
         <Route path={`${path}/info/:surveyId`} component={SurveyInfo}></Route>
         <Route exact path={pathManage} component={Manage}></Route>
+        <Route exact path={pathPassword} component={ChangePassword}></Route>
+        <Route exact path={pathTerminate} component={TerminateAccount}></Route>
         <Redirect from={`${path}/`} to={`${path}/main`} />
       </Switch>
     </>

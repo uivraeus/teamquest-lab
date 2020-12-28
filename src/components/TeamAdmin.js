@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import AppBtn from "../components/AppBtn";
+import RenameTeamModal from "../components/RenameTeamModal";
 import Teams from "../components/Teams";
 
 import { ReactComponent as RenameIcon } from "../icons/edit.svg";
@@ -15,7 +16,11 @@ import "./TeamAdmin.css";
 
 //"user" always valid here (parent's responsibility)
 const TeamAdmin = ({ user }) => {
+  //What the user selects via the Teams component
   const [selectedTeamId, setSelectedTeamId] = useState(null);
+
+  //Control of modal for renaming selected team
+  const [renameTeamId, setRenameTeamId] = useState(null);
 
   const operationsClassNames =
     "TeamAdmin-operations" +
@@ -28,7 +33,11 @@ const TeamAdmin = ({ user }) => {
         <ul>
           <li>
             <div className="TeamAdmin-operation">
-              <AppBtn onClick={() => {}}>
+              <AppBtn
+                onClick={() => {
+                  setRenameTeamId(selectedTeamId);
+                }}
+              >
                 <RenameIcon />
               </AppBtn>
               <p>Change the team name</p>
@@ -39,7 +48,7 @@ const TeamAdmin = ({ user }) => {
               <AppBtn onClick={() => {}}>
                 <TransferIcon />
               </AppBtn>
-              <p>Transfer team to someone else</p>
+              <p>Transfer the team to someone else</p>
             </div>
           </li>
           <li>
@@ -47,11 +56,16 @@ const TeamAdmin = ({ user }) => {
               <AppBtn onClick={() => {}}>
                 <DeleteIcon />
               </AppBtn>
-              <p>Delete team and its surveys</p>
+              <p>Delete the team and its surveys</p>
             </div>
           </li>
         </ul>
       </div>
+      <RenameTeamModal
+        user={user}
+        teamId={renameTeamId}
+        onClose={() => setRenameTeamId(null)}
+      />
     </>
   );
 };

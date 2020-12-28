@@ -14,6 +14,7 @@
   flex-direction: column;
   margin-top: .7em;
   margin-left: 1.6em;
+  margin-bottom: 1em;
   border-left: 1px solid var(--color-border);
   transition: max-height .6s ease-in-out;
   max-height: 0;

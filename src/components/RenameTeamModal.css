@@ -1,0 +1,12 @@
+.RenameTeamModal-input-control {
+  display: flex;
+}
+
+.RenameTeamModal input {
+  min-width: 13em;
+  margin: 0;
+}
+
+.RenameTeamModal button {
+  margin-left: .5em;
+}
