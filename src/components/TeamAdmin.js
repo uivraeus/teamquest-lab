@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState } from "react";
 import AppBtn from "../components/AppBtn";
-import { checkNewName, renameTeam } from "../helpers/team";
+import { checkNewName, deleteTeam, renameTeam } from "../helpers/team";
 import Teams from "../components/Teams";
 import TextInputModal from "../components/TextInputModal";
 import useAppContext from "../hooks/AppContext";
@@ -19,7 +19,7 @@ import "./TeamAdmin.css";
 
 //"user" always valid here (parent's responsibility)
 const TeamAdmin = ({ user }) => {
-  const { showAlert } = useAppContext();
+  const { showAlert, queryConfirm } = useAppContext();
 
   //What the user selects via the Teams component
   const [selectedTeam, setSelectedTeam] = useState(null);
@@ -67,6 +67,39 @@ const TeamAdmin = ({ user }) => {
   //deletion I think it is worth being certain we have a consistent state
   const consistentState = surveysTeamId === selectedTeamId;
 
+  //The GUI-part of the team-deletion procedure
+  const onDeleteTeam = (e) => {
+    if (selectedTeamId !== e.target.id) {
+      showAlert("Inconsistent state", "Something is not right. Aborting delete operation", "Error");
+      return;
+    }
+    const teamName = selectedTeam.alias;
+    queryConfirm(
+      "Delete team and surveys",
+      `Are you sure you want to permanently delete the team "${teamName}" and all associated surveys?`,
+      (confirmed) => {
+        if (confirmed) {
+          queryConfirm(
+            "Really want to do this?",
+            "This operation is final and cannot be undone!",
+            (confirmed) => {
+              if (confirmed) {
+                deleteTeam(user, e.target.id)
+                .then(result => {
+                  //TODO/TBD? cancel spinner?
+                })
+                .catch(err => {
+                  showAlert("Data backend error", err.message, "Error");
+                })
+              }
+            },
+            "Continue/Abort"            
+          )
+        }
+      }
+    );
+  };
+
   //Render helpers
   const headingStr = (selectedTeam && surveys && consistentState)
     ? (`Created ${new Date(selectedTeam.createTime).toLocaleDateString()}, surveys: ${surveys.length}`)
@@ -112,7 +145,8 @@ const TeamAdmin = ({ user }) => {
           <li>
             <div className="TeamAdmin-operation">
               <AppBtn
-                onClick={() => {}}
+                onClick={onDeleteTeam}
+                id={selectedTeamId}
                 disabled={!consistentState}
               >
                 <DeleteIcon />

@@ -58,3 +58,23 @@ export const renameTeam = async (user, teamId, teamName, oldTeamNames) => {
     throw new Error(errMsg);
   }
 }
+
+//Delete a team (permanently). All associated surveys will also be deleted
+//This operation cannot be undone!
+export const deleteTeam = async (user, teamId) => {
+  try {
+    console.log("TODO: Deleting team", teamId, "...");
+    return new Promise((resolve,reject) => setTimeout(() => {
+      console.log("simulated delete done");
+      try {
+        resolve(true);
+      } catch(e) {
+        const errMsg = "Error during deletion of team. " + e.message;
+        reject(new Error(errMsg));
+      }
+    }, 1000));
+  } catch (e) {
+    const errMsg = "Could not initiate deletion of team. " + e.message;
+    throw new Error(errMsg);
+  }
+}
