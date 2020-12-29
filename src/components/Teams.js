@@ -9,9 +9,14 @@ import { ReactComponent as NewTeamIcon } from "../icons/newteam.svg";
 import "./Teams.css";
 
 //"user" always valid here (parent's responsibility)
-const Teams = ({ user, enableEdit=true, onSelected, extSelection = null }) => {
+const Teams = ({ user, enableEdit=true, onSelected, onAvailableTeams = null, extSelection = null }) => {
   //Defined teams (as read from database)
   const { teams, readError } = useOwnedTeams();
+  useEffect(() => {
+    if (teams && onAvailableTeams) {
+      onAvailableTeams(teams);
+    }
+  }, [teams, onAvailableTeams])
 
   //We're using a "controlled input" for the team selection
   const [selected, setSelected] = useState(null);

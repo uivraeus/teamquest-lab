@@ -1,0 +1,12 @@
+.TextInputModal-input-control {
+  display: flex;
+}
+
+.TextInputModal input {
+  min-width: 13em;
+  margin: 0;
+}
+
+.TextInputModal button {
+  margin-left: .5em;
+}
