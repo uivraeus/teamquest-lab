@@ -16,15 +16,18 @@
   margin-left: 1.6em;
   margin-bottom: 1em;
   border-left: 1px solid var(--color-border);
-  transition: max-height .6s ease-in-out;
   max-height: 0;
   overflow: hidden;
+  transition: max-height .6s ease-in-out;
 }
 
 .TeamAdmin-operations-active {
   max-height: 100vh;
 }
 
+.TeamAdmin-operations > h4 {
+  padding-left: .5em;
+}
 .TeamAdmin-operations > ul {
   margin: 0;
   padding-left: .7em;

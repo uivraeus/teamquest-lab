@@ -23,7 +23,9 @@ const Teams = ({ user, enableEdit=true, onSelected, onAvailableTeams = null, ext
   const onChecked = (e) => {
     //console.log("onChecked", selected, "->", e.target.value);
     if (!extSelection) setSelected(e.target.value);
-    onSelected(e.target.value); //notify parent (who may update extSelection)
+    //notify parent (who may update extSelection)
+    const teamObject = (e.target.value && teams.find(t => t.id === e.target.value)) || null;
+    onSelected(e.target.value, teamObject);
   };
   useEffect(() =>{
     setSelected(extSelection);

@@ -1,9 +1,10 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import AppBtn from "../components/AppBtn";
 import { checkNewName, renameTeam } from "../helpers/team";
 import Teams from "../components/Teams";
 import TextInputModal from "../components/TextInputModal";
-import useAppContext from "../hooks/AppContext"
+import useAppContext from "../hooks/AppContext";
+import useTeamTracker from "../hooks/TeamTracker";
 
 import { ReactComponent as RenameIcon } from "../icons/edit.svg";
 import { ReactComponent as TransferIcon } from "../icons/transferteam.svg";
@@ -18,11 +19,12 @@ import "./TeamAdmin.css";
 
 //"user" always valid here (parent's responsibility)
 const TeamAdmin = ({ user }) => {
-  const {showAlert} = useAppContext();
+  const { showAlert } = useAppContext();
 
   //What the user selects via the Teams component
-  const [selectedTeamId, setSelectedTeamId] = useState(null);
-
+  const [selectedTeam, setSelectedTeam] = useState(null);
+  const selectedTeamId = selectedTeam ? selectedTeam.id : null;
+  
   //Also, let the Teams component share its view of available teams
   //Note: important to apply useCallback here to not get stuck in a re-render loop
   //(Teams component doesn't do any clever equality check on onAvailableTeams)
@@ -30,13 +32,15 @@ const TeamAdmin = ({ user }) => {
   const onAvailableTeams = useCallback((teams) => {
     if (teams) {
       setAvailableTeamNames(teams.map((t) => t.alias));
+    } else {
+      setAvailableTeamNames(null);
     }
-  },[]);
+  }, []);
 
   //Control of modal for renaming selected team
   const [renameTeamId, setRenameTeamId] = useState(null);
   const onRenameResult = async (result) => {
-    if (result.id && (result.id === selectedTeamId) && result.value && availableTeamNames) {
+    if (result.id && (selectedTeamId === result.id) && result.value && availableTeamNames) {
       try {
         await renameTeam(user, result.id, result.value, availableTeamNames);
       } catch (e) {
@@ -49,18 +53,37 @@ const TeamAdmin = ({ user }) => {
     return availableTeamNames && checkNewName(value, availableTeamNames);
   };
 
+  //Keep track of all associated surveys, both for displaying "summary"
+  //and for enumerating through when deleting all surveys
+  const { surveys, readError, surveysTeamId } = useTeamTracker(selectedTeamId);
+  useEffect(() => {
+    if (readError) {
+      console.log(readError);
+    }
+  }, [readError]);
+
+  //There is a short delay between switching team id and "surveys" being
+  //being updated. Normally not a big thing but in context of permanent
+  //deletion I think it is worth being certain we have a consistent state
+  const consistentState = surveysTeamId === selectedTeamId;
+
+  //Render helpers
+  const headingStr = (selectedTeam && surveys && consistentState)
+    ? (`Created ${new Date(selectedTeam.createTime).toLocaleDateString()}, surveys: ${surveys.length}`)
+    : "Synchronizing...";
   const operationsClassNames =
     "TeamAdmin-operations" +
-    (selectedTeamId ? " TeamAdmin-operations-active" : "");
+    ((selectedTeamId && consistentState) ? " TeamAdmin-operations-active" : "");
 
   return (
     <>
       <Teams
         user={user}
-        onSelected={setSelectedTeamId}
+        onSelected={(i, o) => setSelectedTeam(o)}
         onAvailableTeams={onAvailableTeams}
       />
       <div className={operationsClassNames}>
+        <h4>{headingStr}</h4>
         <ul>
           <li>
             <div className="TeamAdmin-operation">
@@ -68,6 +91,7 @@ const TeamAdmin = ({ user }) => {
                 onClick={() => {
                   setRenameTeamId(selectedTeamId);
                 }}
+                disabled={!consistentState}
               >
                 <RenameIcon />
               </AppBtn>
@@ -76,7 +100,10 @@ const TeamAdmin = ({ user }) => {
           </li>
           <li>
             <div className="TeamAdmin-operation">
-              <AppBtn onClick={() => {}}>
+              <AppBtn 
+                onClick={() => {}}
+                disabled={!consistentState}
+              >
                 <TransferIcon />
               </AppBtn>
               <p>Transfer the team to someone else</p>
@@ -84,7 +111,10 @@ const TeamAdmin = ({ user }) => {
           </li>
           <li>
             <div className="TeamAdmin-operation">
-              <AppBtn onClick={() => {}}>
+              <AppBtn
+                onClick={() => {}}
+                disabled={!consistentState}
+              >
                 <DeleteIcon />
               </AppBtn>
               <p>Delete the team and its surveys</p>

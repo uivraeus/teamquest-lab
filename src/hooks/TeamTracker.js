@@ -22,12 +22,13 @@ const convertFromRaw = (surveys) => {
   });
 };
 
-//returns { surveys, readError }
+//returns { surveys, readError, surveysTeamId }
 function useTeamTracker(teamId) {
   
   //Responses, incl. meta-data for all surveys for the team
   //(incl. recent ones, which may still be open)
   const [surveys, setSurveys] = useState(null);
+  const [surveysTeamId, setSurveysTeamId] = useState(null);
   const [readError, setReadError] = useState(null);
  
   useEffect( () => {
@@ -47,6 +48,7 @@ function useTeamTracker(teamId) {
             setSurveys([]);
           }          
           setReadError(null);
+          setSurveysTeamId(teamId);
         });
       } catch(e) {
         console.log(e);
@@ -57,6 +59,7 @@ function useTeamTracker(teamId) {
     }
 
     return () => {
+      setSurveysTeamId(null);
       if (dbDataRef) {
         //Unsubscribe from prev team's updates
         try {
@@ -68,7 +71,7 @@ function useTeamTracker(teamId) {
     };
   }, [teamId]);
   
-  return { surveys, readError }
+  return { surveys, readError, surveysTeamId }
 }
 
 export default useTeamTracker;
