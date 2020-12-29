@@ -43,6 +43,7 @@ const AlertModal = ({ alert, onClose = () => {} }) => {
       onClose={() => onClose()}
       closeOnOverlayClick={false}
       center
+      showCloseIcon={false}
     >
       <div className={alertTypeClass}>
         <div className="Alert-Heading">
