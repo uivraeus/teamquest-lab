@@ -37,10 +37,11 @@ const QueryModal = ({ query, onClose = () => {} }) => {
   const positiveText = content.type.split("/")[0];
   const negativeText = content.type.split("/")[1];
   
-  //Handle response by invoking the result-callback and closing
+  //Handle response by closing and invoking the result-callback
   const onResponse = (positive) => {
-    query && query.resultCb && query.resultCb(positive);
+    const cb = (query && query.resultCb) ? query.resultCb : null;
     onClose();
+    cb && cb(positive);
   }
   return (
     <Modal open={!!query} onClose={() => onResponse(false)} closeOnOverlayClick={false} center>
