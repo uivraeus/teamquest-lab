@@ -1,4 +1,5 @@
 import { db } from '../services/firebase';
+import { deleteSurvey, fetchAllId } from './survey';
 
 //Misc functions for accessing and modifying team meta-data
 //(very tuned to how we use Firebase)
@@ -63,18 +64,25 @@ export const renameTeam = async (user, teamId, teamName, oldTeamNames) => {
 //This operation cannot be undone!
 export const deleteTeam = async (user, teamId) => {
   try {
-    console.log("TODO: Deleting team", teamId, "...");
-    return new Promise((resolve,reject) => setTimeout(() => {
-      console.log("simulated delete done");
-      try {
-        resolve(true);
-      } catch(e) {
-        const errMsg = "Error during deletion of team. " + e.message;
-        reject(new Error(errMsg));
-      }
-    }, 1000));
+    //First "suspend" the team to prevent concurrent creation of new surveys
+    await db.ref(`teams/${user.uid}/teams/${teamId}`).update({
+      suspend: true
+    });
+
+    //Then, delete all surveys of this team
+    const surveyIds = await fetchAllId(teamId);
+    const delPromises = surveyIds.map(sId => deleteSurvey(sId));
+    const delOutcome = await Promise.allSettled(delPromises);
+    const numFailed = (delOutcome.filter(o => o.status === "rejected")).length;
+    if (numFailed > 0) {
+      throw new Error(`${numFailed} surveys could not be deleted`);
+    }
+
+    //Finally, delete the actual team node
+    await db.ref(`teams/${user.uid}/teams/${teamId}`).set(null);
+
   } catch (e) {
-    const errMsg = "Could not initiate deletion of team. " + e.message;
+    const errMsg = "Error during deletion of team. " + e.message;
     throw new Error(errMsg);
   }
 }

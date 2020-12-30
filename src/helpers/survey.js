@@ -78,6 +78,25 @@ export const cancelAll = (teamId, dbDataRef) => {
   }
 };
 
+//Onetime fetch IDs (only) of all surveys for a specific team
+//Result is array if IDs
+//(light-weight variant of getAll, without any subscription)
+export const fetchAllId = async (teamId) => {
+  try {
+    const ref = db.ref("surveys").orderByChild("meta/teamId").equalTo(teamId);
+    const snapshot = await ref.once("value");
+    let surveyIds = [];
+    snapshot.forEach(snap => {
+      surveyIds.push(snap.key);
+    });
+    return surveyIds;
+  } catch(e) {
+    const errMsg = "Could not fetch survey IDs for team.";
+    console.log(errMsg, e);
+    throw new Error(errMsg);
+  }    
+} 
+
 //Derive latest set of questions
 //returns (promise of) {id, num}
 export const getLatestQuestionSet = async () => {
