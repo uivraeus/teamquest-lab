@@ -100,6 +100,14 @@ const TeamAdmin = ({ user }) => {
     );
   };
 
+  const initiateTransfer = (e) => {
+    if (selectedTeamId !== e.target.id) {
+      showAlert("Inconsistent state", "Something is not right. Aborting transfer operation", "Error");
+      return;
+    }
+    showAlert("TODO: Transfer team", "This feature is not implemented yet");
+  }
+
   //Render helpers
   const headingStr = (selectedTeam && surveys && consistentState)
     ? ((`Created ${new Date(selectedTeam.createTime).toLocaleDateString()}`) +
@@ -126,6 +134,7 @@ const TeamAdmin = ({ user }) => {
                 onClick={() => {
                   setRenameTeamId(selectedTeamId);
                 }}
+                id={selectedTeamId}
                 disabled={!consistentState}
               >
                 <RenameIcon />
@@ -136,7 +145,8 @@ const TeamAdmin = ({ user }) => {
           <li>
             <div className="TeamAdmin-operation">
               <AppBtn 
-                onClick={() => {}}
+                onClick={initiateTransfer}
+                id={selectedTeamId}
                 disabled={!consistentState}
               >
                 <TransferIcon />
