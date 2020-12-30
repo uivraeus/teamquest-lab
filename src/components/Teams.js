@@ -9,7 +9,7 @@ import { ReactComponent as NewTeamIcon } from "../icons/newteam.svg";
 import "./Teams.css";
 
 //"user" always valid here (parent's responsibility)
-const Teams = ({ user, enableEdit=true, onSelected, onAvailableTeams = null, extSelection = null }) => {
+const Teams = ({ user, enableEdit=true, onSelected, onAvailableTeams = null, extSelection = null, blockSuspended = true }) => {
   //Defined teams (as read from database)
   const { teams, readError } = useOwnedTeams();
   useEffect(() => {
@@ -105,10 +105,10 @@ const Teams = ({ user, enableEdit=true, onSelected, onAvailableTeams = null, ext
                     key={team.id}
                     name="team"
                     value={team.id}
-                    text={team.alias}
+                    text={team.alias + (team.suspend ? " ⚠":"")}
                     checked={selected === team.id}
                     onChange={onChecked}
-                    disabled={newTeamVisible}
+                    disabled={newTeamVisible || (blockSuspended && team.suspend)}
                   />
                 );
               })}

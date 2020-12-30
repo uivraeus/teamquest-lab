@@ -102,7 +102,8 @@ const TeamAdmin = ({ user }) => {
 
   //Render helpers
   const headingStr = (selectedTeam && surveys && consistentState)
-    ? (`Created ${new Date(selectedTeam.createTime).toLocaleDateString()}, surveys: ${surveys.length}`)
+    ? ((`Created ${new Date(selectedTeam.createTime).toLocaleDateString()}`) +
+        (selectedTeam.suspend ? " - ⚠:suspended" : `, surveys: ${surveys.length}`))
     : "Synchronizing...";
   const operationsClassNames =
     "TeamAdmin-operations" +
@@ -114,6 +115,7 @@ const TeamAdmin = ({ user }) => {
         user={user}
         onSelected={(i, o) => setSelectedTeam(o)}
         onAvailableTeams={onAvailableTeams}
+        blockSuspended={false}
       />
       <div className={operationsClassNames}>
         <h4>{headingStr}</h4>
