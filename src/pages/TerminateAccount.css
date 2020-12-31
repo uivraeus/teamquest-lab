@@ -1,0 +1,23 @@
+.TerminateAccount button {
+  margin-top: 1em;
+}
+
+.TerminateAccount > .CheckboxLabel {
+  margin-top: 1em;
+  margin-bottom: 1em;
+}
+
+.TerminateAccount > svg {
+  max-width: 4em;
+  margin-top: .5em;
+  fill: var(--color-bkg-btn-accent);
+  transition: fill .3s ease-in;
+}
+
+.TerminateAccount-confirmed > svg {
+  fill: var(--color-text-warning);
+}
+
+.TerminateAccount-terminating > svg {
+  fill: var(--color-text-error);
+}

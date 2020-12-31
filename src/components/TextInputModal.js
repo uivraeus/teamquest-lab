@@ -17,7 +17,7 @@ const TextInputModal = ({
   id = null,
   label = "Enter your input",
   validateFn = (value) => value.length > 0,
-  numeric = false,
+  type = "text",
   onResult,
 }) => {
   //Controlled input
@@ -68,7 +68,7 @@ const TextInputModal = ({
             autoFocus
             onChange={(e) => setValue(e.target.value)}
             value={value}
-            type={numeric ? "number" : "text"}
+            type={type}
             name="modal-text-input"
             id={`input-${id}`}
           ></input>

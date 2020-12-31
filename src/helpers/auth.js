@@ -23,3 +23,15 @@ export function update(oldPassword, password) {
     .reauthenticateWithCredential(cred)
     .then(() => currentUser.updatePassword(password));
 }
+
+export function deleteAccount(password) {
+  const currentUser = auth().currentUser;
+  const cred = auth.EmailAuthProvider.credential(
+    currentUser.email,
+    password
+  );
+
+  return currentUser
+    .reauthenticateWithCredential(cred)
+    .then(() => currentUser.delete());
+}

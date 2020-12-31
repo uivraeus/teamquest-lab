@@ -75,7 +75,7 @@ export const deleteTeam = async (user, teamId) => {
     const delOutcome = await Promise.allSettled(delPromises);
     const numFailed = (delOutcome.filter(o => o.status === "rejected")).length;
     if (numFailed > 0) {
-      throw new Error(`${numFailed} surveys could not be deleted`);
+      throw new Error(`${numFailed} survey(s) could not be deleted`);
     }
 
     //Finally, delete the actual team node
@@ -86,3 +86,22 @@ export const deleteTeam = async (user, teamId) => {
     throw new Error(errMsg);
   }
 }
+
+//Onetime fetch of IDs (only) of all teams for a specific user
+//Result is array if IDs
+export const fetchAllTeamId = async (user) => {
+  try {
+    const ref = db.ref(`teams/${user.uid}/teams`);
+    const snapshot = await ref.once("value");
+    let teamIds = [];
+    snapshot.forEach(snap => {
+      teamIds.push(snap.key);
+    });
+    return teamIds;
+  } catch(e) {
+    const errMsg = "Could not fetch team IDs for user.";
+    console.log(errMsg, e);
+    throw new Error(errMsg);
+  }
+}
+ 

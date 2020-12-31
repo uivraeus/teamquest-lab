@@ -78,7 +78,7 @@ export const cancelAll = (teamId, dbDataRef) => {
   }
 };
 
-//Onetime fetch IDs (only) of all surveys for a specific team
+//Onetime fetch of IDs (only) of all surveys for a specific team
 //Result is array if IDs
 //(light-weight variant of getAll, without any subscription)
 export const fetchAllId = async (teamId) => {
