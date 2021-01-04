@@ -18,7 +18,7 @@ const useOwnedTeams = () => {
     let onNewData = null; 
     if (user) {
       //Subscribe to teams data for the user;
-      ref = db.ref(`teams/${user.uid}/teams`).orderByChild("alias");
+      ref = db.ref("teams").orderByChild("uid").equalTo(user.uid)
       setReadError(null);
       try {
         onNewData = ref.on("value", (snapshot) => {
@@ -28,6 +28,7 @@ const useOwnedTeams = () => {
               dbTeams.push({ id: snap.key, ...snap.val() });
             });
             //console.log("new 'teams' received, last:", !dbTeams.length ? "<none>" : dbTeams[dbTeams.length - 1].alias);
+            //TODO: sort teams by "alias"?
             setTeams(dbTeams);
           } catch (e) {
             console.log(e);

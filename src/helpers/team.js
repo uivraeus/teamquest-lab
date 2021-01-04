@@ -32,11 +32,12 @@ export const validateNewName = (newName, oldNames) => {
   }
 }
 
-//Create a new team under the specified user
+//Create a new team owned by the specified user
 export const createNewTeam = async (user, teamName, oldTeamNames) => {
   try {
     validateNewName(teamName, oldTeamNames);
-    await db.ref(`teams/${user.uid}/teams`).push({
+    await db.ref(`teams`).push({
+      uid: user.uid,
       alias: teamName,
       createTime: { ".sv": "timestamp" }, //server-side timestamp generation
     });
@@ -46,11 +47,11 @@ export const createNewTeam = async (user, teamName, oldTeamNames) => {
   }
 }
 
-//Rename an existing team owned by the specified user
-export const renameTeam = async (user, teamId, teamName, oldTeamNames) => {
+//Rename an existing team
+export const renameTeam = async (teamId, teamName, oldTeamNames) => {
   try {
     validateNewName(teamName, oldTeamNames);
-    await db.ref(`teams/${user.uid}/teams/${teamId}`).update({
+    await db.ref(`teams/${teamId}`).update({
       alias: teamName,
       lastRenameTime: { ".sv": "timestamp" }, //server-side timestamp generation
     });
@@ -62,11 +63,11 @@ export const renameTeam = async (user, teamId, teamName, oldTeamNames) => {
 
 //Delete a team (permanently). All associated surveys will also be deleted
 //This operation cannot be undone!
-export const deleteTeam = async (user, teamId) => {
+export const deleteTeam = async (teamId) => {
   try {
     //First "suspend" the team to prevent concurrent creation of new surveys
-    await db.ref(`teams/${user.uid}/teams/${teamId}`).update({
-      suspend: true
+    await db.ref(`teams/${teamId}`).update({
+      suspendTime: {".sv": "timestamp"}
     });
 
     //Then, delete all surveys of this team
@@ -79,7 +80,7 @@ export const deleteTeam = async (user, teamId) => {
     }
 
     //Finally, delete the actual team node
-    await db.ref(`teams/${user.uid}/teams/${teamId}`).set(null);
+    await db.ref(`teams/${teamId}`).set(null);
 
   } catch (e) {
     const errMsg = "Error during deletion of team. " + e.message;
@@ -91,7 +92,7 @@ export const deleteTeam = async (user, teamId) => {
 //Result is array if IDs
 export const fetchAllTeamId = async (user) => {
   try {
-    const ref = db.ref(`teams/${user.uid}/teams`);
+    const ref = db.ref("teams").orderByChild("uid").equalTo(user.uid);
     const snapshot = await ref.once("value");
     let teamIds = [];
     snapshot.forEach(snap => {

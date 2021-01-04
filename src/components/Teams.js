@@ -105,10 +105,10 @@ const Teams = ({ user, enableEdit=true, onSelected, onAvailableTeams = null, ext
                     key={team.id}
                     name="team"
                     value={team.id}
-                    text={team.alias + (team.suspend ? " ⚠":"")}
+                    text={team.alias + (!!team.suspendTime ? " ⚠":"")}
                     checked={selected === team.id}
                     onChange={onChecked}
-                    disabled={newTeamVisible || (blockSuspended && team.suspend)}
+                    disabled={newTeamVisible || (blockSuspended && !!team.suspendTime)}
                   />
                 );
               })}

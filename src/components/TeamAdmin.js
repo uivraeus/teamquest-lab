@@ -42,7 +42,7 @@ const TeamAdmin = ({ user }) => {
   const onRenameResult = async (result) => {
     if (result.id && (selectedTeamId === result.id) && result.value && availableTeamNames) {
       try {
-        await renameTeam(user, result.id, result.value, availableTeamNames);
+        await renameTeam(result.id, result.value, availableTeamNames);
       } catch (e) {
         showAlert("Data backend error", e.message, "Error");
       }
@@ -84,7 +84,7 @@ const TeamAdmin = ({ user }) => {
             "This operation is final and cannot be undone!",
             (confirmed) => {
               if (confirmed) {
-                deleteTeam(user, e.target.id)
+                deleteTeam(e.target.id)
                 .then(result => {
                   //TODO/TBD? cancel spinner?
                 })
@@ -111,7 +111,7 @@ const TeamAdmin = ({ user }) => {
   //Render helpers
   const headingStr = (selectedTeam && surveys && consistentState)
     ? ((`Created ${new Date(selectedTeam.createTime).toLocaleDateString()}`) +
-        (selectedTeam.suspend ? " - ⚠:suspended" : `, surveys: ${surveys.length}`))
+        (!!selectedTeam.suspendTime ? " - ⚠:suspended" : `, surveys: ${surveys.length}`))
     : "Synchronizing...";
   const operationsClassNames =
     "TeamAdmin-operations" +
