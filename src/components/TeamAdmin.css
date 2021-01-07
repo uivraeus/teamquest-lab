@@ -54,3 +54,8 @@
 .TeamAdmin-operation > p {
   margin-left: .5em;
 }
+
+.TeamAdmin-transfer-status {
+  margin-left: .5em;
+  color: var(--color-text-accent);
+}

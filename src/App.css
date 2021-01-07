@@ -19,6 +19,7 @@
   --color-text-disabled: rgb(196, 196, 196);
   --color-text-error: rgb(196, 0, 0);
   --color-text-warning: rgb(160, 87, 3);
+  --color-text-accent: rgb(3, 40, 160);
   --color-text-data: rgb(36, 63, 145);
   --color-link: rgb(2, 34, 116);
   --color-link-focus: rgb(40, 98, 245);

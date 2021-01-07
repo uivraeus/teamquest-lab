@@ -4,6 +4,8 @@ import { Link, Redirect, Route, Switch, useHistory, useRouteMatch } from 'react-
 
 //My sub-routes and stuff
 import SurveyInfo from './SurveyInfo';
+import Inherit from './Inherit';
+import TransferInfo from './TransferInfo';
 import Create from './Create';
 import Manage from './Manage';
 import SurveyCatalog from './SurveyCatalog'; 
@@ -24,6 +26,8 @@ const Creator = () => {
   const pathManage = `${path}/manage`;
   const pathPassword = `${path}/password`;
   const pathTerminate = `${path}/terminate`;
+  const pathInherit = `${path}/inherit`
+  const pathTransfer = `${path}/transfer`
 
   const history = useHistory();
   const goTo = (path) => {
@@ -68,6 +72,8 @@ const Creator = () => {
         <Route exact path={pathMonitor} component={SurveyCatalog}></Route>
         <Route path={`${pathMonitor}/:teamId`} component={SurveyCatalog}></Route>
         <Route path={`${path}/info/:surveyId`} component={SurveyInfo}></Route>
+        <Route path={`${pathInherit}/:transferId`} component={Inherit}></Route>
+        <Route path={`${pathTransfer}/:transferId`} component={TransferInfo}></Route>
         <Route exact path={pathManage} component={Manage}></Route>
         <Route exact path={pathPassword} component={ChangePassword}></Route>
         <Route exact path={pathTerminate} component={TerminateAccount}></Route>

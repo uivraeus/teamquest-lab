@@ -16,7 +16,7 @@ export const deleteAccountAndData = async (user, password) => {
 
     //Then, delete all surveys of this team
     const teamIds = await fetchAllTeamId(user);
-    const delPromises = teamIds.map(tId => deleteTeam(tId));
+    const delPromises = teamIds.map(tId => deleteTeam(tId, user));
     const delOutcome = await Promise.allSettled(delPromises);
     const numFailed = (delOutcome.filter(o => o.status === "rejected")).length;
     if (numFailed > 0) {

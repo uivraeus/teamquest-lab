@@ -1,0 +1,35 @@
+.TransferInfo {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.TransferInfo-url {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: space-between;
+  width: 100%;
+  max-width: 1024px;
+  padding: .5em;
+  border-top: 1px solid var(--color-border);
+  border-bottom: 1px solid var(--color-border);
+  margin-bottom: 1em;
+}
+
+.TransferInfo-url a {
+  margin-bottom: 1em;
+}
+
+.TransferInfo-QR {
+  margin-top: 1em;
+  margin-bottom: .5em;
+}
+
+.TransferInfo-url-helpers {
+  display: flex;
+}
+
+.TransferInfo > p {
+  padding-bottom: .5em;
+}
