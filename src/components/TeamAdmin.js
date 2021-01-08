@@ -160,16 +160,15 @@ const TeamAdmin = ({ user }) => {
     const teamName = transferData.alias;
     const transferId = transferData.id;
     queryConfirm(
-      "Cancel transfer",
-      `This will cancel the ongoing transfer of "${teamName}". You will remain the owner of this team.`,
+      "Cancel transfer?",
+      `This will cancel the ongoing transfer of "${teamName}" and you will remain the owner of this team.`,
       (confirmed) => {
         if (confirmed) {
           removeTransfer(transferId).catch((err) => {
             showAlert("Data backend error", err.message, "Error");
           });
         }
-      },
-      "Continue/Abort"
+      }
     );
   };
 
@@ -239,7 +238,7 @@ const TeamAdmin = ({ user }) => {
 
   const transferStr = transferInitiated
     ? transferPendingCommit
-      ? "Confirm transfer to:"
+      ? "Pending transfer to:"
       : `Waiting for acknowledge from${transferNewOwner ? ":" : " the new owner"}`
     : "";
 

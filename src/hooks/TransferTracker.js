@@ -5,10 +5,12 @@ import { cancelAllTransferData, getAllTransferData } from '../helpers/team';
  * team transfer node updates, both for initiated transfer and for the receiving end.
  */
 
+//used to avoid propagating updates between different empty list instances
+const emptyList = []; 
 
 //returns array of transfer objects (typically empty or one single transfer object)
 function useTransferTracker(user, isInitiator=true) {
-  
+  //transfers is null by default to indicate "unknown" (then it's usually [])
   const [transfers, setTransfers] = useState(null);
   
   useEffect( () => {
@@ -17,15 +19,18 @@ function useTransferTracker(user, isInitiator=true) {
     if (user !== null) {
       try {
         dbDataRef = getAllTransferData(user, isInitiator, (transfers) => {
-          setTransfers(transfers);
+          if (transfers && transfers.length)
+            setTransfers(transfers);
+          else
+            setTransfers(emptyList);
         });
       } catch(e) {
         //TBD: something better than "fail silent"? (what error can actually propagate here?)
         console.log(e);
-        setTransfers([]);
+        setTransfers(null);
       }
     } else {
-      setTransfers(null);
+      setTransfers(null); //default/unknown
     }
 
     return () => {
