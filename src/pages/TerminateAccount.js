@@ -61,7 +61,7 @@ const TerminateAccount = () => {
                   : "";
               showAlert(
                 "Account terminated",
-                "You're account has been removed" + extraStr
+                "Your account has been removed" + extraStr
               );
             })
             .catch((err) => {
