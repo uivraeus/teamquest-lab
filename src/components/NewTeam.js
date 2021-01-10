@@ -9,7 +9,7 @@ import { ReactComponent as ConfirmIcon } from "../icons/confirmation.svg";
 import "./NewTeam.css";
 
 //"user" always valid here (parent's responsibility)
-const NewTeam = ({ user, oldTeamNames, onDone }) => {
+const NewTeam = ({ user, oldTeamNames, onDone = () => {} }) => {
   // Add a new team
   const [name, setName] = useState("");
   const {showAlert} = useAppContext();
@@ -18,15 +18,15 @@ const NewTeam = ({ user, oldTeamNames, onDone }) => {
     setName(e.target.value);
   };
 
-  const addNewTeam = async (e) => {
+  const addNewTeam = (e) => {
     e.preventDefault();
-    try {
-      await createNewTeam(user, name, oldTeamNames);
-      setName("");
-      if (onDone) onDone();
-    } catch (e) {
+    //just fire off the update (don't wait for it to complete)
+    createNewTeam(user, name, oldTeamNames)
+    .catch((e) => {
       showAlert("Data backend error", e.message, "Error");
-    }
+    });
+    
+    onDone();
   };
 
   const onCancel = (e) => {

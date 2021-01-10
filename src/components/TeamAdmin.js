@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import AppBtn from "./AppBtn";
 import {
   checkNewName,
@@ -35,20 +35,14 @@ const TeamAdmin = ({ user }) => {
   const history = useHistory();
 
   //What the user selects via the Teams component
-  const [selectedTeam, setSelectedTeam] = useState(null);
-  const selectedTeamId = selectedTeam ? selectedTeam.id : null;
-
+  const [selectedTeamId, setSelectedTeamId] = useState(null);
   //Also, let the Teams component share its view of available teams
-  //Note: important to apply useCallback here to not get stuck in a re-render loop
-  //(Teams component doesn't do any clever equality check on onAvailableTeams)
-  const [availableTeamNames, setAvailableTeamNames] = useState(null);
-  const onAvailableTeams = useCallback((teams) => {
-    if (teams) {
-      setAvailableTeamNames(teams.map((t) => t.alias));
-    } else {
-      setAvailableTeamNames(null);
-    }
-  }, []);
+  const [availableTeams, setAvailableTeams] = useState(null);
+  //Refined "shorthands"
+  const availableTeamNames = availableTeams && availableTeams.map(t => t.alias);
+  const selectedTeam = (availableTeams && selectedTeamId)
+    ? availableTeams.find(t => t.id === selectedTeamId) || null
+    : null;
 
   //Also keep track of any ongoing transfer that the user has initiated
   const transfers = useTransferTracker(user, true);
@@ -86,7 +80,8 @@ const TeamAdmin = ({ user }) => {
   //There is a short delay between switching team id and "surveys" being
   //being updated. Normally not a big thing but in context of permanent
   //deletion I think it is worth being certain we have a consistent state
-  const consistentState = surveysTeamId === selectedTeamId;
+  //Also, during deletions the "de-selection" may lag availableTeams update.
+  const consistentState = (surveysTeamId === selectedTeamId) && selectedTeam;
 
   //The GUI-part of the team-deletion procedure
   const onDeleteTeam = (e) => {
@@ -307,8 +302,8 @@ const TeamAdmin = ({ user }) => {
     <>
       <Teams
         user={user}
-        onSelected={(i, o) => setSelectedTeam(o)}
-        onAvailableTeams={onAvailableTeams}
+        onSelected={setSelectedTeamId}
+        onAvailableTeams={setAvailableTeams}
         blockSuspended={false}
       />
       <div className={operationsClassNames}>
