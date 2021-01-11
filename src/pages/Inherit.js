@@ -4,7 +4,8 @@ import InfoBlock from "../components/InfoBlock"
 import { ackTransfer, grabTransfer } from "../helpers/team";
 import useAppContext from "../hooks/AppContext";
 import useTransferTracker from "../hooks/TransferTracker";
-import { useParams, useHistory } from "react-router-dom";
+import useOwnedTeams from "../hooks/OwnedTeams";
+import { Link, useParams, useHistory } from "react-router-dom";
 
 import "./Inherit.css";
 
@@ -17,6 +18,10 @@ const Inherit = () => {
   const [acknowledged, setAcknowledged] = useState(false);
   const [dbError, setDbError] = useState(null);
   const history = useHistory();
+
+  //Keep track of owned teams to detect successful transfer
+  const { teams } = useOwnedTeams();
+  const [outcome, setOutcome] = useState(null);
 
   const teamName = transferData && transferData.alias;
   const currentOwner = transferData && transferData.email;
@@ -41,8 +46,12 @@ const Inherit = () => {
         } else {
           //Transfer object removed. Probably because it was confirmed by
           //the (previous) owner.
-          //TBD/TODO: track owned teams and look for the new team there
-          //->print some kind of confirmation?
+          //TODO: set outcome to false if prev is null (don't overwrite true)
+          //setOutcome(prev => prev === null ? false : prev);
+          //But... is there a potential race?
+          //- Even though experiments indicate that the teams-update always happens first 
+          //  (and it is executed in that order at the other end)
+          //- Better be safe and do this via a delayed update via a cancellable timeout
         }        
       }
     }
@@ -58,14 +67,36 @@ const Inherit = () => {
     }
   }, [grab])
 
+  //Trying to access a non-existing transfer when opening up the page
+  //(can't tell if this is a completed/cancelled transfer or just an invalid id)
   useEffect(() => {
     if (dbError && showAlert) {
       showAlert("Invalid transfer ID", 
         "Can't access transfer information. Maybe the transfer has already been completed or cancelled?",
         "Info", dbError);
-      history.push("/creator/manage"); //just somewhere...
+      history.push("/creator/manage"); //just somewhere.
     }
   }, [dbError, showAlert, history]);
+
+  //Detect completed transfer (nice feedback - nothing important for the transfer)
+  //(This only works if the user has kept this page open - not if revisiting it
+  //at a later point in time)
+  useEffect(() => {
+    if (transferData && teams && teams.find(t => t.id === transferData.tid)) {
+      setOutcome(true);
+    }
+  }, [transferData, teams])
+  useEffect(() => {
+    if (outcome !== null) {
+      if (outcome) {
+        showAlert("Transfer completed", "You are now the new owner of the team", "Info");
+        history.push("/creator/manage");
+      } else {
+        showAlert("Transfer cancelled", "The original owner never completed the transfer", "Info");
+        history.push("/"); //just somewhere.
+      }
+    }
+  }, [outcome, showAlert, history])
 
   const onAcknowledge = async () => {
     try {
@@ -105,6 +136,9 @@ const Inherit = () => {
             <p>
               Once the current owner has confirmed the transfer, <i>{teamName}</i> will appear among your other teams.
               You can then manage it and create surveys like for any other team you own.
+            </p>
+            <p>
+              All your teams are listed in the <Link to={"/creator/manage"}>Manage</Link> section.
             </p>
             <InfoBlock>
               <p>
