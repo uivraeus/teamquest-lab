@@ -14,24 +14,38 @@
   transition: height .3s ease-in-out;
 }
 
+.AppHeader-home-logo {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.AppHeader-home-logo > button {
+  margin-right: .5em;
+}
+/*Dirty short-cut for this "special" button*/
+.AppHeader-home-logo svg {
+  fill: white !important;
+}
+
 /* Special link for app-name (show more like a "logo") */
-.AppHeader a.style-override {
+.AppHeader-home-logo a.style-override {
   font-size: var(--font-medium);
   color: var(--color-text-inverted);
   text-decoration: none;
 }
 
-.AppHeader a.style-override:visited {
+.AppHeader-home-logo a.style-override:visited {
   color: var(--color-text-inverted);
 }
 
 @media (hover: hover) {
-  .AppHeader a.style-override:hover {
+  .AppHeader-home-logo a.style-override:hover {
     color: var(--color-bkg-btn-focus);
   }  
 }
 
-.AppHeader a.style-override:focus {
+.AppHeader-home-logo a.style-override:focus {
   color: var(--color-bkg-btn-focus);
   outline: 1px dotted var(--color-border);
 }
