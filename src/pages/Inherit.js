@@ -18,7 +18,7 @@ const Inherit = () => {
   const [acknowledged, setAcknowledged] = useState(false);
   const [dbError, setDbError] = useState(null);
   const history = useHistory();
-
+  
   //Keep track of owned teams to detect successful transfer
   const { teams } = useOwnedTeams();
   const [outcome, setOutcome] = useState(null);
@@ -44,19 +44,25 @@ const Inherit = () => {
         if (!acknowledged) {
           setGrab(prevState => prevState || {user, transferId}); //one-time flip
         } else {
-          //Transfer object removed. Probably because it was confirmed by
-          //the (previous) owner.
-          //TODO: set outcome to false if prev is null (don't overwrite true)
-          //setOutcome(prev => prev === null ? false : prev);
-          //But... is there a potential race?
-          //- Even though experiments indicate that the teams-update always happens first 
-          //  (and it is executed in that order at the other end)
-          //- Better be safe and do this via a delayed update via a cancellable timeout
+          //Cancelled or completed? The useEffect on "teams" below should detect
+          //an successful transfer before we end up here but delay the "bad news" a few
+          //seconds if there is some kind of race between teams/transfers updates.
+          //(The logic in teams.js makes the update in the right order but I'm not sure
+          //one can always rely on that here... even though experiments indicate it)
+          const timeout = setTimeout(() => {
+            //only update if the "success-path" hasn't triggered
+            setOutcome(prev => prev === null ? false : prev);
+          }, 5000);
+
+          return () => {
+            clearTimeout(timeout);
+          }
         }        
       }
     }
   }, [transfers, transferId, user, acknowledged, dbError]);
 
+  //One-time effect when "grab" is raised
   useEffect(() => {
     if (grab) {
       grabTransfer(grab.transferId, grab.user)
@@ -74,26 +80,29 @@ const Inherit = () => {
       showAlert("Invalid transfer ID", 
         "Can't access transfer information. Maybe the transfer has already been completed or cancelled?",
         "Info", dbError);
-      history.push("/creator/manage"); //just somewhere.
+      history.replace("/creator/manage"); //just somewhere.
     }
   }, [dbError, showAlert, history]);
 
-  //Detect completed transfer (nice feedback - nothing important for the transfer)
+  //Detect completed transfer (nice feedback - nothing really important)
   //(This only works if the user has kept this page open - not if revisiting it
-  //at a later point in time)
+  //at a later point in time after completion)
   useEffect(() => {
     if (transferData && teams && teams.find(t => t.id === transferData.tid)) {
       setOutcome(true);
     }
   }, [transferData, teams])
+  
+  //Some kind of outcome has been identified in one of the useEffects above
+  //-> inform the user and redirect away from this page.
   useEffect(() => {
     if (outcome !== null) {
       if (outcome) {
         showAlert("Transfer completed", "You are now the new owner of the team", "Info");
-        history.push("/creator/manage");
+        history.replace("/creator/manage");
       } else {
         showAlert("Transfer cancelled", "The original owner never completed the transfer", "Info");
-        history.push("/"); //just somewhere.
+        history.replace("/"); //just somewhere.
       }
     }
   }, [outcome, showAlert, history])

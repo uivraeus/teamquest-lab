@@ -40,7 +40,7 @@ const TransferInfo = () => {
   useEffect(() => {
     if (readError && showAlert) {
       showAlert("Transfer data load error", readError, "Error");
-      history.push("/creator/manage"); //just somewhere...
+      history.replace("/creator/manage"); //just somewhere...
     }
   }, [readError, showAlert, history]);
 
