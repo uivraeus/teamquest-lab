@@ -2,7 +2,7 @@ import React, { useLayoutEffect } from 'react';
 import AppBtn from './AppBtn';
 import useAppContext from '../hooks/AppContext'
 import UserSettings from './UserSettings';
-import { Link, useHistory } from 'react-router-dom';
+import { Link, useHistory, useLocation } from 'react-router-dom';
 
 import { ReactComponent as Home } from "../icons/home.svg";
 
@@ -12,6 +12,12 @@ const AppHeader = () => {
   const { user } = useAppContext();
   const history = useHistory();
 
+  //Don't show "Home" when we're there already
+  //(different depending on auth state)
+  const location = useLocation();
+  const isAtHome = location && 
+    (location.pathname === "/start" || location.pathname === "/creator/main");
+  
   /* The two height variants were derived from what I ended up with before
    * trying to control the height explicitly (e.g. derived from font-size,
    * margins etc.). Just stick with these until I decide I don't like them.
@@ -23,10 +29,11 @@ const AppHeader = () => {
     );
   }, [user])
 
+  const homeLogoClassName = "AppHeader-home-logo" + (isAtHome ? "" : " AppHeader-home-visible")
   return (
       <header className="AppHeader">
-        <div className="AppHeader-home-logo">
-          <AppBtn onClick={() => history.push("/start")}>
+        <div className={homeLogoClassName}>
+          <AppBtn onClick={() => history.push("/start")} disabled={isAtHome}>
             <Home />
           </AppBtn>
           <Link className="style-override" to="/start">Mini-TMQ</Link>

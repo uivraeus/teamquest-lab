@@ -28,6 +28,26 @@
   fill: white !important;
 }
 
+/* When Home button is hidden (already "at home") */
+.AppHeader-home-logo > button {
+  transform: translateX(-2em);
+  opacity: 0;
+  transition: all .3s ease-in-out;
+}
+.AppHeader-home-logo > a {
+  transform: translateX(-2em);
+  transition: transform .3s ease-in-out;
+}
+
+/* When the Home button is visible */
+.AppHeader-home-visible > button {
+  transform: translateX(0);
+  opacity: 1;
+}
+.AppHeader-home-visible > a {
+  transform: translateX(0);
+}
+
 /* Special link for app-name (show more like a "logo") */
 .AppHeader-home-logo a.style-override {
   font-size: var(--font-medium);
