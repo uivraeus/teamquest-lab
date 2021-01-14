@@ -1,12 +1,10 @@
 import React from "react";
-import AppBtn from "../components/AppBtn"
 import { CompLev } from "../helpers/survey";
+import InfoBlock from "../components/InfoBlock";
 import SurveyResult from "../components/SurveyResult";
 import ResultsChart from "../components/ResultsChart";
 import useTeamResults from "../hooks/TeamResults";
 import { useParams } from "react-router-dom";
-
-import { ReactComponent as InfoIcon } from "../icons/info.svg";
 
 import './SurveyResults.css';
 
@@ -71,17 +69,12 @@ const SurveyResults = () => {
                     colors = {colors}
                     labels = {labels}
                   />
-                  <div className="SurveyResults-tooltip">
-                    <form action={toolboxUrl}>
-                      <AppBtn type="submit">
-                        <InfoIcon />
-                      </AppBtn>
-                    </form>
+                  <InfoBlock>
                     <p>
                       Learn more about the <a href={toolboxUrl}>Toolbox</a> for working
                       with each team maturity profile
                     </p>
-                  </div>
+                  </InfoBlock>
                 </>
               ) : (
                 <em>No surveys found</em>
