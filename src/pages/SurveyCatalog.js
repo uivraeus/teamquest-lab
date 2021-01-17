@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import AppBtn from "../components/AppBtn";
+import InfoBlock from "../components/InfoBlock";
 import Teams from "../components/Teams";
 import SurveyEditModal from "../components/SurveyEditModal";
 import SurveyItem from "../components/SurveyItem";
@@ -8,8 +8,6 @@ import useTeamTracker from "../hooks/TeamTracker";
 import useOwnedTeams from "../hooks/OwnedTeams";
 import { CompLev, deleteSurvey } from "../helpers/survey";
 import { Link, useHistory, useParams } from "react-router-dom";
-
-import { ReactComponent as ResultsIcon } from "../icons/analysis.svg";
 
 import "./SurveyCatalog.css";
 
@@ -39,7 +37,7 @@ const SurveyCatalog = () => {
         //Because of crappy setTimeout in Teams... in case of only
         //one team with "auto-selection" I might get a onTeamSelect
         //call delayed by a setTimeout inside Teams (TODO: fix that!)
-        setTimeout(() => history.push("/"), 0);
+        setTimeout(() => history.replace("/"), 0);
       }
     }
 
@@ -112,10 +110,7 @@ const SurveyCatalog = () => {
   };
 
   const pathR = `/results/${validatedTeamId}`;
-  const onResults = () => {
-    history.push(pathR);
-  };
-
+  
   //"early exit" (Routing helpers shall ensure that user is always defined though...)
   if (!user) <></>;
 
@@ -149,17 +144,12 @@ const SurveyCatalog = () => {
       />
       {surveys ? (
         <>
-          <div className="SurveyCatalog-result-link">
-            <div>
-              <AppBtn onClick={onResults}>
-                <ResultsIcon />
-              </AppBtn>
-            </div>
+          <InfoBlock>
             <p>
               The <Link to={pathR}>analysis result page</Link> for this team is
               continuously updated when new responses are received.
             </p>
-          </div>
+          </InfoBlock>
           <h3>Ongoing surveys</h3>
           {ongoing.length ? (
             <ul>
