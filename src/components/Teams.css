@@ -1,9 +1,8 @@
 .Teams {
     display: flex;
     flex-direction: column;
-    width: 92%;
+    width: 96vw;
     max-width: 480px;
-    margin: 0 1rem;
 }
 
 .Teams ul {
