@@ -12,26 +12,22 @@ export function logout() {
   return auth().signOut();
 }
 
-export function update(oldPassword, password) {
-  const currentUser = auth().currentUser;
-  const cred = auth.EmailAuthProvider.credential(
-    currentUser.email,
-    oldPassword
-  );
-
-  return currentUser
-    .reauthenticateWithCredential(cred)
-    .then(() => currentUser.updatePassword(password));
-}
-
-export function deleteAccount(password) {
+export function authenticate(password) {
   const currentUser = auth().currentUser;
   const cred = auth.EmailAuthProvider.credential(
     currentUser.email,
     password
   );
 
-  return currentUser
-    .reauthenticateWithCredential(cred)
-    .then(() => currentUser.delete());
+  return currentUser.reauthenticateWithCredential(cred);
+}
+
+export function update(oldPassword, password) {
+  return authenticate(oldPassword)
+    .then(({ user }) => user.updatePassword(password));
+}
+
+export function deleteAccount(password) {
+  return authenticate(password)
+    .then(({ user }) => user.delete());
 }
