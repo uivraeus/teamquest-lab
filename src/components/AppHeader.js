@@ -15,8 +15,8 @@ const AppHeader = () => {
   //Don't show "Home" when we're there already
   //(different depending on auth state)
   const location = useLocation();
-  const isAtHome = location && 
-    (location.pathname === "/start" || location.pathname === "/creator/main");
+  const homeLocation = user ? "/creator/main" : "/start";
+  const isAtHome = location && location.pathname ===  homeLocation;
   
   /* The two height variants were derived from what I ended up with before
    * trying to control the height explicitly (e.g. derived from font-size,
@@ -33,10 +33,10 @@ const AppHeader = () => {
   return (
       <header className="AppHeader">
         <div className={homeLogoClassName}>
-          <AppBtn onClick={() => history.push("/start")} disabled={isAtHome}>
+          <AppBtn onClick={() => history.push(homeLocation)} disabled={isAtHome}>
             <Home />
           </AppBtn>
-          <Link className="style-override" to="/start">Mini-TMQ</Link>
+          <Link className="style-override" to={homeLocation}>Mini-TMQ</Link>
         </div>        
         {user ? <UserSettings user={user} /> : null}
       </header>
