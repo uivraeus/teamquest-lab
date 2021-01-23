@@ -75,8 +75,9 @@ const Signup = () => {
   const { status, pending, error } = deriveStatus();
   return (
     <div className="Signup">
-      <h1>Sign up for Mini-TMQ tool</h1>
-      <h3>Register a creator account</h3>
+      <h1>Sign up for the Mini-TMQ tool</h1>
+      <p>You need an account to create and manage surveys for your team.</p>
+      <hr></hr>
       <p className={error ? "error-response" : null}>{status}</p>
 
       <form onSubmit={handleSubmit}>
@@ -111,8 +112,16 @@ const Signup = () => {
       </form>
       <InfoBlock>
         <p>
+          The email address you specify will be used if you forget your password and need to <Link to="/reset">reset</Link> it. 
+        </p>
+        <p>
+          Learn more about how user information is managed in the <Link to="/privacy">privacy policy</Link>.
+        </p>
+        <hr></hr>
+        <p>
           Already have an account? <Link to="/login">Login</Link>
         </p>
+        
       </InfoBlock>
     </div>
   );
