@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import AppBtn from "../components/AppBtn";
+import InfoBlock from "../components/InfoBlock";
 import { Link } from "react-router-dom";
 import { signup } from "../helpers/auth";
 
@@ -108,10 +109,11 @@ const Signup = () => {
           <AppBtn text="Sign up" kind="accent" type="submit" disabled={pending} />
         </div>
       </form>
-      <hr></hr>
-      <p>
-        Already have an account? <Link to="/login">Login</Link>
-      </p>
+      <InfoBlock>
+        <p>
+          Already have an account? <Link to="/login">Login</Link>
+        </p>
+      </InfoBlock>
     </div>
   );
 };

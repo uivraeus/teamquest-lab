@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import AppBtn from "../components/AppBtn";
+import InfoBlock from "../components/InfoBlock";
 import { update } from "../helpers/auth";
 import useAppContext from "../hooks/AppContext";
-import { useHistory } from 'react-router-dom'
+import { Link, useHistory } from 'react-router-dom'
 
 import "./ChangePassword.css";
 
@@ -118,6 +119,11 @@ const ChangePassword = () => {
           <AppBtn text="Update" kind="accent" type="submit" disabled={pending} />
         </div>
       </form>
+      <InfoBlock>
+        <p>
+          Forgot your current password? <Link to="/reset">Reset</Link> it via email.
+        </p>
+      </InfoBlock>
     </div>
   );
 };

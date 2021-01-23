@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import AppBtn from "../components/AppBtn";
+import InfoBlock from "../components/InfoBlock";
 import { Link } from "react-router-dom";
 import { login } from "../helpers/auth";
 
@@ -73,10 +74,15 @@ const Login = () => {
           />
         </div>
       </form>
-
-      <p>
-        No account? <Link to="/signup">Sign up</Link> to create one.
-      </p>
+      <InfoBlock>
+        <p>
+          Forgot your password? <Link to="/reset">Reset</Link> it via email.
+        </p>
+        <hr></hr>
+        <p>
+          No account? <Link to="/signup">Sign up</Link> to create one.
+        </p>
+      </InfoBlock>
     </div>
   );
 };

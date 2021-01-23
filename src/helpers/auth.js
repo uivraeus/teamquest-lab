@@ -12,6 +12,11 @@ export function logout() {
   return auth().signOut();
 }
 
+export function reset(email, redirectUrl) {
+  var actionCodeSettings = { url: redirectUrl }; 
+  return auth().sendPasswordResetEmail(email, actionCodeSettings);
+}
+
 export function authenticate(password) {
   const currentUser = auth().currentUser;
   const cred = auth.EmailAuthProvider.credential(
