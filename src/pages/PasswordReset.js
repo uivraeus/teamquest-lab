@@ -32,12 +32,9 @@ const PasswordReset = () => {
 
   const handlePasswordReset = async (e) => {
     e.preventDefault();
-    const myHost = `${window.location.protocol}//${window.location.host}`;
-    const redirectUrl = `${myHost}/login`;
-
     try {
       setInitiated(true);
-      await reset(email, redirectUrl);
+      await reset(email);
       if (user) {
         //Not the most common case but if a logged in user forgot
         //the password and triggers a reset, it doesn't makes sense
@@ -46,7 +43,7 @@ const PasswordReset = () => {
         await logout();
       }
       showAlert("Email sent", "Check your in-box for an email with further instructions");
-      history.replace("/start");
+      history.replace("/login");
     } catch (err) {
       setResponse(err.message);
     }
@@ -90,8 +87,7 @@ const PasswordReset = () => {
           can specify a new password for your account.
         </p>
         <p>
-          Afterwards, you will be directed back to the login page where you can
-          enter your updated credentials.
+          Afterwards, you can login using your updated credentials.
         </p>
       </InfoBlock>
     </div>

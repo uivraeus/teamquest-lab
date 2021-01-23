@@ -12,8 +12,8 @@ export function logout() {
   return auth().signOut();
 }
 
-export function reset(email, redirectUrl) {
-  var actionCodeSettings = { url: redirectUrl }; 
+export function reset(email, redirectUrl = null) {
+  var actionCodeSettings = redirectUrl ? { url: redirectUrl } : undefined; 
   return auth().sendPasswordResetEmail(email, actionCodeSettings);
 }
 
