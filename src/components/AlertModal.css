@@ -5,7 +5,7 @@
 }
 .Alert-Heading > svg {
   min-width: 2em;
-  min-width: 2em;
+  max-width: 2em;
 }
 
 .Alert-Heading > h3 {
