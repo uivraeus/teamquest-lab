@@ -8,24 +8,34 @@
  */
 
  // ! TEMPORARY alg (TODO: replace with the real deal) !
-  
-const analyze = (responses) => {
+
+ //Will throw if there are errors
+const verifyInput = (responses) => {
   const nQ = 13; // expected number of questions
   const nV = 5;  // number of answer options (0-4)
-  
-  let allSum = [0,0,0,0];
-  
+
   responses.forEach(r => {
     if (nQ !== r.length) {
       throw new Error("Unexpected number of responses: " + r.length);
     }
 
-    let catSum = [0,0,0,0];
     r.forEach((v, i) => {
       if (!Number.isInteger(v) || v >= nV) {
         throw new Error("Unexpected answers: " + v);
       }
-      // very temporary "algorithm" ...
+    });    
+  });
+}
+
+const analyze = (responses) => {
+  verifyInput(responses); //will throw if there are errors
+  
+  let allSum = [0,0,0,0];
+  
+  // very temporary "algorithm" ...      
+  responses.forEach(r => {
+    let catSum = [0,0,0,0];
+    r.forEach((v, i) => {
       const cat = i % catSum.length;
       catSum[cat] += v;
     });
