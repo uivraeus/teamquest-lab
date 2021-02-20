@@ -5,16 +5,83 @@ describe("Analyze responses", () => {
 
   // })
 
-  test("handle all possible answer options", () => {
+  test("min values", () => {
+      const inputResponses = [
+        [0,0,0,0,0,0,0,0,0,0,0,0,0],
+        [0,0,0,0,0,0,0,0,0,0,0,0,0],
+        [0,0,0,0,0,0,0,0,0,0,0,0,0]
+      ];
+      const expAnalysisResult = [0,0,0,0];
+
+      expect(analyze(inputResponses)).toEqual(expAnalysisResult);
+  });
+
+  test("max values", () => {
     const inputResponses = [
-      [0,1,2,3,4,0,1,2,3,4,0,1,2],
-      [0,0,0,0,0,0,0,0,0,0,0,0,0],
+      [4,4,4,4,4,4,4,4,4,4,4,4,4],
+      [4,4,4,4,4,4,4,4,4,4,4,4,4],
       [4,4,4,4,4,4,4,4,4,4,4,4,4]
     ];
-    const expAnalysisResult = [6,8,6,9];
+    const expAnalysisResult = [100,100,100,100];
 
     expect(analyze(inputResponses)).toEqual(expAnalysisResult);
-  })
+  });
+  
+  test("50% Dependency and Inclusion", () => {
+    //questions 1,5,9 and 13
+    const inputResponses = [
+      [0,0,0,0,4,0,0,0,1,0,0,0,2],
+      [1,0,0,0,3,0,0,0,3,0,0,0,2],
+      [2,0,0,0,2,0,0,0,2,0,0,0,2],
+      [3,0,0,0,1,0,0,0,1,0,0,0,2],
+      [4,0,0,0,0,0,0,0,3,0,0,0,2]
+    ];
+    const expAnalysisResult = [50,0,0,0];
+
+    expect(analyze(inputResponses)).toEqual(expAnalysisResult);
+  });
+
+  test("50% Counter-Dependency and Fight", () => {
+    //questions 2,6 and 10
+    const inputResponses = [
+      [0,0,0,0,0,4,0,0,0,1,0,0,0],
+      [0,1,0,0,0,3,0,0,0,3,0,0,0],
+      [0,2,0,0,0,2,0,0,0,2,0,0,0],
+      [0,3,0,0,0,1,0,0,0,1,0,0,0],
+      [0,4,0,0,0,0,0,0,0,3,0,0,0]
+    ];
+    const expAnalysisResult = [0,50,0,0];
+
+    expect(analyze(inputResponses)).toEqual(expAnalysisResult);
+  });
+
+  test("50% Trust and Structure", () => {
+    //questions 3,7 and 11
+    const inputResponses = [
+      [0,0,0,0,0,0,4,0,0,0,1,0,0],
+      [0,0,1,0,0,0,3,0,0,0,3,0,0],
+      [0,0,2,0,0,0,2,0,0,0,2,0,0],
+      [0,0,3,0,0,0,1,0,0,0,1,0,0],
+      [0,0,4,0,0,0,0,0,0,0,3,0,0]
+    ];
+    const expAnalysisResult = [0,0,50,0];
+
+    expect(analyze(inputResponses)).toEqual(expAnalysisResult);
+  });
+
+  test("50% Work and Productivity", () => {
+    //questions 4,8 and 12
+    const inputResponses = [
+      [0,0,0,0,0,0,0,4,0,0,0,1,0],
+      [0,0,0,1,0,0,0,3,0,0,0,3,0],
+      [0,0,0,2,0,0,0,2,0,0,0,2,0],
+      [0,0,0,3,0,0,0,1,0,0,0,1,0],
+      [0,0,0,4,0,0,0,0,0,0,0,3,0]
+    ];
+    const expAnalysisResult = [0,0,0,50];
+
+    expect(analyze(inputResponses)).toEqual(expAnalysisResult);
+  });
 
   //TODO: Add test cases with focus on each result category
 });

@@ -18,7 +18,7 @@ const SurveyResult = ({ resultData, colors, labels }) => {
       <div key={index} className="SurveyResult-category">
         <ResultPie
           value={value}
-          max={10}
+          max={100}
           color={colors[index]}
         />
         <div className={descrClassName}>

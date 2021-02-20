@@ -84,7 +84,7 @@ const SurveyResults = () => {
                   <h3>Team history</h3>
                   <ResultsChart
                     results={results}
-                    maxVal={10}
+                    maxVal={100}
                     colors = {colors}
                     labels = {labels}
                   />
