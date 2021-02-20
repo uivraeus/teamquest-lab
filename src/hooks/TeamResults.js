@@ -54,7 +54,10 @@ function useTeamResults(teamId) {
       if (readError) {
         setAnalysisError(`Error reading raw survey data: ${readError}`);
       }
-      setResults({ results: [], latestResult: null });
+      if (surveys && surveys.length === 0) {
+        //Probably no surveys defined for this team yet
+        setResults({ results: [], latestResult: null });
+      }
     }
   }, [surveys, readError]);
 
