@@ -73,7 +73,7 @@ const ResultsChart = ({ results, maxVal, colors, labels }) => {
   return (
     <div className="ResultsChart">
       <ResponsiveContainer minWidth={360} minHeight={200}>
-        <ScatterChart margin={{ top: 10, right: 0, bottom: 0, left: -30 }}>
+        <ScatterChart margin={{ top: 10, right: 0, bottom: 0, left: -27 }}>
           <CartesianGrid vertical={false} />
           <XAxis
             domain={[oldest, now]}

@@ -43,7 +43,7 @@ const ResultPie = ( {value, max, color="#D000E0" }) => {
               <Cell key={`slice-${index}`} fill={entry.name==="void" ? "#00000000": color} />
             ))}
             <Label position="center">
-              {`${value}`}
+              {`${value}%`}
             </Label>
           </Pie>
         </PieChart>
