@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { loadMarkdown, linkRenderer } from "../helpers/markdown";
+import { loadMarkdown, headingRenderer, linkRenderer } from "../helpers/markdown";
 import ReactMarkdown from "react-markdown";
 
 const Privacy = () => {
@@ -8,11 +8,11 @@ const Privacy = () => {
   useEffect(() => {
     loadMarkdown("privacy")
       .then((text) => setContent(text))
-      .catch((e) => setContent("Error: " + e.message));
+      .catch((e) => setContent("```\n" + e.message + "\n```"));
   }, []);
 
   return (
-    <ReactMarkdown children={content} renderers={{ link: linkRenderer }} />
+    <ReactMarkdown children={content} renderers={{ link: linkRenderer, heading: headingRenderer }} />
   );
 };
 
