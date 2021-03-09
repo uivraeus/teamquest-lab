@@ -2,7 +2,7 @@ import React from 'react';
 import AppBtn from './AppBtn';
 import useAppContext from '../hooks/AppContext'
 import UserSettings from './UserSettings';
-import { Link, useHistory, useLocation } from 'react-router-dom';
+import { useHistory, useLocation } from 'react-router-dom';
 
 import { ReactComponent as Home } from "../icons/home.svg";
 
