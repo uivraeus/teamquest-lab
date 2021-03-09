@@ -15,8 +15,8 @@ const UserSettings = ( {user} ) => {
     }
     return (
         <div className="UserSettings">
-            <p><em>{user.email}</em></p>
             <AppBtn text="Log out" kind="menu" id="logout" onClick={handleLogout} />
+            <p><em>{user.email}</em></p>
         </div>
     );
 }

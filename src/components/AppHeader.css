@@ -5,37 +5,62 @@
   top: 0;
   position: fixed;
   z-index: 1000;
-  padding: .5em;
+  padding: 0 .5em 0 .5em;
   flex-direction: row;
   justify-content: space-between;
-  align-items:center;
+  align-items:flex-start;
   background-color: var(--color-bkg-btn-accent);
   box-shadow: 0px 2px 3px var(--color-border);
-  transition: height .3s ease-in-out;
+}
+
+.AppHeader > nav {
+  /* border: 1px dotted yellow; */
+  display: flex;
+  flex-direction: column;
+}
+
+.AppHeader-about-pages {
+  margin-top: .25em;
+  margin-left: -.25em;
 }
 
 .AppHeader-home-logo {
   display: flex;
   flex-direction: row;
-  align-items: center;
+  align-items: flex-start;
+  margin-top: .25em;
+  /* border: 1px dotted white; */
 }
 
-.AppHeader-home-logo > button {
-  margin-right: .5em;
-}
-/*Dirty short-cut for this "special" button*/
+/* Dirty short-cut for this "special" button*/
 .AppHeader-home-logo svg {
   fill: white !important;
 }
 
+/* The "logo" */
+.AppHeader-home-logo > p {
+  font-size: var(--font-medium);
+  margin: 0 0 0 .25em;
+  padding: 0;
+  color: var(--color-text-inverted);
+}
+
+/* Keep Home button smaller to make it better fit next to the logo */
+.AppHeader-home-logo > button {
+  width: 1.5em;
+  height: 1.5em;
+  min-width: 1.5em;
+  min-height: 1.5em;
+} 
+
 /* When Home button is hidden (already "at home") */
 .AppHeader-home-logo > button {
-  transform: translateX(-2em);
+  transform: translateX(-1.5em);
   opacity: 0;
   transition: all .3s ease-in-out;
 }
-.AppHeader-home-logo > a {
-  transform: translateX(-2em);
+.AppHeader-home-logo > p {
+  transform: translateX(-1.5em);
   transition: transform .3s ease-in-out;
 }
 
@@ -44,28 +69,11 @@
   transform: translateX(0);
   opacity: 1;
 }
-.AppHeader-home-visible > a {
+.AppHeader-home-visible > p {
   transform: translateX(0);
 }
 
-/* Special link for app-name (show more like a "logo") */
-.AppHeader-home-logo a.style-override {
-  font-size: var(--font-medium);
-  color: var(--color-text-inverted);
-  text-decoration: none;
-}
-
-.AppHeader-home-logo a.style-override:visited {
-  color: var(--color-text-inverted);
-}
-
-@media (hover: hover) {
-  .AppHeader-home-logo a.style-override:hover {
-    color: var(--color-bkg-btn-focus);
-  }  
-}
-
-.AppHeader-home-logo a.style-override:focus {
-  color: var(--color-bkg-btn-focus);
-  outline: 1px dotted var(--color-border);
+.AppHeader-about-pages span {
+  font-size: var(--font-tiny);
+  color: var(--color-border-light);
 }

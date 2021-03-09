@@ -1,11 +1,15 @@
 .UserSettings {
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
+    justify-content:space-around;
     align-items:flex-end;
+    height: 100%;
 }
 
 .UserSettings > p {
     color: var(--color-text-inverted);
 }
 
+.UserSettings > button {
+    margin-right: -.25em;
+}

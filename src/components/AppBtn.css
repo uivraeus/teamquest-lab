@@ -59,6 +59,7 @@ button.AppBtn-menu {
   border: 1px solid rgba(0,0,0,0);    
   color: var(--color-text-inverted);
   text-decoration: underline;
+  font-size: var(--font-tiny);
   margin: .1em;
   padding: .2em;
 }
