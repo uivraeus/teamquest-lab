@@ -32,8 +32,8 @@
   --font-big:  calc(17px + 2.7vw); 
   --font-medium: calc(11px + 2.7vw);
   --font-small: calc(8px + 2.2vw);
-  --font-tiny: calc(6px + 1.35vw);
-  --height-header: 4.5em;
+  --font-tiny: calc(7px + 1.5vw);
+  --height-header: calc(2.3 * var(--font-big));
 }
 
 @media screen and (min-width: 590px) {

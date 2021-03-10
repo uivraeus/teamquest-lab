@@ -26,7 +26,7 @@ const Manage = () => {
   <>
     <h1>Manage account and teams</h1>
     <div className="Manage-account">
-      <h3>Your account</h3>
+      <h3><em>{user.email}</em></h3>
       <ul>
         <li>
           <div className="Manage-account-link">

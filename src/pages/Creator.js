@@ -39,7 +39,7 @@ const Creator = () => {
       <Switch>
         <Route exact path={`${path}/main`}>
           <div className="Creator">
-            <h1>Mini-TMQ Creator</h1>
+            <h1>Creator Admin</h1>
             <ul>
               <li>
                 <div className="Creator-link">

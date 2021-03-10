@@ -1,15 +1,21 @@
 .UserSettings {
     display: flex;
     flex-direction: column;
-    justify-content:space-around;
-    align-items:flex-end;
+    justify-content: space-between;
+    align-items:center;
     height: 100%;
 }
 
-.UserSettings > p {
-    color: var(--color-text-inverted);
-}
+/* Keep User button smaller to make it better fit the reset of the header */
+.UserSettings > #manage-user-account {
+    width: 1.7em;
+    height: 1.7em;
+    min-width: 1.7em;
+    min-height: 1.7em;
+    margin-bottom: .25em;
+  }
 
-.UserSettings > button {
-    margin-right: -.25em;
-}
+  /* Dirty short-cut for this "special" button*/
+.UserSettings svg {
+    fill: white !important;
+  }

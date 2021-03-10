@@ -5,7 +5,6 @@
   top: 0;
   position: fixed;
   z-index: 1000;
-  padding: 0 .5em 0 .5em;
   flex-direction: row;
   justify-content: space-between;
   align-items:flex-start;
@@ -14,22 +13,18 @@
 }
 
 .AppHeader > nav {
-  /* border: 1px dotted yellow; */
   display: flex;
   flex-direction: column;
-}
-
-.AppHeader-about-pages {
-  margin-top: .25em;
-  margin-left: -.25em;
+  justify-content:space-between;
+  align-items:flex-start;
+  height: 100%;
 }
 
 .AppHeader-home-logo {
   display: flex;
   flex-direction: row;
-  align-items: flex-start;
-  margin-top: .25em;
-  /* border: 1px dotted white; */
+  align-items:flex-end;
+  margin: 0 0 0 .1em;
 }
 
 /* Dirty short-cut for this "special" button*/
@@ -39,7 +34,8 @@
 
 /* The "logo" */
 .AppHeader-home-logo > p {
-  font-size: var(--font-medium);
+  font-size: var(--font-big);
+  font-weight: 300;
   margin: 0 0 0 .25em;
   padding: 0;
   color: var(--color-text-inverted);
@@ -47,20 +43,21 @@
 
 /* Keep Home button smaller to make it better fit next to the logo */
 .AppHeader-home-logo > button {
-  width: 1.5em;
-  height: 1.5em;
-  min-width: 1.5em;
-  min-height: 1.5em;
+  margin-bottom: .25em;
+  width: 1.7em;
+  height: 1.7em;
+  min-width: 1.7em;
+  min-height: 1.7em;
 } 
 
 /* When Home button is hidden (already "at home") */
 .AppHeader-home-logo > button {
-  transform: translateX(-1.5em);
+  transform: translateX(-1.25em);
   opacity: 0;
   transition: all .3s ease-in-out;
 }
 .AppHeader-home-logo > p {
-  transform: translateX(-1.5em);
+  transform: translateX(-1.25em);
   transition: transform .3s ease-in-out;
 }
 
