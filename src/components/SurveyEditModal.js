@@ -115,6 +115,7 @@ const [infoFields, setInfoFields] = useState(["","",""]);
       open={!!editMeta}
       onClose={onClosing}
       closeOnOverlayClick={false}
+      showCloseIcon={false}
       center
       classNames={{ modal: "SurveyEditModal" }}
       onAnimationEnd={()=>setFadingOut(false)}
