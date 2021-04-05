@@ -3,16 +3,19 @@ import { loadMarkdown, headingRenderer, linkRenderer } from "../helpers/markdown
 import ReactMarkdown from "react-markdown";
 import { useLocation } from 'react-router-dom';
 
-import '../helpers/Markdown.css';
+import './MarkdownPage.css';
 
-const Privacy = () => {
+//This is a generic (~template) page, for which the entire content is fetched and
+//rendered via a markdown file.
+
+const MarkdownPage = ({mdFileName = "undefined"}) => {
   //Actual content comes from the markdown file
   const [content, setContent] = useState(null);
   useEffect(() => {
-    loadMarkdown("privacy")
+    loadMarkdown(mdFileName)
       .then((text) => setContent(text))
       .catch((e) => setContent("```\n" + e.message + "\n```"));
-  }, []);
+  }, [mdFileName]);
 
   //If the user enters the app here, with a hash (e.g. via bookmark or navigate-back
   //after leaving it), the auto-scrolling in the browser will fail as the HTML has
@@ -30,8 +33,8 @@ const Privacy = () => {
   }, [location, content]);
 
   return (
-    <ReactMarkdown className="Markdown" children={content ? content : "Loading..."} renderers={{ link: linkRenderer, heading: headingRenderer }} />
+    <ReactMarkdown className="MarkdownPage" children={content ? content : "Loading..."} renderers={{ link: linkRenderer, heading: headingRenderer }} />
   );
 };
 
-export default Privacy;
+export default MarkdownPage;

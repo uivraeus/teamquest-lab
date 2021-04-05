@@ -1,4 +1,4 @@
-.Markdown {
+.MarkdownPage {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
@@ -9,31 +9,31 @@
     margin-bottom: 2em;
 }
 
-.Markdown h2 {
+.MarkdownPage h2 {
     margin-top: 1em;
     margin-bottom: .5em;
 }
 
-.Markdown h3 {
+.MarkdownPage h3 {
     margin-top: 1em;
     margin-bottom: .5em;
 }
 
-.Markdown h4 {
+.MarkdownPage h4 {
     margin-top: 1em;
     margin-bottom: .5em;
 }
 
-.Markdown blockquote {
+.MarkdownPage blockquote {
     background-color: var(--color-bkg-info);
     margin: 1em 0 1em 2em;
     padding: 1em;
 }
 
-.Markdown ul {
+.MarkdownPage ul {
     margin-top: 0;
 }
 
-.Markdown li {
+.MarkdownPage li {
     font-size: var(--font-small);
 }

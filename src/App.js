@@ -9,8 +9,7 @@ import { PrivateRoute, PublicRoute} from './components/AuthRoute';
 import Login from './pages/Login';
 import PasswordReset from './pages/PasswordReset';
 import Contact from './pages/Contact';
-import Privacy from './pages/Privacy';
-import Terms from './pages/Terms';
+import MarkdownPage from './pages/MarkdownPage';
 import Start from './pages/Start';
 import Signup from './pages/Signup';
 import SurveyResults from './pages/SurveyResults';
@@ -36,8 +35,8 @@ const App = () => {
             <PublicRoute path="/signup" component={Signup}></PublicRoute>
             <PublicRoute path="/login" component={Login}></PublicRoute>
             <Route path="/contact" component={Contact}></Route>
-            <Route path="/privacy" component={Privacy}></Route>
-            <Route path="/terms" component={Terms}></Route>
+            <Route path="/privacy" render={() => <MarkdownPage mdFileName="privacy"/>}></Route>
+            <Route path="/terms" render={() => <MarkdownPage mdFileName="terms"/>}></Route>
             <Route path="/reset" component={PasswordReset}></Route>
             <PrivateRoute path="/creator" component={Creator}></PrivateRoute>
             <Redirect from="/" to="/start" />
