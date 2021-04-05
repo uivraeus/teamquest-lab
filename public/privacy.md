@@ -104,7 +104,7 @@ We use Netlify, Inc. (2325 3rd Street, Suite 296, San Francisco, California 9410
 * **Retention:** Less than 30 days
 * **Place of processing:** United States
 
-Additional information on how Netlify deals with privacy for their services can be found in their [Privacy Policy](https://www.netlify.com/privacy/) and their on [GDPR/CCPA page](https://www.netlify.com/gdpr-ccpa/)
+Additional information on how Netlify deals with privacy for their services can be found in their [Privacy Policy](https://www.netlify.com/privacy/) and on their [GDPR/CCPA page](https://www.netlify.com/gdpr-ccpa/)
  
 ### Google Firebase
 We use Firebase from Google, LLC (1600 Amphitheatre Parkway, Mountain View, California 94043, United States) to implement some of the functionality that is essential to the App. Firebase offers numerous services, with a full list available in their [Terms of Service](https://firebase.google.com/terms/) of which we use the ones listed below.
