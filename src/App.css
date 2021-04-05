@@ -45,6 +45,19 @@
   }
 }
 
+/* This app uses a fixed header which will make the browsers auto-scrolling
+ * a bit off (e.g. for links with #). Many ways to "solve" this, with varying degrees
+ * of success and side-effects. But I settled for this, which I think of as a direct
+ * and explicit way of handling this:
+ * https://getpublii.com/blog/one-line-css-solution-to-prevent-anchor-links-from-scrolling-behind-a-sticky-header.html
+ * (despite iOS/Safari issues at the time of writing... Apple must fix this some day... right?)
+ */
+html {
+  scroll-padding: var(--height-header) 0 0 0;
+  scroll-behavior: smooth; /*not really necessary, just nicer I think */
+}
+
+
 /* Explicit for the App component */
 .App {
   text-align: left;
