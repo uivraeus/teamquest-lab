@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import { myFetch } from './fetch';
+import InfoBlock from "../components/InfoBlock";
 
 export const loadMarkdown = (filename) => {
   const mdPromise = myFetch(filename + ".md", {
@@ -79,3 +80,8 @@ export const headingRenderer = (props) => {
   }
 }
 
+/* Enbable usage of the App's InfoBlocks by "hijacking" <blockquotes>
+ */
+export const blockquoteRenderer = (props) => {
+  return <InfoBlock>{props.children}</InfoBlock>
+}

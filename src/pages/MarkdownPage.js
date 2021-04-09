@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { loadMarkdown, headingRenderer, linkRenderer } from "../helpers/markdown";
+import { loadMarkdown, headingRenderer, linkRenderer, blockquoteRenderer } from "../helpers/markdown";
 import ReactMarkdown from "react-markdown";
 import { useLocation } from 'react-router-dom';
 
@@ -33,7 +33,7 @@ const MarkdownPage = ({mdFileName = "undefined"}) => {
   }, [location, content]);
 
   return (
-    <ReactMarkdown className="MarkdownPage" children={content ? content : "Loading..."} renderers={{ link: linkRenderer, heading: headingRenderer }} />
+    <ReactMarkdown className="MarkdownPage" children={content ? content : "Loading..."} renderers={{ link: linkRenderer, heading: headingRenderer, blockquote: blockquoteRenderer }} />
   );
 };
 
