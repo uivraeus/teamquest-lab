@@ -38,3 +38,10 @@
 .MarkdownPage li {
     font-size: var(--font-small);
 }
+
+/* Would be cleaner with ".style-override" instead of "!important",
+ * but there is no custom <p> rendere (yet)
+ */
+.MarkdownPage p {
+    margin-bottom: 1em !important;
+}
