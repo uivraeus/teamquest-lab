@@ -13,17 +13,24 @@ export const loadMarkdown = (filename) => {
   return mdPromise;
 };
 
-/* Helper for rendering links using react-router when applicable
- * (TBD: exactly what is desired here... depending on what one would
- * like to represent in the markdown file)
+/* Helper for rendering links using react-router (Link) when applicable
+ * For "non-Link" links two variants exists:
+ * 1. refs to an "id" (#) on the same page (cross-ref within a md-file)
+ * 2. refs to (app-)external sources
+ * 
+ * All external refs will be opened in a new tab.
  * [https://github.com/remarkjs/react-markdown/issues/29]
+ * [https://html.spec.whatwg.org/multipage/links.html]
  */
 export const linkRenderer = (props) => {
   return (
     props.href.match(/^\//)
       ? <Link to={props.href}>{props.children}</Link>
-      : <a href={props.href}>{props.children}</a>
-  );
+      : (props.href.match(/^#/)
+        ? <a href={props.href}>{props.children}</a>
+        : <a href={props.href} target="_blank" rel="noreferrer">{props.children}</a>
+        )
+  )
 }
 
 /* Helper for creating linkable ("anchor-like") headings
