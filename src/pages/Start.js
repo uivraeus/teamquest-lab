@@ -62,6 +62,8 @@ const Start = () => {
           All answers are anonymized and the tool only presents
           statistics on the team-level, using anonymous team-URLs.
         </p>
+        <hr/>
+        <p>See the <Link to="/privacy">Privacy Policy</Link> for details</p>
       </InfoBlock>
     </div>
   );

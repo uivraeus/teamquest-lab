@@ -77,6 +77,7 @@ const Signup = () => {
     <div className="Signup">
       <h1>Sign up for the Mini-TMQ tool</h1>
       <p>You need an account to create and manage surveys for your team.</p>
+      <p>By signing up for an account you are agreeing to the <Link to="/terms">Terms and Conditions of Use</Link>.</p>
       <hr></hr>
       <p className={error ? "error-response" : null}>{status}</p>
 
