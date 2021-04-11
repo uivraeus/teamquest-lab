@@ -39,7 +39,9 @@
     font-size: var(--font-small);
 }
 
-/* Would be cleaner with ".style-override" instead of "!important",
+/* Until I decide to change the general App styling of <p>s, add some
+ * extra margin between here (massive text blobs are more sensitive)
+ * Would be cleaner with ".style-override" instead of "!important",
  * but there is no custom <p> rendere (yet)
  */
 .MarkdownPage p {

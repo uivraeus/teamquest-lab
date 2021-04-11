@@ -157,6 +157,15 @@ label, input, legend, button {
   border: none; /*1px dotted var(--color-border);*/
 }
 
+/* Ensure that all "open-in-new" links have a clear indication
+ * of this fact (small icon with square/arrow)
+ * [https://codepen.io/thiagobraga/pen/bhDdn]
+ */
+a[target="_blank"]:after {
+  content: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAQElEQVR42qXKwQkAIAxDUUdxtO6/RBQkQZvSi8I/pL4BoGw/XPkh4XigPmsUgh0626AjRsgxHTkUThsG2T/sIlzdTsp52kSS1wAAAABJRU5ErkJggg==);
+  margin: 0 0.05em 0 0.2em;
+}
+
 /* General-purpose "no line break"-span
  */
  .App span.NoBreak {
