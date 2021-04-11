@@ -71,7 +71,7 @@ const SurveyResults = () => {
                   />
                   <InfoBlock>
                     <p>
-                      Learn more about the <a href={toolboxUrl}>Toolbox</a> for working
+                      Learn more about the <a href={toolboxUrl} target="_blank" rel="noreferrer" >Toolbox</a> for working
                       with each team maturity profile
                     </p>
                   </InfoBlock>
