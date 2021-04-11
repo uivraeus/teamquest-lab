@@ -2,7 +2,7 @@
 Your privacy is important and we take is seriously. This Privacy Policy explains how we use any personal information about you that is collected or generated through your use of the _Mini-TMQ_ web application ("the App").
 
 The App is accessed via [teamquest.uivraeus.net](https://teamquest.uivraeus.net) and is operated by _uivraeus_ ("we", "our", "us"). Please refer to the [Contact](/contact) page for how to reach out to us.
->Note that this version of _Mini-TMQ_ is only used for test and evaluation purposes. Account information and data collected may be deleted at any moment, without prior notice. See the [Terms of Service](/terms) for further details.
+>Note that this version of _Mini-TMQ_ is only used for test and evaluation purposes. Account information and data collected may be deleted at any moment, without prior notice. See the [Terms and Conditions of Use](/terms) for further details.
 
 ## Principle of anonymous data {:#anon-principles}
 In principle the App can be used without providing personal data. The main function of the App is to collect and process answers to a set of survey question, but the individuals who provide these answers don't authenticate themselves via login or by other means. This is possible because all answers are stored and made available without any record of _who_ provided them. 
