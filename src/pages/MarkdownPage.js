@@ -12,6 +12,11 @@ const MarkdownPage = ({mdFileName = "undefined"}) => {
   //Actual content comes from the markdown file
   const [content, setContent] = useState(null);
   useEffect(() => {
+    //avoid confusing scroll-pos after changing "page"
+    //(keeping the old content would avoid a "white flash" but any "scroll-to-top"
+    //is hard to get synchronized to the exact content switch)
+    setContent(null);
+    
     loadMarkdown(mdFileName)
       .then((text) => setContent(text))
       .catch((e) => setContent("```\n" + e.message + "\n```"));
@@ -32,8 +37,9 @@ const MarkdownPage = ({mdFileName = "undefined"}) => {
     }
   }, [location, content]);
 
+  //No "loading" indicator for now...
   return (
-    <ReactMarkdown className="MarkdownPage" children={content ? content : "Loading..."} renderers={{ link: linkRenderer, heading: headingRenderer, blockquote: blockquoteRenderer }} />
+    <ReactMarkdown className="MarkdownPage" children={content ? content : ""} renderers={{ link: linkRenderer, heading: headingRenderer, blockquote: blockquoteRenderer }} />
   );
 };
 
