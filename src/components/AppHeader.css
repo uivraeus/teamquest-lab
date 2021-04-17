@@ -28,23 +28,22 @@
   margin: 0 0 0 .1em;
 }
 
-/* Dirty short-cut for this "special" button*/
+/* Dirty short-cut for this "special" button* (will also affect the logo) */
 .AppHeader-home-logo svg {
   fill: white !important;
 }
 
 /* The "logo" */
-.AppHeader-home-logo > p {
-  font-size: var(--font-big);
-  font-weight: 300;
+.AppHeader-home-logo > svg {
+  /* border: 1px dotted red; */
   margin: 0 0 0 .25em;
-  padding: 0;
-  color: var(--color-text-inverted);
+  width: calc(4.3 * var(--font-big));
+  height:auto;
 }
 
 /* Keep Home button smaller to make it better fit next to the logo */
 .AppHeader-home-logo > button {
-  margin-bottom: .25em;
+  margin-bottom: .35em;
   width: 1.7em;
   height: 1.7em;
   min-width: 1.7em;
@@ -57,8 +56,8 @@
   opacity: 0;
   transition: all .3s ease-in-out;
 }
-.AppHeader-home-logo > p {
-  transform: translateX(-1.25em);
+.AppHeader-home-logo > svg {
+  transform: translateX(calc( -1.15 * var(--font-big)));
   transition: transform .3s ease-in-out;
 }
 
@@ -67,10 +66,9 @@
   transform: translateX(0);
   opacity: 1;
 }
-.AppHeader-home-visible > p {
+.AppHeader-home-visible > svg {
   transform: translateX(0);
 }
-
 .AppHeader-about-pages span {
   font-size: var(--font-tiny);
   color: var(--color-border-light);

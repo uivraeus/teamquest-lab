@@ -5,6 +5,7 @@ import UserSettings from './UserSettings';
 import { useHistory, useLocation } from 'react-router-dom';
 
 import { ReactComponent as Home } from "../icons/home.svg";
+import { ReactComponent as Logo } from "../icons/logo.svg";
 
 import './AppHeader.css';
 
@@ -33,7 +34,7 @@ const AppHeader = () => {
             <AppBtn onClick={() => history.push(homeLocation)} disabled={isAtHome}>
               <Home />
             </AppBtn>
-            <p className="style-override">Mini-TMQ</p>
+            <Logo />
           </div>
         </nav>        
         {user ? <UserSettings user={user} /> : null}
