@@ -5,13 +5,23 @@ import { db } from "../services/firebase";
 
 /* This hook allows other components to obtain a list of the teams currently owned
  * by the current user
+ *
+ * The main output from this hook is the "teams" array but to allow for error
+ * reporting, a "readError" is also provided (null when no error). So, these
+ * entries are bundled into an object.
+ * 
+ * Implementation note:
+ * I don't want to return a new/unique object instance for every call if the
+ * contained information hasn't changed. This may help users of this hook when
+ * creating dependency-lists for other hooks. It could be done with useMemo,
+ * useReducer and probably many other techniques. I chose to return a "state"
+ * which holds the entire result object.
  */
 
-//returns { teams, readError }
+const defaultResult = { teams: null, readError:null };
 const useOwnedTeams = () => {
   const { user } = useAppContext();
-  const [teams, setTeams] = useState(null);
-  const [readError, setReadError] = useState(null);
+  const [result, setResult] = useState(defaultResult);
   
   useEffect(() => {
     let ref = null;
@@ -19,7 +29,6 @@ const useOwnedTeams = () => {
     if (user) {
       //Subscribe to teams data for the user;
       ref = db.ref("teams").orderByChild("uid").equalTo(user.uid)
-      setReadError(null);
       try {
         onNewData = ref.on("value", (snapshot) => {
           try {
@@ -29,29 +38,27 @@ const useOwnedTeams = () => {
             });
             //console.log("new 'teams' received, last:", !dbTeams.length ? "<none>" : dbTeams[dbTeams.length - 1].alias);
             //TODO: sort teams by "alias"?
-            setTeams(dbTeams);
+            setResult({ ...defaultResult, teams: dbTeams });
           } catch (e) {
             console.log(e);
-            setReadError(e.message);
+            setResult({ ...defaultResult, readError: e.message });
           }
         });
       } catch (e) {
         console.log(e);
-        setReadError(e.message);
+        setResult({ ...defaultResult, readError: e.message });
       }
     }
 
-    // Return what to do when "un-mounting"
     return () => {
       if (ref) {
-        //console.log("ref.off: ", onNewData ? "callback" : "all callbacks");
         if (onNewData)
           ref.off("value", onNewData);
       }
     };
   }, [user]);
   
-  return { teams, readError };
+  return result;
 }
 
 export default useOwnedTeams;

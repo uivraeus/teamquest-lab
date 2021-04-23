@@ -5,7 +5,7 @@ import SurveyEditModal from "../components/SurveyEditModal";
 import SurveyItem from "../components/SurveyItem";
 import useAppContext from "../hooks/AppContext";
 import useTeamTracker from "../hooks/TeamTracker";
-import useOwnedTeams from "../hooks/OwnedTeams";
+import useValidatedTeam, {ValidationStatus} from "../hooks/ValidatedTeam";
 import { CompLev, deleteSurvey } from "../helpers/survey";
 import { Link, useHistory, useParams } from "react-router-dom";
 
@@ -15,44 +15,40 @@ const SurveyCatalog = () => {
   const { queryConfirm, showAlert, user } = useAppContext();
   const history = useHistory();
   const { teamId } = useParams();
-  const ownedTeams = useOwnedTeams();
-
+  
   //The output from TeamTracker is not "access protected" in any way
   //(unauthenticated users must be able to follow a team's result)
   //But it would be very confusing to allow showing another user's catalog
   //here so ensure that the team is actually "owned" by the current user.
   //(Any attempts to modify/discard surveys would in the end fail due to
   //access permissions in the backend anyway)
-  const [validatedTeamId, setValidatedTeamId] = useState(null);
-  useEffect(() => {
-    if (ownedTeams && ownedTeams.teams && teamId) {
-      if (ownedTeams.teams.map((t) => t.id).includes(teamId)) {
-        setValidatedTeamId(teamId);
-      } else {
-        showAlert(
-          "Invalid URL",
-          "It looks like you tried to access a team you are not the owner of"
-        );
-        //Why SetTimeout?
-        //Because of crappy setTimeout in Teams... in case of only
-        //one team with "auto-selection" I might get a onTeamSelect
-        //call delayed by a setTimeout inside Teams (TODO: fix that!)
-        setTimeout(() => history.replace("/"), 0);
-      }
-    }
+  const validationResult = useValidatedTeam(teamId);
+  const validatedTeamId = validationResult.teamObj ? validationResult.teamObj.id : null;
 
-    if (ownedTeams && ownedTeams.readError && showAlert) {
-      showAlert(
+  useEffect(() => {
+    if (validationResult.status === ValidationStatus.NOT_OWNER) {
+      !!showAlert && showAlert(
+        "Invalid URL",
+        "It looks like you tried to access a team you are not the owner of"
+      );
+      
+      //Why SetTimeout?
+      //Because of crappy setTimeout in Teams... in case of only
+      //one team with "auto-selection" I might get a onTeamSelect
+      //call delayed by a setTimeout inside Teams (TODO: fix that!)
+      setTimeout(() => !!history && history.replace("/"), 0);
+    } else if (validationResult.status === ValidationStatus.FAILED) {
+      !!showAlert && showAlert(
         "User configuration error",
         "Could not derive user's team ownership",
         "Error",
-        ownedTeams.readError
+        validationResult.errorMsg
       );
     }
-  }, [teamId, ownedTeams, showAlert, history]);
+  }, [validationResult, showAlert, history]);
 
   let { surveys, readError } = useTeamTracker(validatedTeamId);
-
+  
   const onTeamsSelect = (id) => {
     history.push(`/creator/tracker/${id}`);
   };
