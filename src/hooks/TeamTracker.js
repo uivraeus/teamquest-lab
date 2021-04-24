@@ -3,6 +3,12 @@ import { cancelAll, getAll, getMeta, CompLev } from '../helpers/survey';
 
 /* This useTeamTracker hook allows other components to make use of continuously
  * updated survey responses
+ *
+ * The main output from this hook is the "surveys" array and the associated
+ * "surveysTeamId", which enables consistency checks when the input teamId
+ * changes. To allow for error reporting, a "readError" is also provided (null
+ * when no error).
+ * All these result entries are bundled into an object. 
  */
 
 //Internal list conversion helper ("raw responses" -> results, incl. meta-data)
@@ -22,15 +28,13 @@ const convertFromRaw = (surveys) => {
   });
 };
 
-//returns { surveys, readError, surveysTeamId }
+const defaultResult = { surveys: null, readError:null, surveysTeamId: null };
 function useTeamTracker(teamId) {
   
   //Responses, incl. meta-data for all surveys for the team
   //(incl. recent ones, which may still be open)
-  const [surveys, setSurveys] = useState(null);
-  const [surveysTeamId, setSurveysTeamId] = useState(null);
-  const [readError, setReadError] = useState(null);
- 
+  const [result, setResult] = useState(defaultResult);
+  
   useEffect( () => {
     //Subscribe to all raw survey data
     let dbDataRef = null;
@@ -40,26 +44,24 @@ function useTeamTracker(teamId) {
           if (anyError) { //TBD;
             console.log("anyError set when reding surveys for teamId:", teamId);
           }
-          if (rawSurveys && rawSurveys.length) {
-            // Now refine the "raw responses" into something more useful
-            setSurveys(convertFromRaw(rawSurveys));
-          } else {
-            // No surveys found (probably not an error)
-            setSurveys([]);
-          }          
-          setReadError(null);
-          setSurveysTeamId(teamId);
+          // Now refine the "raw responses" into something more useful
+          // (if no surveys are found that is probably not an error)
+          const surveys = (rawSurveys && rawSurveys.length) ?
+            convertFromRaw(rawSurveys) :
+            [];
+          setResult({ ...defaultResult, surveys, surveysTeamId: teamId }); 
         });
       } catch(e) {
         console.log(e);
-        setReadError(e.message);
+        setResult({ ...defaultResult, readError: e.message });
       }
     } else {
-      setSurveys(null);
+      setResult(defaultResult);
     }
 
     return () => {
-      setSurveysTeamId(null);
+      //Don't provide obsolete results when the teamId changes
+      setResult(defaultResult);
       if (dbDataRef) {
         //Unsubscribe from prev team's updates
         try {
@@ -71,7 +73,12 @@ function useTeamTracker(teamId) {
     };
   }, [teamId]);
   
-  return { surveys, readError, surveysTeamId }
+  //Never return obsolete results when the teamId changes
+  if (teamId !== result.surveysTeamId) {
+    return defaultResult;  
+  } else {
+    return result;
+  }
 }
 
 export default useTeamTracker;
