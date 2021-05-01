@@ -1,0 +1,73 @@
+/* Very much inspired by: 
+ * https://moderncss.dev/custom-select-styles-with-pure-css/
+ */
+
+/* "Remove" the native select (not the dropdown though) */
+.ControlledSelect select {
+  /* A reset of styles, including removing the default dropdown arrow */
+  appearance: none;
+  /* Additional resets for further consistency */
+  background-color: transparent;
+  border: none;
+  padding: 0;
+  margin: 0;
+  width: 100%;
+  font-family: inherit;
+  font-size: inherit;
+  cursor: inherit;
+  line-height: inherit;
+  outline: none;
+  
+  /* Stack above custom arrow 
+  (otherwise nothing happens when you click on that)
+  */
+  z-index: 1;
+}
+
+/* Style via the wrapping div */
+.ControlledSelect {
+  width: 100%;
+  min-width: 15ch;
+  border: 1px solid var(--color-border);
+  border-radius: 0.125em;
+  padding: 0.25em .5em;
+  font-size: var(--font-small);
+  cursor: pointer;
+  line-height: calc(var(--font-small) * 1.5);
+  background-color: var(--color-bkg-default);
+
+   /* allow for styling of the down-arrow via ::after below */
+  display: grid;
+  grid-template-areas: "select";
+  align-items: center;
+}
+
+/* The down-arrow (using clip-path) */
+.ControlledSelect::after {
+  content: "";
+  margin-top: -.1em;
+  width: calc(var(--font-small) * 0.8);
+  height: calc(var(--font-small) * 0.8);
+  background-color: var(--color-border-accent);
+  /*clip-path: polygon(100% 0%, 0 0%, 50% 100%);*/
+  clip-path: polygon(50% 66%, 50% 66%, 83% 33%, 100% 50%, 50% 100%, 0 50%, 17% 33%);
+}
+
+/* The contained select and the arrow below use the same grid area  ...*/
+.ControlledSelect select,
+.ControlledSelect:after {
+  grid-area: select;
+}
+/* ... with the arrow to the right */
+.ControlledSelect:after {
+  justify-self: end;
+}
+
+/* Default "outline" removed above, manage :focus state manually */
+.ControlledSelect:focus-within {
+  border: 2px solid var(--color-border-accent);
+  padding: calc(0.25em - 1px) calc(0.5em - 1px);
+}
+
+/* Currently no support for :disabled... Add class-based solution when needed */
+
