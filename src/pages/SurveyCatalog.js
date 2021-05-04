@@ -1,58 +1,21 @@
 import React, { useEffect, useState } from "react";
 import InfoBlock from "../components/InfoBlock";
-import Teams from "../components/Teams";
+import RouteSelect from "../components/RouteSelect"
 import SurveyEditModal from "../components/SurveyEditModal";
 import SurveyItem from "../components/SurveyItem";
 import useAppContext from "../hooks/AppContext";
 import useTeamTracker from "../hooks/TeamTracker";
-import useValidatedTeam, {ValidationStatus} from "../hooks/ValidatedTeam";
 import { CompLev, deleteSurvey } from "../helpers/survey";
-import { Link, useHistory, useParams } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 
 import "./SurveyCatalog.css";
 
-const SurveyCatalog = () => {
-  const { queryConfirm, showAlert, user } = useAppContext();
+const SurveyCatalog = ({ teams }) => {
+  const { queryConfirm, showAlert } = useAppContext();
   const history = useHistory();
-  const { teamId } = useParams();
+  const [selectedTeam, setSelectedTeam] = useState(null);
+  let { surveys, readError } = useTeamTracker(selectedTeam ? selectedTeam.id : null);
   
-  //The output from TeamTracker is not "access protected" in any way
-  //(unauthenticated users must be able to follow a team's result)
-  //But it would be very confusing to allow showing another user's catalog
-  //here so ensure that the team is actually "owned" by the current user.
-  //(Any attempts to modify/discard surveys would in the end fail due to
-  //access permissions in the backend anyway)
-  const validationResult = useValidatedTeam(teamId);
-  const validatedTeamId = validationResult.teamObj ? validationResult.teamObj.id : null;
-
-  useEffect(() => {
-    if (validationResult.status === ValidationStatus.NOT_OWNER) {
-      !!showAlert && showAlert(
-        "Invalid URL",
-        "It looks like you tried to access a team you are not the owner of"
-      );
-      
-      //Why SetTimeout?
-      //Because of crappy setTimeout in Teams... in case of only
-      //one team with "auto-selection" I might get a onTeamSelect
-      //call delayed by a setTimeout inside Teams (TODO: fix that!)
-      setTimeout(() => !!history && history.replace("/"), 0);
-    } else if (validationResult.status === ValidationStatus.FAILED) {
-      !!showAlert && showAlert(
-        "User configuration error",
-        "Could not derive user's team ownership",
-        "Error",
-        validationResult.errorMsg
-      );
-    }
-  }, [validationResult, showAlert, history]);
-
-  let { surveys, readError } = useTeamTracker(validatedTeamId);
-  
-  const onTeamsSelect = (id) => {
-    history.push(`/creator/tracker/${id}`);
-  };
-
   const onShare = ({ id }) => {
     history.push(`/creator/info/${id}`);
   };
@@ -80,6 +43,18 @@ const SurveyCatalog = () => {
     setEditSurveyMeta(editMeta);
   }, [surveys, editSurveyId]);
   
+  //If no team(s) defined, the user must create one via the Manage section
+  useEffect(() => {
+    if (teams.length === 0) {
+      history.push(`/creator/manage`);
+      showAlert("No team defined yet", 
+        "To monitor survey results you must first create a team. You have now been redirected to the Manage section where this can be done.");
+    }
+  }, [teams, history, showAlert]);
+  if (teams.length === 0) {
+    return null;
+  }
+  
   const onEditClose = () => {
     setEditSurveyId(null); //Id=null -> meta=null
   };
@@ -105,11 +80,8 @@ const SurveyCatalog = () => {
     );
   };
 
-  const pathR = `/results/${validatedTeamId}`;
+  const pathR = `/results/${selectedTeam ? selectedTeam.id : ""}`;
   
-  //"early exit" (Routing helpers shall ensure that user is always defined though...)
-  if (!user) <></>;
-
   //Sort the surveys according to their completion status
   //Here it makes most sense to present newest surveys first
   const ongoing = surveys && surveys.filter((s) => s.meta.ongoing).reverse();
@@ -132,11 +104,12 @@ const SurveyCatalog = () => {
   return (
     <div className="SurveyCatalog">
       <h1>Survey catalog</h1>
-      <Teams
-        user={user}
-        enableEdit={false}
-        onSelected={onTeamsSelect}
-        extSelection={validatedTeamId}
+      <label htmlFor="team-select">Team:</label>
+      <RouteSelect
+        options={teams}
+        textKey="alias"
+        elementId="team-select"
+        onSelected={setSelectedTeam}
       />
       {surveys ? (
         <>
@@ -210,7 +183,7 @@ const SurveyCatalog = () => {
           ) : null}
           <SurveyEditModal meta={editSurveyMeta} onClose={onEditClose}/>
         </>
-      ) : validatedTeamId ? (
+      ) : selectedTeam ? (
         <p>
           <em>Loading surveys...</em>
         </p>
