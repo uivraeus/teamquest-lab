@@ -5,6 +5,7 @@
 .TextInputModal input {
   min-width: 13em;
   margin: 0;
+  font-family: inherit;
 }
 
 .TextInputModal button {
