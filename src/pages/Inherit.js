@@ -4,12 +4,11 @@ import InfoBlock from "../components/InfoBlock"
 import { ackTransfer, grabTransfer } from "../helpers/team";
 import useAppContext from "../hooks/AppContext";
 import useTransferTracker from "../hooks/TransferTracker";
-import useOwnedTeams from "../hooks/OwnedTeams";
 import { Link, useParams, useHistory } from "react-router-dom";
 
 import "./Inherit.css";
 
-const Inherit = () => {
+const Inherit = ({ teams }) => {
   const { transferId } = useParams();
   const { user, showAlert } = useAppContext();
   const transfers = useTransferTracker(user, false); //receiver-role
@@ -20,7 +19,6 @@ const Inherit = () => {
   const history = useHistory();
   
   //Keep track of owned teams to detect successful transfer
-  const { teams } = useOwnedTeams();
   const [outcome, setOutcome] = useState(null);
 
   const teamName = transferData && transferData.alias;
