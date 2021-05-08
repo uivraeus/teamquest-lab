@@ -90,7 +90,7 @@ const RouteSelect = ({
         //Is it not selected yet?
         const paramValues = Object.values(routeMatch.params);
         const selectedId = (paramValues.length === 1) ? paramValues[0] : null;
-        if (selectedId && (option[idKey] !== selectedId)) {
+        if (option[idKey] !== selectedId) {
           //Select it
           history.replace(`${getBasePath(routeMatch)}/${option[idKey]}`, history.location.state)
         }
