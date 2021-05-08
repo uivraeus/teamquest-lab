@@ -57,7 +57,9 @@ const RouteSelect = ({
           //Notify parent on current selection.
           onSelected(option)
         } else {
-          console.log("Invalid ID parameter in URL:", routeId);
+          //Either the user has entered an invalid URL explicitly, or the
+          //team that was selected got deleted.
+          //console.log("Invalid ID parameter in URL:", routeId);
           history.replace(`${getBasePath(routeMatch)}`);
         }
       } else {
@@ -93,9 +95,13 @@ const RouteSelect = ({
     }
   }, [routeMatch, options, idKey, textKey, history, autoSelectText]);
 
+  //Only show the select when there is something to select
+  if (options.length === 0) {
+    return null;
+  }
+  
   const values = Object.values(routeMatch.params);
   const routeId = values.length === 1 ? values[0] : null;
-
   return (
     <ControlledSelect
       elementId={elementId}

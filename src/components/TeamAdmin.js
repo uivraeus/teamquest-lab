@@ -1,14 +1,15 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import AppBtn from "./AppBtn";
 import {
   checkNewName,
+  createNewTeam,
   deleteTeam,
   renameTeam,
   initTransfer /*, removeTransfer, commitTransfer*/,
   removeTransfer,
   commitTransfer,
 } from "../helpers/team";
-import Teams from "./Teams";
+import RouteSelect from "./RouteSelect";
 import TextInputModal from "./TextInputModal";
 import useAppContext from "../hooks/AppContext";
 import useTeamTracker from "../hooks/TeamTracker";
@@ -24,50 +25,72 @@ import { ReactComponent as DeleteIcon } from "../icons/trash.svg";
 
 import "./TeamAdmin.css";
 
-/* This component builds upon the Teams component, which is used to select
- * (or create) a team. For the selected team, a set of "admin operations"
- * are then provided.
+/* This component bundles the team selection (via RouteSelect) with a set
+ * of "team admin operations", incl. creation, renaming, transfer and deletion.
  */
 
-//"user" always valid here (parent's responsibility)
-const TeamAdmin = ({ user }) => {
+//"user" and "teams" always valid here, but teams may be [] (parent's responsibility)
+const TeamAdmin = ({ user, teams }) => {
   const { showAlert, queryConfirm } = useAppContext();
   const history = useHistory();
 
-  //What the user selects via the Teams component
-  const [selectedTeamId, setSelectedTeamId] = useState(null);
-  //Also, let the Teams component share its view of available teams
-  const [availableTeams, setAvailableTeams] = useState(null);
-  //Refined "shorthands"
-  const availableTeamNames = availableTeams && availableTeams.map(t => t.alias);
-  const selectedTeam = (availableTeams && selectedTeamId)
-    ? availableTeams.find(t => t.id === selectedTeamId) || null
-    : null;
+  //What the user selects via the RouteSelect component
+  const [selectedTeam, setSelectedTeam] = useState(null);
 
+  //Additional tricks, to support auto-selection of newly created teams
+  const refNewTeamName = useRef(null);
+  const onTeamSelected = useCallback(t => {
+    refNewTeamName.current = null; //remove auto-selection hint
+    setSelectedTeam(t)
+  },[refNewTeamName]);
+  
   //Also keep track of any ongoing transfer that the user has initiated
   const transfers = useTransferTracker(user, true);
 
+  //Convenient shorthands
+  const selectedTeamId = selectedTeam ? selectedTeam.id : null;
+  const teamNames = teams.map(t => t.alias);
+  
+  //Control of modal for creating a new team
+  const [defineNewTeam, setDefineNewTeam] = useState(false);
+  const onCreateResult = async (result) => {
+    if (result.value) {
+      try {
+        refNewTeamName.current = result.value; //auto-selection hint
+        await createNewTeam(user, result.value, teamNames);
+        setDefineNewTeam(false);
+      } catch (e) {
+        setDefineNewTeam(false);
+        showAlert("Data backend error", e.message, "Error");
+      }
+    } else {
+      setDefineNewTeam(false);
+    }
+  };
+  const validateNewName = (value) => {
+    return checkNewName(value, teamNames);
+  };
+  
   //Control of modal for renaming selected team
   const [renameTeamId, setRenameTeamId] = useState(null);
   const onRenameResult = async (result) => {
     if (
       result.id &&
       selectedTeamId === result.id &&
-      result.value &&
-      availableTeamNames
+      result.value
     ) {
       try {
-        await renameTeam(result.id, result.value, availableTeamNames);
+        await renameTeam(result.id, result.value, teamNames);
+        setRenameTeamId(null);
       } catch (e) {
+        setRenameTeamId(null);
         showAlert("Data backend error", e.message, "Error");
       }
+    } else {
+      setRenameTeamId(null);
     }
-    setRenameTeamId(null);
   };
-  const validateNewName = (value) => {
-    return availableTeamNames && checkNewName(value, availableTeamNames);
-  };
-
+  
   //Keep track of all associated surveys, both for displaying "summary"
   //and for enumerating through when deleting all surveys
   const { surveys, readError, surveysTeamId } = useTeamTracker(selectedTeamId);
@@ -80,8 +103,8 @@ const TeamAdmin = ({ user }) => {
   //There is a short delay between switching team id and "surveys" being
   //being updated. Normally not a big thing but in context of permanent
   //deletion I think it is worth being certain we have a consistent state
-  //Also, during deletions the "de-selection" may lag availableTeams update.
-  const consistentState = (surveysTeamId === selectedTeamId) && selectedTeam;
+  //Also, during deletions the "de-selection" may lag "teams" update.
+  const consistentState = surveysTeamId === selectedTeamId;
 
   //The GUI-part of the team-deletion procedure
   const onDeleteTeam = (e) => {
@@ -300,12 +323,27 @@ const TeamAdmin = ({ user }) => {
   //Component render (finally)
   return (
     <>
-      <Teams
-        user={user}
-        onSelected={setSelectedTeamId}
-        onAvailableTeams={setAvailableTeams}
-        blockSuspended={false}
-      />
+      { teams.length === 0 ?
+          <p className="TeamAdmin-accent">
+            <em>There is no team associated with your account. Click "New" to create one.</em>
+          </p> : 
+          <label htmlFor="team-select">Selected team:</label>
+      }
+      <div className="TeamAdmin-select-create">
+        <RouteSelect
+          options={teams}
+          textKey="alias"
+          elementId="team-select"
+          autoSelectText={refNewTeamName.current}
+          onSelected={onTeamSelected}
+        />
+        <AppBtn 
+          id="create-new-team" 
+          text="New"
+          kind={teams.length === 0 ? "accent" : null}
+          onClick={()=>setDefineNewTeam(true)}
+          disabled={defineNewTeam}/>
+      </div>
       <div className={operationsClassNames}>
         <h4>{headingStr}</h4>
         {transferInitiated
@@ -320,8 +358,14 @@ const TeamAdmin = ({ user }) => {
         <TeamOps />
       </div>
       <TextInputModal
+        id={defineNewTeam ? 1 : null}
+        label="Enter a name for the team"
+        onResult={onCreateResult}
+        validateFn={validateNewName}
+      />
+      <TextInputModal
         id={renameTeamId}
-        label="Enter the new team name"
+        label="Enter a new team name"
         onResult={onRenameResult}
         validateFn={validateNewName}
       />

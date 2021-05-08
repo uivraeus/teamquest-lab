@@ -9,7 +9,7 @@ import { ReactComponent as TerminateIcon } from "../icons/terminate.svg";
 
 import "./Manage.css";
 
-const Manage = () => {
+const Manage = ({ teams }) => {
   const { user } = useAppContext();
   
   const pathPassword = `/creator/password`;
@@ -46,8 +46,7 @@ const Manage = () => {
         </li>      
       </ul>
     </div>
-    <h3>Your teams</h3>
-    <TeamAdmin user={user} />
+    <TeamAdmin user={user} teams={teams} />
   </>      
   );
 };

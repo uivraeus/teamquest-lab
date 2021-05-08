@@ -1,6 +1,7 @@
 .Manage-account {
   display: flex;
   flex-direction: column;
+  margin-bottom: 1em;
 }
 
 .Manage-account > ul {

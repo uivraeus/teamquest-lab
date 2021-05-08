@@ -1,13 +1,21 @@
-/* .TeamAdmin {
-  border: 1px dotted blue;
-} */
+/* The RouteSelect with an addition (create) button to the right */
+.TeamAdmin-select-create {
+  display: flex;
+  flex-direction: row;
+}
 
-/* This styling is very much (implicitly) tied to the Teams styling
- * The idea is to provide a "drop down" under the Teams component
- * which would probably be more robust if these two components were
- * styled by some common rules. As it is now, any adjustment of the
- * Teams styling might have consequences for how well the styling
- * here works.
+.TeamAdmin-select-create > .ControlledSelect {
+  margin-right: 0.5em;
+}
+
+.TeamAdmin-accent {
+  color: var(--color-text-accent);
+}
+
+/* The idea is to provide a "drop down" under the RouteSelect which 
+ * would probably be more robust if these two components were styled
+ * by some common rules. As it is now, any adjustment of the RouteSelect
+ * styling might have consequences for how well the styling here works.
  */
 .TeamAdmin-operations {
   display: flex;
