@@ -109,10 +109,12 @@ const Creator = () => {
                 </div>
               </li>
             </ul>
-            <InfoBlock>
-              <p>You need to define a team before you can create and monitor surveys.</p>
-              <p>Do that in the Manage section</p>
-            </InfoBlock>    
+            {!allowTeamsOp ?
+              <InfoBlock>
+                <p>You need to define a team before you can create and monitor surveys.</p>
+                <p>Do that in the Manage section</p>
+              </InfoBlock> : null
+            }    
           </div>
         </Route>
         
