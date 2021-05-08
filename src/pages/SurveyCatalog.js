@@ -44,13 +44,12 @@ const SurveyCatalog = ({ teams }) => {
   }, [surveys, editSurveyId]);
   
   //If no team(s) defined, the user must create one via the Manage section
+  //TODO: fix this in Creator with some custom "TeamsRoute" or similar
   useEffect(() => {
     if (teams.length === 0) {
       history.push(`/creator/manage`);
-      showAlert("No team defined yet", 
-        "To monitor survey results you must first create a team. You have now been redirected to the Manage section where this can be done.");
     }
-  }, [teams, history, showAlert]);
+  }, [teams, history]);
   if (teams.length === 0) {
     return null;
   }

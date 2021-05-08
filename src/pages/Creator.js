@@ -14,6 +14,7 @@ import TerminateAccount from './TerminateAccount';
 import useOwnedTeams from '../hooks/OwnedTeams';
 import useAppContext from '../hooks/AppContext';
 import AppBtn from "../components/AppBtn";
+import InfoBlock from '../components/InfoBlock';
 
 import { ReactComponent as SurveyNewIcon } from "../icons/survey-new.svg";
 import { ReactComponent as SurveyMonIcon } from "../icons/survey-monitor.svg";
@@ -59,6 +60,17 @@ const Creator = () => {
     }
   }, [readError, showAlert])
 
+  //If we enter the signed in part of the app without any team(s), then help the
+  //user understand that the first thing to do is to create a team.
+  //(In addition, the menu options for teams-dependent operation will be disabled)
+  useEffect( () => {
+    if (teams && teams.length === 0) {
+      history.push(pathManage);
+    }
+  },[teams, history, pathManage]);
+  const allowTeamsOp = teams && teams.length > 0;
+  const teamsLinkClassName = "Creator-link" + (allowTeamsOp ? "" : " Creator-link-disabled");
+  //TODO: refactor this to make it more DRY (add some render-helper or similar)
   return (
     <>
       <Switch>
@@ -67,19 +79,25 @@ const Creator = () => {
             <h1>Creator Admin</h1>
             <ul>
               <li>
-                <div className="Creator-link">
-                  <AppBtn onClick={() => goTo(pathNew)}>
+                <div className={teamsLinkClassName}>
+                  <AppBtn onClick={() => goTo(pathNew)} disabled={!allowTeamsOp}>
                     <SurveyNewIcon />
                   </AppBtn>
-                  <p><Link to={pathNew}>Create</Link> a new survey</p>
+                  {allowTeamsOp ?
+                    <p><Link to={pathNew}>Create</Link> a new survey</p> :
+                    <p>Create a new survey</p>
+                  }
                 </div>
               </li>
               <li>
-                <div className="Creator-link">
-                  <AppBtn onClick={() => goTo(pathMonitor)}>
+                <div className={teamsLinkClassName}>
+                  <AppBtn onClick={() => goTo(pathMonitor)} disabled={!allowTeamsOp}>
                     <SurveyMonIcon />
                   </AppBtn>
-                  <p><Link to={pathMonitor}>Monitor</Link> and manage previously created surveys</p>
+                  {allowTeamsOp ?
+                    <p><Link to={pathMonitor}>Monitor</Link> and manage previously created surveys</p> :
+                    <p>Monitor and manage previously created surveys</p>
+                  }
                 </div>
               </li>
               <li>
@@ -90,9 +108,14 @@ const Creator = () => {
                   <p><Link to={pathManage}>Manage</Link> your account and associated teams</p>
                 </div>
               </li>
-            </ul>    
+            </ul>
+            <InfoBlock>
+              <p>You need to define a team before you can create and monitor surveys.</p>
+              <p>Do that in the Manage section</p>
+            </InfoBlock>    
           </div>
         </Route>
+        
         <Route exact path={pathNew} render={ teamsPage(Create, teams, readError) } ></Route>
         <Route path={`${pathNew}/:teamId`} render={ teamsPage(Create, teams, readError) } ></Route>
         <Route exact path={pathMonitor} render={ teamsPage(SurveyCatalog, teams, readError) }></Route>
@@ -101,6 +124,7 @@ const Creator = () => {
         <Route path={`${pathInherit}/:transferId`} render={ teamsPage(Inherit, teams, readError)}></Route>
         <Route path={`${pathTransfer}/:transferId`} component={TransferInfo}></Route>
         <Route exact path={pathManage} render={ teamsPage(Manage, teams, readError) }></Route>
+        <Route exact path={`${pathManage}/:teamId`} render={ teamsPage(Manage, teams, readError) }></Route>
         <Route exact path={pathPassword} component={ChangePassword}></Route>
         <Route exact path={pathTerminate} component={TerminateAccount}></Route>
         <Redirect from={`${path}/`} to={`${path}/main`} />

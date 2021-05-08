@@ -1,14 +1,13 @@
 import React, { useEffect, useState } from "react";
+import InfoBlock from "../components/InfoBlock";
 import SurveySetup from "../components/SurveySetup";
 import RouteSelect from "../components/RouteSelect"
-import { useHistory } from "react-router-dom";
-import useAppContext from "../hooks/AppContext";
+import { Link, useHistory } from "react-router-dom";
 
 import "./Create.css";
 
 //Parent must ensure that "teams" is always valid (not null/undefined)
 const Create = ({ teams }) => {
-  const { showAlert } = useAppContext();
   const [selectedTeam, setSelectedTeam] = useState(null);
   
   const history = useHistory();
@@ -18,13 +17,12 @@ const Create = ({ teams }) => {
   };
 
   //If no team(s) defined, the user must create one via the Manage section
+  //TODO: fix this in Creator with some custom "TeamsRoute" or similar
   useEffect(() => {
     if (teams.length === 0) {
       history.push(`/creator/manage`);
-      showAlert("No team defined yet", 
-        "To initiate a survey you must first create a team. You have now been redirected to the Manage section where this can be done.");
     }
-  }, [teams, history, showAlert]);
+  }, [teams, history]);
   if (teams.length === 0) {
     return null;
   }
@@ -40,6 +38,12 @@ const Create = ({ teams }) => {
           elementId="team-select"
           onSelected={setSelectedTeam}
         />
+        <InfoBlock>
+          <p>
+            Additional teams can be defined via the {" "}
+            <Link to={"/creator/manage"}>Manage</Link> section
+          </p>
+        </InfoBlock>
         {selectedTeam ? (
           <SurveySetup teamId={selectedTeam.id} onCreated={surveyCreated} />
         ) : null}

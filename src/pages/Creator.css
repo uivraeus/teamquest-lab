@@ -31,3 +31,11 @@
 .Creator-link > p {
   margin-left: 1em;
 }
+
+.Creator-link-disabled * {
+  color: var(--color-text-disabled);
+}
+
+.Creator > .InfoBlock {
+  margin-top: 2em;
+}

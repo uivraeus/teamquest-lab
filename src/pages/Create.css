@@ -8,6 +8,11 @@
     /* border: 1px solid purple */
 }
 
+.Create > .InfoBlock {
+    margin-top: 1em;
+    max-width: 480px;
+}
+
 /* .Create > * {
     border: 1px dashed red;
 } */
