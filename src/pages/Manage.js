@@ -6,6 +6,7 @@ import useAppContext from "../hooks/AppContext";
 
 import { ReactComponent as PasswordIcon } from "../icons/password.svg";
 import { ReactComponent as TerminateIcon } from "../icons/terminate.svg";
+import { ReactComponent as BackIcon } from "../icons/left-arrow.svg";
 
 import "./Manage.css";
 
@@ -18,10 +19,11 @@ const Manage = ({ teams }) => {
   const goTo = (path) => {
     history.push(path);
   }
-
+  
   //Routing helpers shall ensure that we never end up here with user==null, but...
   if (!user) return <></>;
 
+  const backPage = history.location.state && history.location.state.prevPage;
   return (
   <>
     <h1>Manage account and teams</h1>
@@ -47,6 +49,17 @@ const Manage = ({ teams }) => {
       </ul>
     </div>
     <TeamAdmin user={user} teams={teams} />
+    {backPage ?
+      <>
+        <hr className="Manage-separator"/>
+        <div className="Manage-account-link-back">
+          <AppBtn onClick={() => history.goBack()}>
+            <BackIcon />
+          </AppBtn>
+          <p>Back to <Link to={""} onClick={(e) => {e.preventDefault();history.goBack()}}>{backPage}</Link></p>
+        </div>
+      </>  : null
+    }
   </>      
   );
 };

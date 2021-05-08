@@ -10,6 +10,9 @@ import { useHistory, useRouteMatch } from "react-router-dom";
  * 
  * The parent can specify and "auto select"; i.e. a text that, if present among
  * the options, it will always be selected (enforced)
+ * 
+ * Any history state set externally for the current route will be preserved through
+ * any history-replace operations triggered by this component. 
  *
  * Constraints:
  * - Only one param can exist in the URL to signify the ID of the selected item
@@ -21,7 +24,7 @@ import { useHistory, useRouteMatch } from "react-router-dom";
  *   options-array      : [{id: 1000, text: "One option"}, {id: 1234, text: "Another option"}]
  *   -> the select will show the text corresponding to id=1234 ("Another option")
  *   -> the user can change selection to "One option"
- *      -> the route will change (push:ed) to /my/route/to/page/1000
+ *      -> the route will change (replaced:ed) to /my/route/to/page/1000
  *      -> if provided, the parent's onSelected will be called with the selected option, i.e. 
  *         {id: 1234, text: "Another option"}
  *          
@@ -42,7 +45,7 @@ const RouteSelect = ({
 }) => {
   const history = useHistory();
   const routeMatch = useRouteMatch();
-
+  
   //Validate the route's "id part" against the available options and notify parent on the outcome
   useEffect(() => {
     //Don't make any decisions before the options are known
@@ -60,13 +63,13 @@ const RouteSelect = ({
           //Either the user has entered an invalid URL explicitly, or the
           //team that was selected got deleted.
           //console.log("Invalid ID parameter in URL:", routeId);
-          history.replace(`${getBasePath(routeMatch)}`);
+          history.replace(`${getBasePath(routeMatch)}`, history.location.state);
         }
       } else {
         //nothing selected (yet)
         if (options.length === 1) {
           //Only one option available, auto-select it */
-          history.replace(`${getBasePath(routeMatch)}/${options[0][idKey]}`);
+          history.replace(`${getBasePath(routeMatch)}/${options[0][idKey]}`, history.location.state);
         } else {
           //Ensure that the parent know that nothing is selected
           onSelected(null);
@@ -89,7 +92,7 @@ const RouteSelect = ({
         const selectedId = (paramValues.length === 1) ? paramValues[0] : null;
         if (selectedId && (option[idKey] !== selectedId)) {
           //Select it
-          history.push(`${getBasePath(routeMatch)}/${option[idKey]}`)
+          history.replace(`${getBasePath(routeMatch)}/${option[idKey]}`, history.location.state)
         }
       }
     }
@@ -107,7 +110,7 @@ const RouteSelect = ({
       elementId={elementId}
       defaultText="- select -"
       options={options ? options.map(o => ({ id: o[idKey], text: o[textKey] })) : []}
-      onSelected={id => history.push(`${getBasePath(routeMatch)}/${id}`)}
+      onSelected={id => history.replace(`${getBasePath(routeMatch)}/${id}`, history.location.state)}
       selectedId={routeId}
     />
   );

@@ -41,7 +41,7 @@ const Create = ({ teams }) => {
         <InfoBlock>
           <p>
             Additional teams can be defined via the {" "}
-            <Link to={"/creator/manage"}>Manage</Link> section
+            <Link to={{pathname:"/creator/manage", state:{prevPage:"Create new survey"}}}>Manage</Link> section
           </p>
         </InfoBlock>
         {selectedTeam ? (

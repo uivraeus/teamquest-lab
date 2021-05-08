@@ -47,8 +47,11 @@ const Creator = () => {
   const pathTransfer = `${path}/transfer`
 
   const history = useHistory();
+
+  //Make sub-pages know where they came from (what "back" implies) 
+  const historyState = {prevPage: "Main menu"};
   const goTo = (path) => {
-    history.push(path);
+    history.push(path, historyState);
   }
 
   //Alert on db read error
@@ -78,7 +81,7 @@ const Creator = () => {
                     <SurveyNewIcon />
                   </AppBtn>
                   {allowTeamsOp ?
-                    <p><Link to={pathNew}>Create</Link> a new survey</p> :
+                    <p><Link to={{pathname:pathNew, state:historyState}}>Create</Link> a new survey</p> :
                     <p>Create a new survey</p>
                   }
                 </div>
@@ -89,7 +92,7 @@ const Creator = () => {
                     <SurveyMonIcon />
                   </AppBtn>
                   {allowTeamsOp ?
-                    <p><Link to={pathMonitor}>Monitor</Link> and manage previously created surveys</p> :
+                    <p><Link to={{pathname:pathMonitor, state:historyState}}>Monitor</Link> and manage previously created surveys</p> :
                     <p>Monitor and manage previously created surveys</p>
                   }
                 </div>
@@ -99,7 +102,7 @@ const Creator = () => {
                   <AppBtn onClick={() => goTo(pathManage)}>
                     <SettingsIcon />
                   </AppBtn>
-                  <p><Link to={pathManage}>Manage</Link> your account and associated teams</p>
+                  <p><Link to={{pathname:pathManage, state:historyState}}>Manage</Link> your account and associated teams</p>
                 </div>
               </li>
             </ul>

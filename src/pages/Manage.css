@@ -32,3 +32,19 @@
 .Manage-account-link > p {
   margin-left: 1em;
 }
+
+.Manage-account-link-back {
+  display: flex;
+  align-items: center;
+}
+
+.Manage-account-link-back > p {
+  padding-top: 0.25em;
+  margin-left: .3em;
+}
+
+.Manage-separator {
+  width:100%;
+  margin-top: 1.5em;
+  border-bottom: 1  px solid var(--color-border-light);
+}
