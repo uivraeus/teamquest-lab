@@ -62,12 +62,6 @@ const Creator = () => {
 
   //If we enter the signed in part of the app without any team(s), then help the
   //user understand that the first thing to do is to create a team.
-  //(In addition, the menu options for teams-dependent operation will be disabled)
-  useEffect( () => {
-    if (teams && teams.length === 0) {
-      history.push(pathManage);
-    }
-  },[teams, history, pathManage]);
   const allowTeamsOp = teams && teams.length > 0;
   const teamsLinkClassName = "Creator-link" + (allowTeamsOp ? "" : " Creator-link-disabled");
   //TODO: refactor this to make it more DRY (add some render-helper or similar)
