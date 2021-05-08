@@ -65,7 +65,12 @@ const Creator = () => {
 
   //If we enter the signed in part of the app without any team(s), then help the
   //user understand that the first thing to do is to create a team.
-  const allowTeamsOp = teams && teams.length > 0;
+  //NOTE: what to show before "teams" has loaded?
+  //      - the logical move would be to "disallow" but..
+  //      - that will cause a "disabled-flicker" at each load when there _are_ teams
+  //        -> optimize on the common case (teams.length > 0)
+  //        (it's just a presentational thing; the teams-pages will not mount anyway)
+  const allowTeamsOp = !teams || teams.length > 0;
   const teamsLinkClassName = "Creator-link" + (allowTeamsOp ? "" : " Creator-link-disabled");
   //TODO: refactor this to make it more DRY (add some render-helper or similar)
   return (
