@@ -24,7 +24,7 @@ const SurveyResults = () => {
     "Work and Productivity"
   ];
 
-  const toolboxUrl = "https://en.wikipedia.org/wiki/Knitting";
+  const toolboxUrl = "https://proagileab.github.io/agile-team-development/";
 
   //Derive information/text to render for the "latest result"
   //TODO: replace with "selected" instead of "latest" ?
