@@ -1,5 +1,13 @@
 import analyze from './algorithm';
 
+//Helper for translating to answer range 0-4 (as in db backend)
+const dbFormat = (responses) => {
+  const transformed = responses.map(response =>
+    response.map(v => v - 1)
+  );
+  return transformed;
+}
+
 describe("Analyze responses", () => {
   // test("no input", () => {
 
@@ -26,64 +34,101 @@ describe("Analyze responses", () => {
 
     expect(analyze(inputResponses)).toEqual(expAnalysisResult);
   });
-  
-  test("50% Dependency and Inclusion", () => {
+ 
+  test("Approx Mean: Dependency and Inclusion", () => {
     //questions 1,5,9 and 13
-    const inputResponses = [
-      [0,0,0,0,4,0,0,0,1,0,0,0,2],
-      [1,0,0,0,3,0,0,0,3,0,0,0,2],
-      [2,0,0,0,2,0,0,0,2,0,0,0,2],
-      [3,0,0,0,1,0,0,0,1,0,0,0,2],
-      [4,0,0,0,0,0,0,0,3,0,0,0,2]
-    ];
-    const expAnalysisResult = [50,0,0,0];
-
-    expect(analyze(inputResponses)).toEqual(expAnalysisResult);
+    //Mean corresponds to avg of 9.65 
+    //-> 3x10 + 2x9 -> avg 9.6 -> just below mean (49.07...)
+    const inputResponses = dbFormat([
+    /* |       |       |       | */
+      [1,1,1,1,5,1,1,1,1,1,1,1,3],
+      [2,1,1,1,4,1,1,1,3,1,1,1,1],
+      [3,1,1,1,3,1,1,1,2,1,1,1,2],
+      [4,1,1,1,2,1,1,1,2,1,1,1,1],
+      [5,1,1,1,1,1,1,1,1,1,1,1,2]
+    ]);
+    const expAnalysisResult = [49,0,0,0];
+    const result = analyze(inputResponses); 
+    result.forEach((r,i) => {
+      expect(r).toBeCloseTo(expAnalysisResult[i]);
+    });
   });
 
-  test("50% Counter-Dependency and Fight", () => {
+  test("Approx 25% Counter-Dependency and Fight", () => {
     //questions 2,6 and 10
-    const inputResponses = [
-      [0,0,0,0,0,4,0,0,0,1,0,0,0],
-      [0,1,0,0,0,3,0,0,0,3,0,0,0],
-      [0,2,0,0,0,2,0,0,0,2,0,0,0],
-      [0,3,0,0,0,1,0,0,0,1,0,0,0],
-      [0,4,0,0,0,0,0,0,0,3,0,0,0]
-    ];
-    const expAnalysisResult = [0,50,0,0];
-
-    expect(analyze(inputResponses)).toEqual(expAnalysisResult);
+    //25% corresponds to avg of 5.92
+    //-> 3x5 + 1x8 + 1x7 -> avg 6 -> just above 25% (26.38) 
+    const inputResponses = dbFormat([
+    /*   |       |       |       */
+      [1,1,1,1,1,2,1,1,1,2,1,1,1],
+      [1,3,1,1,1,1,1,1,1,1,1,1,1],
+      [1,2,1,1,1,1,1,1,1,2,1,1,1],
+      [1,4,1,1,1,3,1,1,1,1,1,1,1],
+      [1,5,1,1,1,1,1,1,1,1,1,1,1]
+    ]);
+    const expAnalysisResult = [0,26,0,0];
+    const result = analyze(inputResponses); 
+    result.forEach((r,i) => {
+      expect(r).toBeCloseTo(expAnalysisResult[i]);
+    });
   });
 
-  test("50% Trust and Structure", () => {
+  test("75% Trust and Structure", () => {
     //questions 3,7 and 11
-    const inputResponses = [
-      [0,0,0,0,0,0,4,0,0,0,1,0,0],
-      [0,0,1,0,0,0,3,0,0,0,3,0,0],
-      [0,0,2,0,0,0,2,0,0,0,2,0,0],
-      [0,0,3,0,0,0,1,0,0,0,1,0,0],
-      [0,0,4,0,0,0,0,0,0,0,3,0,0]
-    ];
-    const expAnalysisResult = [0,0,50,0];
-
-    expect(analyze(inputResponses)).toEqual(expAnalysisResult);
+    //75% corresponds to avg of 12.00
+    //-> 12 + 13 + 11 + 14 + 10-> avg 12 -> 75% 
+    const inputResponses = dbFormat([
+    /*     |       |       |     */
+      [1,1,5,1,1,1,5,1,1,1,2,1,1],
+      [1,1,4,1,1,1,4,1,1,1,5,1,1],
+      [1,1,3,1,1,1,4,1,1,1,4,1,1],
+      [1,1,5,1,1,1,5,1,1,1,4,1,1],
+      [1,1,2,1,1,1,5,1,1,1,3,1,1]
+    ]);
+    const expAnalysisResult = [0,0,75,0];
+    const result = analyze(inputResponses); 
+    result.forEach((r,i) => {
+      expect(r).toBeCloseTo(expAnalysisResult[i]);
+    });
   });
 
-  test("50% Work and Productivity", () => {
+  test("84% Work and Productivity", () => {
     //questions 4,8 and 12
-    const inputResponses = [
-      [0,0,0,0,0,0,0,4,0,0,0,1,0],
-      [0,0,0,1,0,0,0,3,0,0,0,3,0],
-      [0,0,0,2,0,0,0,2,0,0,0,2,0],
-      [0,0,0,3,0,0,0,1,0,0,0,1,0],
-      [0,0,0,4,0,0,0,0,0,0,0,3,0]
-    ];
-    const expAnalysisResult = [0,0,0,50];
-
-    expect(analyze(inputResponses)).toEqual(expAnalysisResult);
+    //84% corresponds to avg of 13.00
+    //-> 13 + 12 + 14 + 11 + 15-> avg 13 -> 84% 
+    const inputResponses = dbFormat([
+    /*       |       |       |   */
+      [1,1,1,4,1,1,1,4,1,1,1,5,1],
+      [1,1,1,3,1,1,1,5,1,1,1,4,1],
+      [1,1,1,5,1,1,1,4,1,1,1,5,1],
+      [1,1,1,4,1,1,1,3,1,1,1,4,1],
+      [1,1,1,5,1,1,1,5,1,1,1,5,1]
+    ]);
+    const expAnalysisResult = [0,0,0,84];
+    const result = analyze(inputResponses); 
+    result.forEach((r,i) => {
+      expect(r).toBeCloseTo(expAnalysisResult[i]);
+    });
   });
-
-  //TODO: Add test cases with focus on each result category
+  
+  test("Approx 16% Work and Productivity", () => {
+    //questions 4,8 and 12
+    //16% corresponds to avg of 9.93
+    //-> 4x10 + 1x9-> avg 9.8 -> just below 16% (15.70) 
+    const inputResponses = dbFormat([
+    /*       |       |       |   */
+      [1,1,1,4,1,1,1,4,1,1,1,2,1],
+      [1,1,1,3,1,1,1,2,1,1,1,5,1],
+      [1,1,1,2,1,1,1,5,1,1,1,3,1],
+      [1,1,1,1,1,1,1,5,1,1,1,4,1],
+      [1,1,1,3,1,1,1,3,1,1,1,3,1]
+    ]);
+    const expAnalysisResult = [0,0,0,16];
+    const result = analyze(inputResponses); 
+    result.forEach((r,i) => {
+      expect(r).toBeCloseTo(expAnalysisResult[i]);
+    });
+  });
 });
 
 describe("Failed analysis due to invalid input", () => {
