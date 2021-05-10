@@ -29,6 +29,7 @@
   --color-result-b: rgb(128,160,70);
   --color-result-c: rgb(70,160,128);
   --color-result-d: rgb(70,128,160);
+  --color-result-nomatch: rgb(160,160,160);
   --font-big:  calc(17px + 2.7vw); 
   --font-medium: calc(11px + 2.7vw);
   --font-small: calc(8px + 2.2vw);
