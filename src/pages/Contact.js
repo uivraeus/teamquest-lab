@@ -5,7 +5,7 @@ const Contact = () => {
     <>
       <h1>Contact information</h1>
       <p>Questions and requests regarding this App should be sent by email to:</p>
-      <a href="mailto:contact@teamquest.uivraeus.net?subject=Mini-TMQ">contact@teamquest.uivraeus.net</a>
+      <a href="mailto:contact@mini-tmq.com?subject=Mini-TMQ">contact@mini-tmq.com</a>
     </>
   );
 };

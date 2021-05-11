@@ -2,5 +2,5 @@
 Work in progress
 
 ## Example deployment
-* Deployment of [teamquest](https://teamquest.uivraeus.net) at [Netlify](https://www.netlify.com/)
+* Deployment of [mini-tmq](https://mini-tmq.com) at [Netlify](https://www.netlify.com/)
 
