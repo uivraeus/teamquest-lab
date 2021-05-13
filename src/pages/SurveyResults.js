@@ -8,26 +8,26 @@ import { useParams } from "react-router-dom";
 
 import './SurveyResults.css';
 
+//The charts presented under this result page are partially styled via javascript
+//So, to align the colors between the latest result and the history plots the
+//colors are defined here (or at least which css-variables that hold them)
+const colors = ["a", "b", "c", "d"].map(c => `var(--color-result-${c})`);
+
+const labels = [
+  "1. Dependency and Inclusion",
+  "2. Counter-Dependency and Fight",
+  "3. Trust and Structure",
+  "4. Work and Productivity"
+];
+
+const toolboxUrl = "https://proagileab.github.io/agile-team-development/";
+
 const SurveyResults = () => {
   const { teamId } = useParams();
   const { results, latestResult, analysisError } = useTeamResults(teamId);
 
-  //The charts presented under this result page are partially styled via javascript
-  //So, to align the colors between the latest result and the history plots the
-  //colors are defined here (or at least which css-variables that hold them)
-  const colors = ["a", "b", "c", "d"].map(c => `var(--color-result-${c})`);
-
-  const labels = [
-    "Dependency and Inclusion",
-    "Counter-Dependency and Fight",
-    "Trust and Structure",
-    "Work and Productivity"
-  ];
-
-  const toolboxUrl = "https://proagileab.github.io/agile-team-development/";
-
   //Derive information/text to render for the "latest result"
-  //TODO: replace with "selected" instead of "latest" ?
+  //TODO (?): replace with "selected" instead of "latest"
   let showLatestResult = false;
   let latestDescrStr = null;
   if (latestResult) {
@@ -64,6 +64,8 @@ const SurveyResults = () => {
               {latestResult ? (
                 <>
                   <em>{latestDescrStr}</em>
+                  <hr/>
+                  <h4>Matching stages:</h4>
                   <SurveyResult 
                     resultData={latestResult.analysis}
                     colors = {colors}

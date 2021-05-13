@@ -35,10 +35,15 @@
 }
 
 
-.SurveyResult-category > * {
+.SurveyResult-category > .SurveyResult-description {
   margin: 0;
   padding: 0;
+  color: var(--color-result-nomatch);
   /* border: 1px  dotted orange; */
+}
+
+.SurveyResult-category.matched > .SurveyResult-description {
+  color: var(--color-text);
 }
 
 .SurveyResult-category > .ResultPie {
@@ -47,6 +52,11 @@
   height: fit-content;
   min-width: fit-content;
   min-height: fit-content;
+  font-weight: normal;
+}
+
+.SurveyResult-category.matched > .ResultPie {
+  font-weight: bold
 }
 
 .SurveyResult-description {
