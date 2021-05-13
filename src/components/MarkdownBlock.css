@@ -25,7 +25,13 @@
 }
 
 .MarkdownBlock li {
+    margin-top: 0.5em;
     font-size: var(--font-small);
+}
+
+.MarkdownBlock li::marker {
+    color: var(--color-text-info);
+    font-size: 1.2em;
 }
 
 /* Until I decide to change the general App styling of <p>s, add some

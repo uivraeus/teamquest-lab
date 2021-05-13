@@ -3,6 +3,7 @@ import { CompLev } from "../helpers/survey";
 import InfoBlock from "../components/InfoBlock";
 import SurveyResult from "../components/SurveyResult";
 import ResultsChart from "../components/ResultsChart";
+import ResultInterpretation from "../components/ResultInterpretation";
 import useTeamResults from "../hooks/TeamResults";
 import { useParams } from "react-router-dom";
 
@@ -71,6 +72,12 @@ const SurveyResults = () => {
                     colors = {colors}
                     labels = {labels}
                   />
+                  <h4>Analysis</h4>
+                  { latestResult.meta.ongoing ?
+                    <p><i>Waiting for completed survey...</i></p> :
+                    <ResultInterpretation resultData={latestResult.analysis}/>
+                  }                  
+                  <hr/>
                   <InfoBlock>
                     <p>
                       Learn more about the <a href={toolboxUrl} target="_blank" rel="noreferrer" >Toolbox</a> for working

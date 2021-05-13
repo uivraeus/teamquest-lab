@@ -1,6 +1,10 @@
-.SurveyResults hr {
+.SurveyResults > hr {
   min-width: 100%;
   border:none;
   border-bottom: 1px solid var(--color-border-light);
   margin: 1em 0 1em 0;
+}
+
+.SurveyResults > .InfoBlock {
+  margin-top: 2em;
 }
