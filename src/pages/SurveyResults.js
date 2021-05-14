@@ -73,7 +73,7 @@ const SurveyResults = () => {
                     labels = {labels}
                   />
                   <h4>Analysis</h4>
-                  { latestResult.meta.ongoing ?
+                  {(latestResult.meta.ongoing || !latestResult.analysis) ?
                     <p><i>Waiting for completed survey...</i></p> :
                     <ResultInterpretation resultData={latestResult.analysis}/>
                   }                  
