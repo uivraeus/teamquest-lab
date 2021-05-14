@@ -5,6 +5,7 @@ import SurveyResult from "./SurveyResult";
 import ResultsChart from "./ResultsChart";
 import ResultInterpretation from "./ResultInterpretation";
 import useTeamResults from "../hooks/TeamResults";
+import { Link } from "react-router-dom";
 
 import './SurveyResults.css';
 
@@ -22,7 +23,7 @@ const labels = [
 
 const toolboxUrl = "https://proagileab.github.io/agile-team-development/";
 
-const SurveyResults = ({ teamId }) => {
+const SurveyResults = ({ teamId, manageUrl = null }) => {
   const { results, latestResult, analysisError } = useTeamResults(teamId);
 
   //Derive information/text to render for the "latest result"
@@ -49,6 +50,18 @@ const SurveyResults = ({ teamId }) => {
     }
   }
 
+  //Hint to the users waiting for analysis results due to ongoing survey
+  const CompletionHint = () =>
+    manageUrl ?
+      <p>
+        You can mark the survey as completed by <Link to={manageUrl}>editing the survey
+        settings</Link> if no additional responses are expected.
+      </p> : 
+      <p>
+        The initiator of the survey can mark it as completed if no additional responses
+        are expected.
+      </p>  
+
   return (
     <div className="SurveyResults">
       <h3>Latest survey</h3>
@@ -72,16 +85,24 @@ const SurveyResults = ({ teamId }) => {
                   />
                   <h4>Analysis</h4>
                   {(latestResult.meta.ongoing || !latestResult.analysis) ?
-                    <p><i>Waiting for completed survey...</i></p> :
+                    <>
+                      <p><i>Waiting for completed survey...</i></p>
+                      <InfoBlock>
+                        <CompletionHint/>
+                      </InfoBlock> 
+                    </> :
                     <ResultInterpretation resultData={latestResult.analysis}/>
                   }                  
                   <hr/>
-                  <InfoBlock>
-                    <p>
-                      Learn more about the <a href={toolboxUrl} target="_blank" rel="noreferrer" >Toolbox</a> for working
-                      with each team maturity profile
-                    </p>
-                  </InfoBlock>
+                  {(!latestResult.meta.ongoing && latestResult.analysis) ?
+                    <InfoBlock>
+                      <p>
+                        Learn more about the <a href={toolboxUrl} target="_blank" rel="noreferrer" >Toolbox</a> for working
+                        with each team maturity profile
+                      </p>
+                    </InfoBlock> : null
+                  }
+                  
                 </>
               ) : (
                 <em>No surveys found</em>

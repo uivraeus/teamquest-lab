@@ -34,6 +34,10 @@ const ResultsPage = () => {
   //of information on owned teams. Use that before useOwnedTeams returns a value.
   const ownedTeams = teams || (history.location.state && history.location.state.teams) || null;
   const mySelectedTeam = (ownedTeams && ownedTeams.find(t => t.id === teamId));
+  
+  //When the owner of a team, pass a long a "manage surveys link" to SurveyResult
+  const manageUrl = mySelectedTeam ? `/creator/tracker/${teamId}` : null;
+
   return (
     <>
       {user ?
@@ -61,7 +65,7 @@ const ResultsPage = () => {
         </div> : null
       }
       {teamId ?
-        <SurveyResults teamId={teamId} /> : null
+        <SurveyResults teamId={teamId} manageUrl={manageUrl} /> : null
       }
       
     </>
