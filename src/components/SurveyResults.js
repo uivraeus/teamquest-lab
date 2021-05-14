@@ -54,8 +54,8 @@ const SurveyResults = ({ teamId, manageUrl = null }) => {
   const CompletionHint = () =>
     manageUrl ?
       <p>
-        You can mark the survey as completed by <Link to={manageUrl}>editing the survey
-        settings</Link> if no additional responses are expected.
+        You can mark the survey as completed by <Link to={{pathname:manageUrl, state:{prevPage:"Results page"}}}>
+        editing the survey settings</Link> if no additional responses are expected.
       </p> : 
       <p>
         The initiator of the survey can mark it as completed if no additional responses

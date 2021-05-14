@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import BackBtnLink from "../components/BackBtnLink";
 import InfoBlock from "../components/InfoBlock";
 import RouteSelect from "../components/RouteSelect"
 import SurveyEditModal from "../components/SurveyEditModal";
@@ -192,6 +193,7 @@ const SurveyCatalog = ({ teams }) => {
           <em>{readError}</em>
         </p>
       ) : null}
+      <BackBtnLink separator/>
     </div>
   );
 };
