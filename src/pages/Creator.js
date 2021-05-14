@@ -17,6 +17,7 @@ import AppBtn from "../components/AppBtn";
 import InfoBlock from '../components/InfoBlock';
 
 import { ReactComponent as SurveyNewIcon } from "../icons/survey-new.svg";
+import { ReactComponent as ResultsIcon } from "../icons/results.svg";
 import { ReactComponent as SurveyMonIcon } from "../icons/survey-monitor.svg";
 import { ReactComponent as SettingsIcon } from "../icons/settings.svg";
 
@@ -45,6 +46,9 @@ const Creator = () => {
   const pathTerminate = `${path}/terminate`;
   const pathInherit = `${path}/inherit`
   const pathTransfer = `${path}/transfer`
+
+  //Results are shown via a public route (also for signed in users)
+  const pathResults = "/results";
 
   const history = useHistory();
 
@@ -88,6 +92,17 @@ const Creator = () => {
                   {allowTeamsOp ?
                     <p><Link to={{pathname:pathNew, state:historyState}}>Create</Link> a new survey</p> :
                     <p>Create a new survey</p>
+                  }
+                </div>
+              </li>
+              <li>
+                <div className={teamsLinkClassName}>
+                  <AppBtn onClick={() => goTo(pathResults)} disabled={!allowTeamsOp}>
+                    <ResultsIcon />
+                  </AppBtn>
+                  {allowTeamsOp ?
+                    <p><Link to={{pathname:pathResults, state:historyState}}>Results</Link> and analysis of previously created surveys</p> :
+                    <p>Results and analysis of previously created surveys</p>
                   }
                 </div>
               </li>

@@ -22,6 +22,9 @@ import './App.css';
 const App = () => {
   const { initialAuthChecked } = useAppContext();
 
+  //Note that the /result route is a bit special; the variant without any
+  //team-identifier is only available for users who are signed in (who can
+  //select one of their teams)
   return (
     <div className="App">
       <AppHeader />
@@ -30,6 +33,7 @@ const App = () => {
           <p>Loading...</p> : (
           <Switch>
             <PublicRoute exact path="/start" component={Start}></PublicRoute>
+            <PrivateRoute exact path="/results" component={ResultsPage}></PrivateRoute>
             <Route path="/run/:surveyId" component={Run}></Route>
             <Route path="/results/:teamId" component={ResultsPage}></Route>
             <PublicRoute path="/signup" component={Signup}></PublicRoute>
