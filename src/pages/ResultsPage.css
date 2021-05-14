@@ -23,3 +23,7 @@
 .ResultsPage-team-control > label {
   margin-right: .5em;
 }
+
+.ResultsPage-team-control > .AppBtn {
+  margin-left: .5em;
+}

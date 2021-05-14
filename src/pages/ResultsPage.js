@@ -7,6 +7,8 @@ import { useHistory, useParams } from "react-router-dom";
 import useAppContext from '../hooks/AppContext'
 import useOwnedTeams from '../hooks/OwnedTeams';
 
+import { ReactComponent as ShareIcon } from "../icons/share.svg";
+
 import './ResultsPage.css';
 
 /* This page is accessible via a "public route", i.e. not only to signed-in users.
@@ -34,6 +36,11 @@ const ResultsPage = () => {
   //of information on owned teams. Use that before useOwnedTeams returns a value.
   const ownedTeams = teams || (history.location.state && history.location.state.teams) || null;
   const mySelectedTeam = (ownedTeams && ownedTeams.find(t => t.id === teamId));
+
+  //An owner of a selected team can share the results page via the team-control section
+  const onShare = () => {
+    history.push(`/creator/share-results/${teamId}`, {prevPage: "Results page", teams:ownedTeams});
+  };
   
   //When the owner of a team, pass a long a "manage surveys link" to SurveyResult
   const manageUrl = mySelectedTeam ? `/creator/tracker/${teamId}` : null;
@@ -52,6 +59,11 @@ const ResultsPage = () => {
                     textKey="alias"
                     elementId="team-select"
                   />
+                  {mySelectedTeam ?
+                    <AppBtn onClick={() => onShare()}>
+                      <ShareIcon />
+                    </AppBtn> : null
+                  }
                 </> :
                 <InfoBlock>
                   <p>This is not one of your managed teams</p>

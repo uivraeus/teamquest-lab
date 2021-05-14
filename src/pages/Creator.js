@@ -11,6 +11,7 @@ import Manage from './Manage';
 import SurveyCatalog from './SurveyCatalog'; 
 import ChangePassword from './ChangePassword';
 import TerminateAccount from './TerminateAccount';
+import ShareResults from './ShareResults';
 import useOwnedTeams from '../hooks/OwnedTeams';
 import useAppContext from '../hooks/AppContext';
 import AppBtn from "../components/AppBtn";
@@ -46,6 +47,7 @@ const Creator = () => {
   const pathTerminate = `${path}/terminate`;
   const pathInherit = `${path}/inherit`
   const pathTransfer = `${path}/transfer`
+  const pathShareResults = `${path}/share-results`;
 
   //Results are shown via a public route (also for signed in users)
   const pathResults = "/results";
@@ -145,6 +147,8 @@ const Creator = () => {
         <Route path={`${pathTransfer}/:transferId`} component={TransferInfo}></Route>
         <Route exact path={pathManage} render={ teamsPage(Manage, teams, readError) }></Route>
         <Route exact path={`${pathManage}/:teamId`} render={ teamsPage(Manage, teams, readError) }></Route>
+        {/* Result-sharing page does not require an initialized teams prop, so don't delay its rendering */}
+        <Route path={`${pathShareResults}/:teamId`} render={ () => <ShareResults teams={teams}/> } ></Route>
         <Route exact path={pathPassword} component={ChangePassword}></Route>
         <Route exact path={pathTerminate} component={TerminateAccount}></Route>
         <Redirect from={`${path}/`} to={`${path}/main`} />
