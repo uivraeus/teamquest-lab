@@ -12,7 +12,7 @@ import Contact from './pages/Contact';
 import MarkdownPage from './pages/MarkdownPage';
 import Start from './pages/Start';
 import Signup from './pages/Signup';
-import SurveyResults from './pages/SurveyResults';
+import ResultsPage from './pages/ResultsPage';
 import Creator from './pages/Creator'
 import Run from './pages/Run';
 
@@ -31,7 +31,7 @@ const App = () => {
           <Switch>
             <PublicRoute exact path="/start" component={Start}></PublicRoute>
             <Route path="/run/:surveyId" component={Run}></Route>
-            <Route path="/results/:teamId" component={SurveyResults}></Route>
+            <Route path="/results/:teamId" component={ResultsPage}></Route>
             <PublicRoute path="/signup" component={Signup}></PublicRoute>
             <PublicRoute path="/login" component={Login}></PublicRoute>
             <Route path="/contact" component={Contact}></Route>

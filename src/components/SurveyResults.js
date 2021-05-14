@@ -1,11 +1,10 @@
 import React from "react";
 import { CompLev } from "../helpers/survey";
-import InfoBlock from "../components/InfoBlock";
-import SurveyResult from "../components/SurveyResult";
-import ResultsChart from "../components/ResultsChart";
-import ResultInterpretation from "../components/ResultInterpretation";
+import InfoBlock from "./InfoBlock";
+import SurveyResult from "./SurveyResult";
+import ResultsChart from "./ResultsChart";
+import ResultInterpretation from "./ResultInterpretation";
 import useTeamResults from "../hooks/TeamResults";
-import { useParams } from "react-router-dom";
 
 import './SurveyResults.css';
 
@@ -23,8 +22,7 @@ const labels = [
 
 const toolboxUrl = "https://proagileab.github.io/agile-team-development/";
 
-const SurveyResults = () => {
-  const { teamId } = useParams();
+const SurveyResults = ({ teamId }) => {
   const { results, latestResult, analysisError } = useTeamResults(teamId);
 
   //Derive information/text to render for the "latest result"
