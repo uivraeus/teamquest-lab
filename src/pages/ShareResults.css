@@ -36,12 +36,3 @@
   border-bottom: 1  px solid var(--color-border-light);
 }
 
-.ShareResults-link-back {
-  display: flex;
-  align-items: center;
-}
-
-.ShareResults-link-back > p {
-  padding-top: 0.25em;
-  margin-left: .3em;
-}

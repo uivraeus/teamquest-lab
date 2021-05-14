@@ -1,9 +1,9 @@
 import React, { useEffect } from "react";
 import AppBtn from "../components/AppBtn";
-import { Link, useHistory, useParams } from "react-router-dom";
+import { useHistory, useParams } from "react-router-dom";
 import QRCode from "qrcode.react";
+import BackBtnLink from "../components/BackBtnLink";
 
-import { ReactComponent as BackIcon } from "../icons/left-arrow.svg";
 import { ReactComponent as CopyIcon } from "../icons/copy.svg";
 
 import './ShareResults.css';
@@ -45,8 +45,6 @@ const ShareResults = ({teams}) => {
     }
   }
 
-  const backPage = history.location.state && history.location.state.prevPage;
-  
   return (
     <>
       <div className="ShareResults">
@@ -72,16 +70,7 @@ const ShareResults = ({teams}) => {
           </div>
         </div>
       </div>
-      {backPage ?
-        <>
-          <div className="ShareResults-link-back">
-            <AppBtn onClick={() => history.goBack()}>
-              <BackIcon />
-            </AppBtn>
-            <p>Back to <Link to={""} onClick={(e) => {e.preventDefault();history.goBack()}}>{backPage}</Link></p>
-          </div>
-        </>  : null
-      }
+      <BackBtnLink />
     </>
   );
   
