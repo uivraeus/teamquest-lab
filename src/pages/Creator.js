@@ -53,7 +53,8 @@ const Creator = () => {
   const history = useHistory();
 
   //Make sub-pages know where they came from (what "back" implies) 
-  const historyState = {prevPage: "Main menu"};
+  //Also include "teams" for jump-starting ownership check "dual private/public use" pages                    
+  const historyState = {prevPage: "Main menu", teams};
   const goTo = (path) => {
     history.push(path, historyState);
   }

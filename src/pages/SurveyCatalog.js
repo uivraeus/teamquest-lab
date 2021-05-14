@@ -114,8 +114,8 @@ const SurveyCatalog = ({ teams }) => {
         <>
           <InfoBlock>
             <p>
-              The <Link to={pathR}>analysis result page</Link> for this team is
-              continuously updated when new responses are received.
+              The <Link to={{pathname:pathR, state:{teams}}}>analysis result page</Link>
+              for this team is continuously updated when new responses are received.
             </p>
           </InfoBlock>
           <h3>Ongoing surveys</h3>

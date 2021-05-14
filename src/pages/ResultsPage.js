@@ -22,7 +22,6 @@ const ResultsPage = () => {
   //For signed in users; determine what to show in the team-control part
   const { teams, readError } = useOwnedTeams();
   const { showAlert, user } = useAppContext();
-  const mySelectedTeam = (teams && teams.find(t => t.id === teamId));
   
   //Alert on db read error (but don't do anything... what _could_ be done?)
   useEffect( () => {
@@ -31,17 +30,21 @@ const ResultsPage = () => {
     }
   }, [readError, showAlert])
 
+  //If we were directed to this page from the Creator, then we have a hand-over
+  //of information on owned teams. Use that before useOwnedTeams returns a value.
+  const ownedTeams = teams || (history.location.state && history.location.state.teams) || null;
+  const mySelectedTeam = (ownedTeams && ownedTeams.find(t => t.id === teamId));
   return (
     <>
       {user ?
         <div className="ResultsPage-signed-in">
           <div className="ResultsPage-team-control">
-            {teams ?
+            {ownedTeams ?
               (!teamId || mySelectedTeam) ?
                 <>
                   <label htmlFor="team-select">Team:</label>
                   <RouteSelect
-                    options={teams}
+                    options={ownedTeams}
                     textKey="alias"
                     elementId="team-select"
                   />
