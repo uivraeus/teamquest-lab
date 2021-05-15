@@ -1,0 +1,13 @@
+.LoadingIndicator  {
+  display: flex;
+  flex-direction:column;
+  align-items: center;
+  justify-content: center;
+  height: calc(100vh - var(--height-header));
+  opacity: 0;
+}
+
+.LoadingIndicator.visible {
+  opacity: 1;
+  transition: ease-in 2s;
+}
