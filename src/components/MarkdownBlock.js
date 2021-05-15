@@ -15,15 +15,26 @@ const MarkdownBlock = ({mdFileName = "undefined", onLoaded=null}) => {
     //(keeping the old content would avoid a "white flash" but any "scroll-to-top"
     //is hard to get synchronized to the exact content switch)
     setContent(null);
-    
+    let abort = false;
     loadMarkdown(mdFileName)
       .then((text) => {
-        setContent(text)
-        if (onLoaded) {
-          onLoaded(mdFileName);
+        if (!abort) {
+          setContent(text)
+          onLoaded && onLoaded(mdFileName);
         }
       })
-      .catch((e) => setContent("```\n" + e.message + "\n```"));
+      .catch((e) => {
+        if (!abort) {
+          setContent("```\n" + e.message + "\n```")
+          //indicate completed but failed loading
+          onLoaded && onLoaded(e);
+        }
+      });
+    
+    return () => {
+      abort = true;
+      onLoaded && onLoaded(null);
+    }
   }, [mdFileName, onLoaded]);
 
   
