@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { loadMarkdown, headingRenderer, linkRenderer, blockquoteRenderer } from "../helpers/markdown";
+import { loadMarkdown, MdLink, MdHeading, MdBlockquote } from "../helpers/markdown";
 import ReactMarkdown from "react-markdown";
 
 import './MarkdownBlock.css';
@@ -29,7 +29,19 @@ const MarkdownBlock = ({mdFileName = "undefined", onLoaded=null}) => {
   
   //No "loading" indicator for now...
   return (
-    <ReactMarkdown className="MarkdownBlock" children={content ? content : ""} renderers={{ link: linkRenderer, heading: headingRenderer, blockquote: blockquoteRenderer }} />
+    <ReactMarkdown 
+      className="MarkdownBlock"
+      children={content ? content : ""} 
+      components={{
+        a: MdLink,
+        h1: MdHeading,
+        h2: MdHeading,
+        h3: MdHeading,
+        h4: MdHeading,
+        h5: MdHeading,
+        h6: MdHeading,
+        blockquote: MdBlockquote
+      }} />
   );
 };
 
