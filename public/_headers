@@ -1,5 +1,4 @@
 # Note that this requires INLINE_RUNTIME_CHUNK=false 
 # [https://create-react-app.dev/docs/advanced-configuration/]
 /*
-  Content-Security-Policy: default-src 'self';
-  Content-Security-Policy: connect-src 'self' https://www.googleapis.com;
+  Content-Security-Policy: default-src 'self'; connect-src 'self' https://www.googleapis.com;
