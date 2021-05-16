@@ -87,9 +87,11 @@ const SurveyResults = ({ teamId, manageUrl = null }) => {
                   {(latestResult.meta.ongoing || !latestResult.analysis) ?
                     <>
                       <p><i>Waiting for completed survey...</i></p>
-                      <InfoBlock>
-                        <CompletionHint/>
-                      </InfoBlock> 
+                      {latestResult.meta.compLev !== CompLev.TOO_FEW ?
+                        <InfoBlock>
+                          <CompletionHint/>
+                        </InfoBlock> : null
+                      } 
                     </> :
                     <ResultInterpretation resultData={latestResult.analysis}/>
                   }                  
