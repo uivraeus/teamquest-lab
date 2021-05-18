@@ -1,21 +1,13 @@
 //3rd-party
-import React, { useEffect } from 'react';
+import React, { Suspense, lazy, useEffect } from 'react';
 import { Link, Redirect, Route, Switch, useHistory, useRouteMatch } from 'react-router-dom'
 
-//My sub-routes and stuff
-import SurveyInfo from './SurveyInfo';
-import Inherit from './Inherit';
-import TransferInfo from './TransferInfo';
-import Create from './Create';
-import Manage from './Manage';
-import SurveyCatalog from './SurveyCatalog'; 
-import ChangePassword from './ChangePassword';
-import TerminateAccount from './TerminateAccount';
-import ShareResults from './ShareResults';
+//My hooks and helpers
 import useOwnedTeams from '../hooks/OwnedTeams';
 import useAppContext from '../hooks/AppContext';
 import AppBtn from "../components/AppBtn";
 import InfoBlock from '../components/InfoBlock';
+import LoadingIndicator from '../components/LoadingIndicator';
 
 import { ReactComponent as SurveyNewIcon } from "../icons/survey-new.svg";
 import { ReactComponent as ResultsIcon } from "../icons/results.svg";
@@ -24,13 +16,29 @@ import { ReactComponent as SettingsIcon } from "../icons/settings.svg";
 
 import './Creator.css';
 
+//Lazy loaded components for the sub-pages
+//(chunk names aren't required but makes it easier to analyze in dev tools )
+const SurveyInfo = lazy(() => import(/* webpackChunkName: 'SurveyInfo' */ './SurveyInfo'));
+const Inherit = lazy(() => import(/* webpackChunkName: 'Inherit' */ './Inherit'));
+const TransferInfo = lazy(() => import(/* webpackChunkName: 'TransferInfo' */ './TransferInfo'));
+const ChangePassword = lazy(() => import(/* webpackChunkName: 'ChangePassword' */ './ChangePassword'));
+const TerminateAccount = lazy(() => import(/* webpackChunkName: 'TerminateAccount' */ './TerminateAccount'));
+const ShareResults = lazy(() => import(/* webpackChunkName: 'ShareResults' */ './ShareResults'));
+//The routes that are more "popular" can be preloaded (gray-area...)
+const CreatePromise = import(/* webpackChunkName: 'Create' */ './Create');
+const ManagePromise = import(/* webpackChunkName: 'Manage' */ './Manage');
+const SurveyCatalogPromise = import(/* webpackChunkName: 'SurveyCatalog' */ './SurveyCatalog');
+const Create = lazy(() => CreatePromise);
+const Manage = lazy(() => ManagePromise);
+const SurveyCatalog = lazy(() => SurveyCatalogPromise);
+
 /* Internal render-helper for pages that require an _initialized_ "teams" prop  */
 const teamsPage = (Component, teams, readError ) => {
   if (readError) {
     return () => (<p>Can't access user team configuration</p>)
   }
   else if (!teams) {
-    return () => (<p>Loading user team configuration...</p>);
+    return () => (<LoadingIndicator text="Loading user team configuration"/>);
   } else {
     return () => <Component teams={teams}/>
   }
@@ -81,7 +89,7 @@ const Creator = () => {
   const teamsLinkClassName = "Creator-link" + (allowTeamsOp ? "" : " Creator-link-disabled");
   //TODO: refactor this to make it more DRY (add some render-helper or similar)
   return (
-    <>
+    <Suspense fallback={<LoadingIndicator />}>
       <Switch>
         <Route exact path={`${path}/main`}>
           <div className="Creator">
@@ -153,7 +161,7 @@ const Creator = () => {
         <Route exact path={pathTerminate} component={TerminateAccount}></Route>
         <Redirect from={`${path}/`} to={`${path}/main`} />
       </Switch>
-    </>
+    </Suspense>
   );
 }
 
