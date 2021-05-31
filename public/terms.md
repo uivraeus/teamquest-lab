@@ -59,4 +59,4 @@ Please read our [Privacy Policy](/privacy).
 Any claim related to _TBD_'s App shall be governed by the laws of Sweden without regards to its conflict of law provisions.
 
 ***
-_Last updated: April 11, 2021_
+_Last updated: May 11, 2021_
