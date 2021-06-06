@@ -311,7 +311,7 @@ export const isOpenById = async (surveyId) => {
 export const CompLev = {
   CANCELED: 'canceled',
   TOO_FEW : 'too few responders',
-  SOME    : 'several responders',
+  SOME    : 'some responders',
   ALL     : 'all responders'  
 };
 export const getCompLev = (surveyObj, respHandle = null) => {

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import AppBtn from "../components/AppBtn";
+import BackBtnLink from "../components/BackBtnLink";
 import { getClosingTime, load } from "../helpers/survey";
 import { Link, useParams } from "react-router-dom";
 import { ReactComponent as CopyIcon } from "../icons/copy.svg";
@@ -74,6 +75,7 @@ const SurveyInfo = () => {
           The <Link to={pathR}>analysis result page</Link> will be updated when
           enough responses have been collected
         </p>
+        <BackBtnLink separator/>
       </div>
     );
   }

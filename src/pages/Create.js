@@ -13,7 +13,8 @@ const Create = ({ teams }) => {
   const history = useHistory();
   const surveyCreated = (surveyId) => {
     //console.log("Survey created: ", surveyId);
-    history.push(`/creator/info/${surveyId}`);
+    //Replace with maintained state so that "back" implies back to main menu
+    history.replace(`/creator/info/${surveyId}`, history.location.state);
   };
 
   //If no team(s) defined, the user must create one via the Manage section

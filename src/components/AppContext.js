@@ -75,11 +75,12 @@ const AppContextProvider = ({ children }) => {
   }, [fixedContext]);
 
   //Basically render all possible modals and then the actual (wrapped) components
+  //if the initial authentication check has completed.
   return (
     <AppContext.Provider value={context} >
       <QueryModal query={query} onClose={onCloseQuery} />
       <AlertModal alert={alert} onClose={onCloseAlert} />
-      {children}
+      {context.initialAuthChecked ? children : null }
     </AppContext.Provider>
   );
 };

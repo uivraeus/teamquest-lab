@@ -73,12 +73,11 @@ const [infoFields, setInfoFields] = useState(["","",""]);
 
   const onApply = async () => {
     if (editing) {
-      if (addResp && !hours && editMeta && !editMeta.ongoing) {
-        showAlert(
-          "Invalid edit",
-          "This survey is not open. Add more hours to it if you want to add more responders",
-          "Info"
-        );
+      if (editMeta && !editMeta.ongoing && ((addResp && !hours) || (!addResp && hours))) {
+        const msg = !hours ?
+        "This survey is not open. Add more hours to it if you want to add more responders" :
+        "Maximum number of responses received. Add more responders if you want to add more time"
+        showAlert("Invalid edit", msg, "Info");
       } else {
         setFadingOut(true);
         setEditing(false);

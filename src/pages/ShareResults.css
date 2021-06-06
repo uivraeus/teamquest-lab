@@ -1,11 +1,10 @@
-.SurveyInfo {
+.ShareResults {
   display: flex;
   flex-direction: column;
   width: 100%;
-  max-width: 1024px;
 }
 
-.SurveyInfo-url {
+.ShareResults-url {
   display: flex;
   flex-direction: row;
   align-items: flex-start;
@@ -18,16 +17,22 @@
   margin-bottom: 1em;
 }
 
-.SurveyInfo-url a {
+.ShareResults-url a {
   margin-bottom: 1em;
 }
 
-.SurveyInfo-QR {
+.ShareResults-QR {
   margin-top: 1em;
   margin-bottom: .5em;
 }
 
-.SurveyInfo-url-helpers {
+.ShareResults-url-helpers {
   display: flex;
-  
 }
+
+.ShareResults > hr {
+  width:100%;
+  margin-top: 1.5em;
+  border-bottom: 1  px solid var(--color-border-light);
+}
+

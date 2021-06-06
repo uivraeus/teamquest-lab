@@ -1,0 +1,44 @@
+.MarkdownBlock h2 {
+    margin-top: 1em;
+    margin-bottom: .5em;
+}
+
+.MarkdownBlock h3 {
+    margin-top: 1em;
+    margin-bottom: .5em;
+}
+
+.MarkdownBlock h4 {
+    margin-top: 1em;
+    margin-bottom: .5em;
+}
+
+.MarkdownBlock hr {
+    min-width: 100%;
+    border:none;
+    border-bottom: 1px solid var(--color-border-light);
+    margin: 1em 0 1em 0;
+}
+
+.MarkdownBlock ul {
+    margin-top: 0;
+}
+
+.MarkdownBlock li {
+    margin-top: 0.5em;
+    font-size: var(--font-small);
+}
+
+.MarkdownBlock li::marker {
+    color: var(--color-text-info);
+    font-size: 1.2em;
+}
+
+/* Until I decide to change the general App styling of <p>s, add some
+ * extra margin between here (massive text blobs are more sensitive)
+ * Would be cleaner with ".style-override" instead of "!important",
+ * but there is no custom <p> rendere (yet)
+ */
+.MarkdownBlock p {
+    margin-bottom: 1em !important;
+}

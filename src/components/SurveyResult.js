@@ -10,22 +10,25 @@ const descriptions = [
   "This is the performing stage of a team",
 ];
 
+const categoryClass = "SurveyResult-category"
+const matchedCategoryClass = `${categoryClass} matched`
 const descrClass = "SurveyResult-description";
-const disabledDescrClass = "SurveyResult-description disabled";
+const disabledDescrClass = `${descrClass} disabled`;
 
 const SurveyResult = ({ resultData, colors, labels }) => {
   const data = resultData || [0, 0, 0, 0];
 
   return <div className="SurveyResult">
     {data.map((value, index) => (
-      <div key={index} className="SurveyResult-category">
+      <div key={index} className={value > 75 ? matchedCategoryClass : categoryClass}>
         <ResultPie
           value={value}
           max={100}
-          color={value > 75 ? colors[index] : "var(--color-result-nomatch)"}
-          textColor={value > 75 ? "var(--color-text)" : "var(--color-result-nomatch)"}
+          color={colors[index]}
+          opacity={value > 75 ? "1.0" : "0.3"}
+          textColor={value > 75 ? colors[index] : "var(--color-result-nomatch)"}
         />
-        <div className={resultData && value > 75 ? descrClass : disabledDescrClass}>
+        <div className={resultData ? descrClass : disabledDescrClass}>
           <span><p>{labels[index]}</p></span>
           <p>{descriptions[index]}</p>
         </div>
