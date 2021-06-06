@@ -1,5 +1,10 @@
 /* Implement the algorithm for analyzing the responses of a specific survey run
  * Input: Array (#responders) of array (#questions) of numbers (answers, i.e. 0-4); 
+ *        Note on #questions:
+ *        13 questions are used in this implementation. But, the app also allows
+ *        for additional questions which are not related to this algorithm.
+ *        These additional answers are located from index [13] and upward. 
+ * 
  * Output: Array with four results in the range [0-100], one for each "category":
  *         [0]: "Dependency and Inclusion" ,
  *         [1]: "Counter-Dependency and Fight",
@@ -9,8 +14,15 @@
 
   //Will throw if there are errors
 const verifyInput = (responses) => {
-  const nQ = 13; // expected number of questions
   const nV = 5;  // number of answer options (0-4)
+
+  if (responses.length === 0) {
+    throw new Error("Empty response input");
+  }
+  const nQ = responses[0].length; // equal number of questions expected in all responses
+  if (nQ < 13) {
+    throw new Error("Unexpected number of responses: " + nQ);
+  }
 
   responses.forEach(r => {
     if (nQ !== r.length) {

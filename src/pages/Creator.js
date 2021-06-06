@@ -1,26 +1,36 @@
 //3rd-party
-import React, { useEffect } from 'react';
+import React, { Suspense, lazy, useEffect } from 'react';
 import { Link, Redirect, Route, Switch, useHistory, useRouteMatch } from 'react-router-dom'
 
-//My sub-routes and stuff
-import SurveyInfo from './SurveyInfo';
-import Inherit from './Inherit';
-import TransferInfo from './TransferInfo';
-import Create from './Create';
-import Manage from './Manage';
-import SurveyCatalog from './SurveyCatalog'; 
-import ChangePassword from './ChangePassword';
-import TerminateAccount from './TerminateAccount';
+//My hooks and helpers
 import useOwnedTeams from '../hooks/OwnedTeams';
 import useAppContext from '../hooks/AppContext';
 import AppBtn from "../components/AppBtn";
 import InfoBlock from '../components/InfoBlock';
+import LoadingIndicator from '../components/LoadingIndicator';
 
 import { ReactComponent as SurveyNewIcon } from "../icons/survey-new.svg";
+import { ReactComponent as ResultsIcon } from "../icons/results.svg";
 import { ReactComponent as SurveyMonIcon } from "../icons/survey-monitor.svg";
 import { ReactComponent as SettingsIcon } from "../icons/settings.svg";
 
 import './Creator.css';
+
+//Lazy loaded components for the sub-pages
+//(chunk names aren't required but makes it easier to analyze in dev tools )
+const SurveyInfo = lazy(() => import(/* webpackChunkName: 'SurveyInfo' */ './SurveyInfo'));
+const Inherit = lazy(() => import(/* webpackChunkName: 'Inherit' */ './Inherit'));
+const TransferInfo = lazy(() => import(/* webpackChunkName: 'TransferInfo' */ './TransferInfo'));
+const ChangePassword = lazy(() => import(/* webpackChunkName: 'ChangePassword' */ './ChangePassword'));
+const TerminateAccount = lazy(() => import(/* webpackChunkName: 'TerminateAccount' */ './TerminateAccount'));
+const ShareResults = lazy(() => import(/* webpackChunkName: 'ShareResults' */ './ShareResults'));
+//The routes that are more "popular" can be preloaded (gray-area...)
+const CreatePromise = import(/* webpackChunkName: 'Create' */ './Create');
+const ManagePromise = import(/* webpackChunkName: 'Manage' */ './Manage');
+const SurveyCatalogPromise = import(/* webpackChunkName: 'SurveyCatalog' */ './SurveyCatalog');
+const Create = lazy(() => CreatePromise);
+const Manage = lazy(() => ManagePromise);
+const SurveyCatalog = lazy(() => SurveyCatalogPromise);
 
 /* Internal render-helper for pages that require an _initialized_ "teams" prop  */
 const teamsPage = (Component, teams, readError ) => {
@@ -28,7 +38,7 @@ const teamsPage = (Component, teams, readError ) => {
     return () => (<p>Can't access user team configuration</p>)
   }
   else if (!teams) {
-    return () => (<p>Loading user team configuration...</p>);
+    return () => (<LoadingIndicator text="Loading user team configuration"/>);
   } else {
     return () => <Component teams={teams}/>
   }
@@ -45,11 +55,16 @@ const Creator = () => {
   const pathTerminate = `${path}/terminate`;
   const pathInherit = `${path}/inherit`
   const pathTransfer = `${path}/transfer`
+  const pathShareResults = `${path}/share-results`;
+
+  //Results are shown via a public route (also for signed in users)
+  const pathResults = "/results";
 
   const history = useHistory();
 
   //Make sub-pages know where they came from (what "back" implies) 
-  const historyState = {prevPage: "Main menu"};
+  //Also include "teams" for jump-starting ownership check "dual private/public use" pages                    
+  const historyState = {prevPage: "Main menu", teams};
   const goTo = (path) => {
     history.push(path, historyState);
   }
@@ -74,7 +89,7 @@ const Creator = () => {
   const teamsLinkClassName = "Creator-link" + (allowTeamsOp ? "" : " Creator-link-disabled");
   //TODO: refactor this to make it more DRY (add some render-helper or similar)
   return (
-    <>
+    <Suspense fallback={<LoadingIndicator />}>
       <Switch>
         <Route exact path={`${path}/main`}>
           <div className="Creator">
@@ -88,6 +103,17 @@ const Creator = () => {
                   {allowTeamsOp ?
                     <p><Link to={{pathname:pathNew, state:historyState}}>Create</Link> a new survey</p> :
                     <p>Create a new survey</p>
+                  }
+                </div>
+              </li>
+              <li>
+                <div className={teamsLinkClassName}>
+                  <AppBtn onClick={() => goTo(pathResults)} disabled={!allowTeamsOp}>
+                    <ResultsIcon />
+                  </AppBtn>
+                  {allowTeamsOp ?
+                    <p><Link to={{pathname:pathResults, state:historyState}}>Results</Link> and analysis of previously created surveys</p> :
+                    <p>Results and analysis of previously created surveys</p>
                   }
                 </div>
               </li>
@@ -129,11 +155,13 @@ const Creator = () => {
         <Route path={`${pathTransfer}/:transferId`} component={TransferInfo}></Route>
         <Route exact path={pathManage} render={ teamsPage(Manage, teams, readError) }></Route>
         <Route exact path={`${pathManage}/:teamId`} render={ teamsPage(Manage, teams, readError) }></Route>
+        {/* Result-sharing page does not require an initialized teams prop, so don't delay its rendering */}
+        <Route path={`${pathShareResults}/:teamId`} render={ () => <ShareResults teams={teams}/> } ></Route>
         <Route exact path={pathPassword} component={ChangePassword}></Route>
         <Route exact path={pathTerminate} component={TerminateAccount}></Route>
         <Redirect from={`${path}/`} to={`${path}/main`} />
       </Switch>
-    </>
+    </Suspense>
   );
 }
 

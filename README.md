@@ -1,6 +1,6 @@
 # teamquest-lab
 Work in progress
 
-## Example deployment
-* Deployment of [mini-tmq](https://mini-tmq.com) at [Netlify](https://www.netlify.com/)
+## Evaluation version
+* Deployment of [Mini-TMQ app](https://app.minitmq.org) at [Netlify](https://www.netlify.com/)
 

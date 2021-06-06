@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import BackBtnLink from "../components/BackBtnLink";
 import InfoBlock from "../components/InfoBlock";
 import RouteSelect from "../components/RouteSelect"
 import SurveyEditModal from "../components/SurveyEditModal";
@@ -114,8 +115,8 @@ const SurveyCatalog = ({ teams }) => {
         <>
           <InfoBlock>
             <p>
-              The <Link to={pathR}>analysis result page</Link> for this team is
-              continuously updated when new responses are received.
+              The <Link to={{pathname:pathR, state:{teams}}}>analysis result page</Link> for
+              this team is continuously updated when new responses are received.
             </p>
           </InfoBlock>
           <h3>Ongoing surveys</h3>
@@ -192,6 +193,7 @@ const SurveyCatalog = ({ teams }) => {
           <em>{readError}</em>
         </p>
       ) : null}
+      <BackBtnLink separator/>
     </div>
   );
 };

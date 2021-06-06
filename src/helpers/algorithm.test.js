@@ -34,6 +34,17 @@ describe("Analyze responses", () => {
 
     expect(analyze(inputResponses)).toEqual(expAnalysisResult);
   });
+
+  test("additional questions", () => {
+    const inputResponses = [
+      [4,4,4,4,4,4,4,4,4,4,4,4,4,1,3],
+      [4,4,4,4,4,4,4,4,4,4,4,4,4,2,2],
+      [4,4,4,4,4,4,4,4,4,4,4,4,4,3,1]
+    ];
+    const expAnalysisResult = [100,100,100,100];
+
+    expect(analyze(inputResponses)).toEqual(expAnalysisResult);
+  });
  
   test("Approx Mean: Dependency and Inclusion", () => {
     //questions 1,5,9 and 13

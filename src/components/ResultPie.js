@@ -3,7 +3,7 @@ import { PieChart, Pie, Cell, ResponsiveContainer, Label} from "recharts";
 
 import "./ResultPie.css"
 
-const ResultPie = ( {value, max, color="#D000E0", textColor="#000000" }) => {
+const ResultPie = ( {value, max, color="#D000E0", opacity="1.0", textColor="#000000" }) => {
   //Add a "void" entry to get a percentage aspect of the result 
   const data = [
     { name: "result", value },
@@ -40,7 +40,7 @@ const ResultPie = ( {value, max, color="#D000E0", textColor="#000000" }) => {
             stroke=""
           >
             {data.map((entry, index) => (
-              <Cell key={`slice-${index}`} fill={entry.name==="void" ? "#00000000": color} />
+              <Cell key={`slice-${index}`} fill={entry.name==="void" ? "#00000000": color} opacity={opacity}/>
             ))}
             <Label position="center" fill={textColor}>
               {`${value}%`}

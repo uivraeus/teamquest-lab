@@ -22,7 +22,7 @@ export const loadMarkdown = (filename) => {
  * [https://github.com/remarkjs/react-markdown/issues/29]
  * [https://html.spec.whatwg.org/multipage/links.html]
  */
-export const linkRenderer = (props) => {
+export const MdLink = (props) => {
   return (
     props.href.match(/^\//)
       ? <Link to={props.href}>{props.children}</Link>
@@ -51,9 +51,9 @@ export const linkRenderer = (props) => {
  *   ## Another level2 heading {:#another-heading}
  *   Test text
  */
-export const headingRenderer = (props) => {
+export const MdHeading = (props) => {
   // Access actual (string) value of heading
-  let heading = props.children[0].props.value;
+  let heading = props.children[0];
   
   //Can there ever be multiple children?
   // - What does the markdown look like then?
@@ -87,8 +87,8 @@ export const headingRenderer = (props) => {
   }
 }
 
-/* Enbable usage of the App's InfoBlocks by "hijacking" <blockquotes>
+/* Enable usage of the App's InfoBlocks by "hijacking" <blockquote>
  */
-export const blockquoteRenderer = (props) => {
+export const MdBlockquote = (props) => {
   return <InfoBlock>{props.children}</InfoBlock>
 }

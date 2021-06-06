@@ -1,0 +1,29 @@
+.ResultsPage-signed-in {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  margin-top: 1em;
+}
+
+.ResultsPage-signed-in > hr {
+  min-width: 100%;
+  border:none;
+  border-bottom: 1px solid var(--color-border-light);
+}
+
+.ResultsPage-team-control {
+  display:flex;
+  flex-direction: row;
+  align-items: center;
+  width: 100%;
+  /*Ensure consistent hight-layout before/after owned teams are known */  
+  min-height: 3em;
+}
+
+.ResultsPage-team-control > label {
+  margin-right: .5em;
+}
+
+.ResultsPage-team-control > .AppBtn {
+  margin-left: .5em;
+}

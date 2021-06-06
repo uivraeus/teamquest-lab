@@ -1,7 +1,7 @@
 ## Privacy Policy
 Your privacy is important and we take is seriously. This Privacy Policy explains how we use any personal information about you that is collected or generated through your use of the _Mini-TMQ_ web application ("the App").
 
-The App is accessed via _https://mini-tmq.com_ and is operated by _TBD_ ("we", "our", "us"). Please refer to the [Contact](/contact) page for how to reach out to us.
+The App is accessed via _https://app.minitmq.org_ and is operated by _TBD_ ("we", "our", "us"). Please refer to the [Contact](/contact) page for how to reach out to us.
 >Note that this version of _Mini-TMQ_ is only used for test and evaluation purposes. Account information and data collected may be deleted at any moment, without prior notice. See the [Terms and Conditions of Use](/terms) for further details.
 
 ## Principle of anonymous data {:#anon-principles}
@@ -132,3 +132,6 @@ Erasure of your personal data is available to you directly via the App as descri
 If, for some reason, the automatic functions within the App don't allow you to accomplish what is within your rights, please contact us so that we can assist you. See the [Contact](/contact) page for details.
 
 If you believe our processing of your personal data infringes data protection laws, you have a legal right to initiate a complaint with a supervisory authority responsible for data protection in accordance with [Article 77 of the GDPR](https://gdpr-info.eu/art-77-gdpr/).
+
+***
+_Last updated: June 06, 2021_
