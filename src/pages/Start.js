@@ -31,7 +31,7 @@ const Start = () => {
         </TextBlockItem>
         <TextBlockItem>
           <p>
-            It comprises 13 items rated on a <em>Likert scale</em> from 1-5 that
+            It comprises a set of statements rated on a scale from 1-5 that
             outputs a team’s maturity profile regarding its internal
             collaboration.
           </p>
