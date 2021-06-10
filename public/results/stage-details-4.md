@@ -2,8 +2,8 @@
 Innovate in both deliveries and ways of working, and maintain the fruitful climate.
 
 A suggestion of excersices is:
-1. https://proagileab.github.io/agile-team-development/guides/Appreciation-Cards.html
-2. https://proagileab.github.io/agile-team-development/guides/Clarifying-Team-Mandate.html
+1. [Appreciation Cards](https://proagileab.github.io/agile-team-development/guides/Appreciation-Cards.html)
+2. [Clarifying Team Mandate](https://proagileab.github.io/agile-team-development/guides/Clarifying-Team-Mandate.html)
 
 #### Distinguishing characteristics
 - The team's purpose is clear to everyone, and the members work together to achieve it.

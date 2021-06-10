@@ -3,4 +3,4 @@ To get matches on all stages is extremely rare. A team that is one collaborative
 
 #### What the team needs
 The team probably need a reset and a different setup. Start by looking at the team development journey and what needs to be in place in order to start teams: 
-1. https://proagileab.github.io/agile-team-development/guides/A-Team-Development-Framework.html
+1. [A Team Development Framework](https://proagileab.github.io/agile-team-development/guides/A-Team-Development-Framework.html)
