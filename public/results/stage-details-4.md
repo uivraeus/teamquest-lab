@@ -1,7 +1,7 @@
 #### What the team needs
 Innovate in both deliveries and ways of working, and maintain the fruitful climate.
 
-A suggestion of excersices is:
+A suggestion of exercises is:
 1. [Appreciation Cards](https://proagileab.github.io/agile-team-development/guides/Appreciation-Cards.html)
 2. [Clarifying Team Mandate](https://proagileab.github.io/agile-team-development/guides/Clarifying-Team-Mandate.html)
 

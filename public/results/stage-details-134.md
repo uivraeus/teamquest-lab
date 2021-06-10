@@ -1,7 +1,7 @@
 #### What the team needs
 The challenges of the team is then to figure out how the team can have stage 1 issues of dependency and inclusion if the team is otherwise mature.
 
-A suggestion of excersices is:
+A suggestion of exercises is:
 1. [A Team Development Framework](https://proagileab.github.io/agile-team-development/guides/A-Team-Development-Framework.html)
 2. [Team-Start Example](https://proagileab.github.io/agile-team-development/guides/Team-Start-Example.html)
 3. [Journey Lines](https://proagileab.github.io/agile-team-development/guides/Journey-Lines.html)

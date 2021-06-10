@@ -1,7 +1,7 @@
 #### What the team needs
 The team needs to get together as a whole. Note that this is a challenge in teams with more than around 10 members.
 
-A suggestion of excersices is:
+A suggestion of exercises is:
 1. [A Team Development Framework](https://proagileab.github.io/agile-team-development/guides/A-Team-Development-Framework.html)
 2. [Team-Start Example](https://proagileab.github.io/agile-team-development/guides/Team-Start-Example.html)
 3. [Journey Lines](https://proagileab.github.io/agile-team-development/guides/Journey-Lines.html)

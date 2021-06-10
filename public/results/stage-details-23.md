@@ -4,7 +4,7 @@ To get matches on stages 2 and 3 is rare. A team that is more mature should theo
 #### What the team needs
 The challenges of the team is then to figure out why some members are stuck in conflict while other seems to have found common ground with regards to a collaborative atmosphere.
 
-A suggestion of excersices is:
+A suggestion of exercises is:
 1. [Ground Rules and Decision Making](https://proagileab.github.io/agile-team-development/guides/Ground-Rules-and-Decision-Making.html)
 2. [Product Goals for Teams](https://proagileab.github.io/agile-team-development/guides/Product-Goals-for-Teams.html)
 3. [Individual Goals](https://proagileab.github.io/agile-team-development/guides/Individual-Goals.html)

@@ -2,7 +2,7 @@
 The team, therefore, needs to gather the whole team and focus on getting everybody on board in regards to feeling safe, and together get through stage 2, which is where the team gets everybody on board with goals, roles etc. The team should by that expect more periods of conflict and discussions but need that period in order to get the team together as a whole.
 
 
-A suggestion of excersices is:
+A suggestion of exercises is:
 1. [A Team Development Framework](https://proagileab.github.io/agile-team-development/guides/A-Team-Development-Framework.html)
 2. [Team-Start Example](https://proagileab.github.io/agile-team-development/guides/Team-Start-Example.html)
 3. [Journey Lines](https://proagileab.github.io/agile-team-development/guides/Journey-Lines.html)

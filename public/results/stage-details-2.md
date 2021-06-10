@@ -1,7 +1,7 @@
 #### What the team needs
 Keep conflicts work-related and avoid turning them into personal conflict. Focus on created shared goals, roles, and common ground for how to work together.
 
-A suggestion of excersices is:
+A suggestion of exercises is:
 1. [Ground Rules and Decision Making](https://proagileab.github.io/agile-team-development/guides/Ground-Rules-and-Decision-Making.html)
 2. [Product Goals for Teams](https://proagileab.github.io/agile-team-development/guides/Product-Goals-for-Teams.html)
 3. [Individual Goals](https://proagileab.github.io/agile-team-development/guides/Individual-Goals.html)

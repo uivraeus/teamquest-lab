@@ -2,7 +2,7 @@
 The action should be to get the team together and start the process of defining common ground for collaboration, a mutual purpose, expectations, and how to get the team together. 
 Look at all the aspects in the detailed stage descriptions and select focus areas, tools or workshops that could get the team to spend energy on the team-level more.
 
-A suggestion of excersices is:
+A suggestion of exercises is:
 1. [A Team Development Framework](https://proagileab.github.io/agile-team-development/guides/A-Team-Development-Framework.html)
 2. [Team-Start Example](https://proagileab.github.io/agile-team-development/guides/Team-Start-Example.html)
 3. [Journey Lines](https://proagileab.github.io/agile-team-development/guides/Journey-Lines.html)

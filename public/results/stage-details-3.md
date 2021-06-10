@@ -1,7 +1,7 @@
 #### What the team needs
 Give and take feedback from other team members, develop even better work structures, allocate roles, and strengthen good relationships.
 
-A suggestion of excersices is:
+A suggestion of exercises is:
 1. [Journey Lines](https://proagileab.github.io/agile-team-development/guides/Journey-Lines.html)
 2. [Organizational Goals for Teams](https://proagileab.github.io/agile-team-development/guides/Organizational-Goals-for-Teams.html)
 3. [Balancing Team and Individual Work](https://proagileab.github.io/agile-team-development/guides/Balancing-Team-and-Individual-Work.html)
