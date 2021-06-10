@@ -102,7 +102,7 @@ const SurveyResults = ({ teamId, manageUrl = null }) => {
                         You can find the entire toolbox for all the stages <a href={toolboxUrl} target="_blank" rel="noreferrer" >here</a>.
                       </p>
                       <p>
-                        If the suggested tools does not suit you team, please also look at the other tools and try them out.
+                        If the suggested tools don't suit your team, please also look at the other tools and try them out.
                       </p>
                     </InfoBlock> : null
                   }
