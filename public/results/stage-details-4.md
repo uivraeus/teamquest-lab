@@ -1,3 +1,10 @@
+#### What the team needs
+Innovate in both deliveries and ways of working, and maintain the fruitful climate.
+
+A suggestion of exercises is:
+1. [Appreciation Cards](https://proagileab.github.io/agile-team-development/guides/Appreciation-Cards.html)
+2. [Clarifying Team Mandate](https://proagileab.github.io/agile-team-development/guides/Clarifying-Team-Mandate.html)
+
 #### Distinguishing characteristics
 - The team's purpose is clear to everyone, and the members work together to achieve it.
 - Team members can form subgroups and it is clear how that work contributes to the overall goals.
@@ -10,5 +17,4 @@
 - Team decisions are acted upon and results are evaluated.
 - The team makes sure it has good relationships with other teams.
 
-#### What the team needs
-Innovate in both deliveries and ways of working, and maintain the fruitful climate.
+
