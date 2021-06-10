@@ -99,8 +99,10 @@ const SurveyResults = ({ teamId, manageUrl = null }) => {
                   {(!latestResult.meta.ongoing && latestResult.analysis) ?
                     <InfoBlock>
                       <p>
-                        Learn more about the <a href={toolboxUrl} target="_blank" rel="noreferrer" >Toolbox</a> for working
-                        with each team maturity profile
+                        You can find the entire toolbox for all the stages <a href={toolboxUrl} target="_blank" rel="noreferrer" >here</a>.
+                      </p>
+                      <p>
+                        If the suggested tools does not suit you team, please also look at the other tools and try them out.
                       </p>
                     </InfoBlock> : null
                   }
