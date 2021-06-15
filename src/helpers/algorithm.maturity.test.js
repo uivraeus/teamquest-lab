@@ -1,4 +1,4 @@
-import analyze from './algorithm';
+import { analyzeMaturity} from './algorithm';
 
 //Helper for translating to answer range 0-4 (as in db backend)
 const dbFormat = (responses) => {
@@ -8,11 +8,7 @@ const dbFormat = (responses) => {
   return transformed;
 }
 
-describe("Analyze responses", () => {
-  // test("no input", () => {
-
-  // })
-
+describe("Analyze maturity matching", () => {
   test("min values", () => {
       const inputResponses = [
         [0,0,0,0,0,0,0,0,0,0,0,0,0],
@@ -21,7 +17,7 @@ describe("Analyze responses", () => {
       ];
       const expAnalysisResult = [0,0,0,0];
 
-      expect(analyze(inputResponses)).toEqual(expAnalysisResult);
+      expect(analyzeMaturity(inputResponses)).toEqual(expAnalysisResult);
   });
 
   test("max values", () => {
@@ -32,20 +28,9 @@ describe("Analyze responses", () => {
     ];
     const expAnalysisResult = [100,100,100,100];
 
-    expect(analyze(inputResponses)).toEqual(expAnalysisResult);
+    expect(analyzeMaturity(inputResponses)).toEqual(expAnalysisResult);
   });
 
-  test("additional questions", () => {
-    const inputResponses = [
-      [4,4,4,4,4,4,4,4,4,4,4,4,4,1,3],
-      [4,4,4,4,4,4,4,4,4,4,4,4,4,2,2],
-      [4,4,4,4,4,4,4,4,4,4,4,4,4,3,1]
-    ];
-    const expAnalysisResult = [100,100,100,100];
-
-    expect(analyze(inputResponses)).toEqual(expAnalysisResult);
-  });
- 
   test("Approx Mean: Dependency and Inclusion", () => {
     //questions 1,5,9 and 13
     //Mean corresponds to avg of 9.65 
@@ -59,7 +44,7 @@ describe("Analyze responses", () => {
       [5,1,1,1,1,1,1,1,1,1,1,1,2]
     ]);
     const expAnalysisResult = [49,0,0,0];
-    const result = analyze(inputResponses); 
+    const result = analyzeMaturity(inputResponses); 
     result.forEach((r,i) => {
       expect(r).toBeCloseTo(expAnalysisResult[i]);
     });
@@ -78,7 +63,7 @@ describe("Analyze responses", () => {
       [1,5,1,1,1,1,1,1,1,1,1,1,1]
     ]);
     const expAnalysisResult = [0,26,0,0];
-    const result = analyze(inputResponses); 
+    const result = analyzeMaturity(inputResponses); 
     result.forEach((r,i) => {
       expect(r).toBeCloseTo(expAnalysisResult[i]);
     });
@@ -97,7 +82,7 @@ describe("Analyze responses", () => {
       [1,1,2,1,1,1,5,1,1,1,3,1,1]
     ]);
     const expAnalysisResult = [0,0,75,0];
-    const result = analyze(inputResponses); 
+    const result = analyzeMaturity(inputResponses); 
     result.forEach((r,i) => {
       expect(r).toBeCloseTo(expAnalysisResult[i]);
     });
@@ -116,7 +101,7 @@ describe("Analyze responses", () => {
       [1,1,1,5,1,1,1,5,1,1,1,5,1]
     ]);
     const expAnalysisResult = [0,0,0,84];
-    const result = analyze(inputResponses); 
+    const result = analyzeMaturity(inputResponses); 
     result.forEach((r,i) => {
       expect(r).toBeCloseTo(expAnalysisResult[i]);
     });
@@ -135,61 +120,34 @@ describe("Analyze responses", () => {
       [1,1,1,3,1,1,1,3,1,1,1,3,1]
     ]);
     const expAnalysisResult = [0,0,0,16];
-    const result = analyze(inputResponses); 
+    const result = analyzeMaturity(inputResponses); 
     result.forEach((r,i) => {
       expect(r).toBeCloseTo(expAnalysisResult[i]);
     });
   });
 });
 
-describe("Failed analysis due to invalid input", () => {
-  
-  test("too few answers", () => {
+describe("Failed maturity analysis due to invalid input", () => {
+  test("too few answers for maturity calc", () => {
     //12 instead of 13
     const inputResponses = [
     [0,0,0,0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0,0,0,0,0]
+    [0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0]
    ];
    
-   //wrap in "invoker" function to test exception
-   expect(() => analyze(inputResponses)).toThrowError("Unexpected number of responses: 12");
+   expect(() => analyzeMaturity(inputResponses)).toThrowError("Unexpected number of responses for maturity matching: 12");
   });
 
-  test("too many answers", () => {
+  test("too many answers for maturity calc", () => {
     //14 instead of 13
     const inputResponses = [
-    [0,0,0,0,0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0],
     [0,0,0,0,0,0,0,0,0,0,0,0,0,0]
    ];
    
-   //wrap in "invoker" function to test exception
-   expect(() => analyze(inputResponses)).toThrowError("Unexpected number of responses: 14");
-  });
-
-  test("invalid answer - out of range", () => {
-    //5, not in range 0-4
-    const inputResponses = [
-    [0,0,0,0,0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,5,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0,0,0,0,0]
-   ];
-   
-   //wrap in "invoker" function to test exception
-   expect(() => analyze(inputResponses)).toThrowError("Unexpected answers: 5");
-  });
-
-  test("invalid answer - not a number", () => {
-    //null, not in range 0-4
-    const inputResponses = [
-    [0,0,0,0,0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,null,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0,0,0,0,0]
-   ];
-   
-   //wrap in "invoker" function to test exception
-   expect(() => analyze(inputResponses)).toThrowError("Unexpected answers: ");
+   expect(() => analyzeMaturity(inputResponses)).toThrowError("Unexpected number of responses for maturity matching: 14");
   });
 
 });

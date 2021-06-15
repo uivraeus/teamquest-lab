@@ -34,7 +34,7 @@ const SurveyResults = ({ teamId, manageUrl = null }) => {
     const meta = latestResult.meta;
     latestDescrStr =
       new Date(meta.createTime).toLocaleDateString() + ", ";
-    showLatestResult = !!latestResult.analysis;
+    showLatestResult = !!latestResult.maturity; //maturity is always present in survey
     let resultDescr = "results not yet available";
     if (showLatestResult) {
       resultDescr = meta.ongoing ? "still ongoing" : "completed";
@@ -79,12 +79,12 @@ const SurveyResults = ({ teamId, manageUrl = null }) => {
                   <hr/>
                   <h4>Matching stages:</h4>
                   <SurveyResult 
-                    resultData={latestResult.analysis}
+                    resultData={latestResult.maturity}
                     colors = {colors}
                     labels = {labels}
                   />
                   <h4>Analysis</h4>
-                  {(latestResult.meta.ongoing || !latestResult.analysis) ?
+                  {(latestResult.meta.ongoing || !showLatestResult) ?
                     <>
                       <p><i>Waiting for completed survey...</i></p>
                       {latestResult.meta.compLev !== CompLev.TOO_FEW ?
@@ -93,10 +93,10 @@ const SurveyResults = ({ teamId, manageUrl = null }) => {
                         </InfoBlock> : null
                       } 
                     </> :
-                    <ResultInterpretation resultData={latestResult.analysis}/>
+                    <ResultInterpretation resultData={latestResult.maturity}/>
                   }                  
                   <hr/>
-                  {(!latestResult.meta.ongoing && latestResult.analysis) ?
+                  {(!latestResult.meta.ongoing && latestResult.maturity) ?
                     <InfoBlock>
                       <p>
                         You can find the entire toolbox for all the stages <a href={toolboxUrl} target="_blank" rel="noreferrer" >here</a>.

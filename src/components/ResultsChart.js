@@ -14,7 +14,7 @@ import "./ResultsChart.css";
 //TODO/TBD: Add any "safety nets"? Now, I just assume that all results
 //have the same values.length and that this also match colors and labels.
 const ResultsChart = ({ results, maxVal, colors, labels }) => {
-  //Transform the input (list of "result objects" with shape {meta, analysis})
+  //Transform the input (list of "result objects" with shape {meta, maturity, ...})
   //into four separate series to match the API for ScatterChart/Scatter.
   //(i.e. list of pairs of date (x-axis) and score (y-axis))
   //Also, create a separate "meta-series" which is used to populate the custom
@@ -24,14 +24,14 @@ const ResultsChart = ({ results, maxVal, colors, labels }) => {
   //that is the responsibility of the parent, i.e. just try to plot everything.
   const meta = results.map((result) => ({
     date: result.meta.createTime,
-    numResponders: result.meta.numResponders,
+    numResponders: result.meta.numResponders
   }));
 
   //Helper for extracting a,b,c,d series
   const createSeries = (analysisIndex) => {
     return results.map((result, index) => ({
       date: meta[index].date,
-      value: result.analysis[analysisIndex],
+      value: result.maturity[analysisIndex],
       refIx: index,
       label: labels[analysisIndex],
     }));
