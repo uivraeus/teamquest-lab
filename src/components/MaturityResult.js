@@ -1,7 +1,7 @@
 import React from "react";
 import ResultPie from "./ResultPie";
 
-import "./SurveyResult.css";
+import "./MaturityResult.css";
 
 const descriptions = [
   "This is the forming stage of a team",
@@ -10,15 +10,15 @@ const descriptions = [
   "This is the performing stage of a team",
 ];
 
-const categoryClass = "SurveyResult-category"
+const categoryClass = "MaturityResult-category"
 const matchedCategoryClass = `${categoryClass} matched`
-const descrClass = "SurveyResult-description";
+const descrClass = "MaturityResult-description";
 const disabledDescrClass = `${descrClass} disabled`;
 
-const SurveyResult = ({ resultData, colors, labels }) => {
+const MaturityResult = ({ resultData, colors, labels }) => {
   const data = resultData || [0, 0, 0, 0];
 
-  return <div className="SurveyResult">
+  return <div className="MaturityResult">
     {data.map((value, index) => (
       <div key={index} className={value > 75 ? matchedCategoryClass : categoryClass}>
         <ResultPie
@@ -37,4 +37,4 @@ const SurveyResult = ({ resultData, colors, labels }) => {
   </div>;
 };
 
-export default SurveyResult;
+export default MaturityResult;

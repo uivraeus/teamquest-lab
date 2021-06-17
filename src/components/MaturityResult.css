@@ -1,4 +1,4 @@
-.SurveyResult {
+.MaturityResult {
   display: flex;
   justify-content:space-evenly;
   align-items: flex-start;
@@ -8,12 +8,12 @@
 }
 
 @media screen and (min-width: 800px) {
-  .SurveyResult {
+  .MaturityResult {
     flex-direction: row;
   } 
 }
 
-.SurveyResult-category {
+.MaturityResult-category {
   flex: 0;
   display:flex;
   flex-flow: row;
@@ -25,7 +25,7 @@
 }
 
 @media screen and (min-width: 800px) {
-  .SurveyResult-category {
+  .MaturityResult-category {
     flex-direction: column;
     justify-content: center;
     align-items: center;
@@ -35,18 +35,18 @@
 }
 
 
-.SurveyResult-category > .SurveyResult-description {
+.MaturityResult-category > .MaturityResult-description {
   margin: 0;
   padding: 0;
   color: var(--color-result-nomatch);
   /* border: 1px  dotted orange; */
 }
 
-.SurveyResult-category.matched > .SurveyResult-description {
+.MaturityResult-category.matched > .MaturityResult-description {
   color: var(--color-text);
 }
 
-.SurveyResult-category > .ResultPie {
+.MaturityResult-category > .ResultPie {
   flex: 0;
   width: fit-content;
   height: fit-content;
@@ -55,43 +55,43 @@
   font-weight: normal;
 }
 
-.SurveyResult-category.matched > .ResultPie {
+.MaturityResult-category.matched > .ResultPie {
   font-weight: bold
 }
 
-.SurveyResult-description {
+.MaturityResult-description {
   flex: auto;
   padding-left: .5em;
   min-height: 5.5em;
   font-style: italic;
 }
 
-.SurveyResult-description.disabled p {
+.MaturityResult-description.disabled p {
   color: var(--color-text-disabled);
 }
 
-.SurveyResult-description > p {
+.MaturityResult-description > p {
   padding-left: .5em;
   font-weight: lighter;
 }
 
 @media screen and (min-width: 800px) {
-  .SurveyResult-category > .ResultPie {
+  .MaturityResult-category > .ResultPie {
     min-width: 13vmin;
     min-height: 13vmin;
   }
 
-  .SurveyResult-description {
+  .MaturityResult-description {
     flex: auto;
     padding-left: 0;
     width: 20vw;
   }
 
-  .SurveyResult-description > span {
+  .MaturityResult-description > span {
     text-align: center;
   }
 
-  .SurveyResult-description > p {
+  .MaturityResult-description > p {
     padding-left: 0;
     text-align: center;
   }

@@ -1,7 +1,7 @@
 import React from "react";
 import { CompLev } from "../helpers/survey";
 import InfoBlock from "./InfoBlock";
-import SurveyResult from "./SurveyResult";
+import MaturityResult from "./MaturityResult";
 import ResultsChart from "./ResultsChart";
 import ResultInterpretation from "./ResultInterpretation";
 import useTeamResults from "../hooks/TeamResults";
@@ -78,7 +78,7 @@ const SurveyResults = ({ teamId, manageUrl = null }) => {
                   <em>{latestDescrStr}</em>
                   <hr/>
                   <h4>Matching stages:</h4>
-                  <SurveyResult 
+                  <MaturityResult 
                     resultData={latestResult.maturity}
                     colors = {colors}
                     labels = {labels}
