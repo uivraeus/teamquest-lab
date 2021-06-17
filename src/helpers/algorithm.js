@@ -1,6 +1,28 @@
 /* Implement the algorithms for analyzing the responses of a specific survey run
  */
- 
+
+/* Team efficiency
+ * Input: Array (#responders) of array (3 questions) of numbers (answers, i.e. 0-4)
+ * Output: integer: 0-100 (no decimal points)
+ */
+const analyzeEfficiency = (responses) => {
+  //alg.specific
+  if (responses[0].length !== 3) {
+    throw new Error("Unexpected number of responses for efficiency estimation: " + responses[0].length);
+  }
+
+  //E1 + (4-E2) + E3
+  const sumAll = responses.reduce((acc, response) => {
+    return acc + (response[0] + (4-response[1]) + response[2])
+  }, 0);
+
+  //Average over three questions and #responders
+  //=> range 0-4
+  const avgAll = sumAll / (3 * responses.length);
+
+  //Scale output
+  return Math.round(100 * avgAll / 4);
+}
 
 
 /* Team maturity (stage matching)
@@ -81,4 +103,4 @@ const computePercentile = (value, interval) => {
   return Math.round(intervalBase + rangeRatio(value, min, max) * intervalLength);
 }
 
-export { analyzeMaturity };
+export { analyzeEfficiency, analyzeMaturity };
