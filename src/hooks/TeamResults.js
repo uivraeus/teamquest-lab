@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { splitResponses, verifyInput } from '../helpers/responses';
-import { analyzeMaturity } from '../helpers/algorithm';
+import { analyzeEfficiency, analyzeMaturity } from '../helpers/algorithm';
 import useAppContext from "../hooks/AppContext"
 import useTeamTracker from "./TeamTracker";
 import { CompLev } from "../helpers/survey";
@@ -37,9 +37,9 @@ function useTeamResults(teamId) {
         const newResults = validSurveys.map((survey) => {
           verifyInput(survey.respHandle.responses);
           const resp = splitResponses(survey);
+          const efficiency = resp.efficiency ? analyzeEfficiency(resp.efficiency) : null;
           const maturity = resp.maturity ? analyzeMaturity(resp.maturity) : null;
-          //TODO: add efficiency...
-          return { meta: survey.meta, maturity };
+          return { meta: survey.meta, efficiency, maturity };
         });
 
         //If the latest (last) entry was valid just point to the entry in results

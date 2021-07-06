@@ -54,6 +54,19 @@ const analyzeMaturity = (responses) => {
   return [r0, r1, r2, r3];  
 }
 
+/* Add-on/helper for team maturity (stage matching)
+ * Input: Maturity array (output from analyzeMaturity); 
+ * Output: Array with "matching" stage(s), 1-4, sorted in increasing numerical order
+ *         (array length may vary between 0 and 4, depending on results)
+ */
+const matchedMaturityStages = (maturityAnalysis) => {
+  if (!maturityAnalysis || maturityAnalysis.length !==4) {
+    return [];
+  }
+  //A "match" is defined by a result value > 75
+  return maturityAnalysis.reduce((acc, v, i) => (v > 75) ? acc.concat(i + 1) : acc, []);
+}
+
 //Helper for summing specific questions for each responder
 //- specified question-indexes and answers are zero-based (!)
 //- but the answers are summed with +1 (treated as range 1-5)
@@ -103,4 +116,4 @@ const computePercentile = (value, interval) => {
   return Math.round(intervalBase + rangeRatio(value, min, max) * intervalLength);
 }
 
-export { analyzeEfficiency, analyzeMaturity };
+export { analyzeEfficiency, analyzeMaturity, matchedMaturityStages };
