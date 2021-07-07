@@ -83,7 +83,7 @@ const SurveyResults = ({ teamId, manageUrl = null }) => {
               {latestResult ? (
                 <>
                   <em>{latestDescrStr}</em>
-                  {latestResult.meta.compLev === CompLev.SOME ?
+                  {latestResult.meta.ongoing && latestResult.meta.compLev === CompLev.SOME ?
                     <InfoBlock>
                       <CompletionHint/>
                     </InfoBlock> : null                    
