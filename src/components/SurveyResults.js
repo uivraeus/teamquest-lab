@@ -1,10 +1,10 @@
 import React from "react";
 import { CompLev } from "../helpers/survey";
 import EfficiencyResult from "./EfficiencyResult";
+import HistoryChart from "./HistoryChart";
 import InfoBlock from "./InfoBlock";
 import MarkdownBlock from "./MarkdownBlock";
 import MaturityResult from "./MaturityResult";
-import ResultsChart from "./ResultsChart";
 import useTeamResults from "../hooks/TeamResults";
 import { matchedMaturityStages } from "../helpers/algorithm";
 import { Link } from "react-router-dom";
@@ -102,6 +102,13 @@ const SurveyResults = ({ teamId, manageUrl = null }) => {
                       label = {labelE}
                     />
                   </div>
+                  {results.length > 1 ? (
+                    <>
+                      <hr/>
+                      <h3>Team history</h3>
+                      <HistoryChart results={results.filter(r => !r.meta.ongoing)} />
+                    </>) : null
+                  }
                   <hr/>
                   {(!latestResult.meta.ongoing && latestResult.maturity) ?
                     <>
@@ -119,18 +126,7 @@ const SurveyResults = ({ teamId, manageUrl = null }) => {
                 </>
               ) : (
                 <em>No surveys found</em>
-              )}
-              {results.length > 1 ? (
-                <>
-                  <h3>Team history</h3>
-                  <ResultsChart
-                    results={results}
-                    maxVal={100}
-                    colors = {colorsM}
-                    labels = {labelsM}
-                  />
-                </>
-              ) : null}
+              )}              
             </>
           )}
         </>
