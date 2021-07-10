@@ -83,7 +83,7 @@ const HistoryChart = ({ results }) => {
             shape="circle"
             opacity="0.5"
             data={matMid}
-            fill="var(--color-result-m1)"
+            fill="var(--color-result-m)"
             strokeWidth={1}
           />
           <Scatter
@@ -92,7 +92,7 @@ const HistoryChart = ({ results }) => {
             shape="circle"
             opacity="0.5"
             data={matMax}
-            fill="var(--color-result-m1)"
+            fill="var(--color-result-m)"
             strokeWidth={1}
             strokeDasharray="3 3"
           />
@@ -101,7 +101,7 @@ const HistoryChart = ({ results }) => {
             lineJointType="monotoneX"
             shape="circle"
             data={matMin}
-            fill="var(--color-result-m1)"
+            fill="var(--color-result-m)"
             strokeWidth={2}
           />
           

@@ -4,6 +4,13 @@ import ResultInterpretation from "./ResultInterpretation";
 
 import "./MaturityResult.css";
 
+const labels = [
+  "1. Dependency and Inclusion",
+  "2. Counter-Dependency and Fight",
+  "3. Trust and Structure",
+  "4. Work and Productivity"
+];
+
 const descriptions = [
   "This is the forming stage of a team",
   "This is the storming stage of a team",
@@ -11,12 +18,14 @@ const descriptions = [
   "This is the performing stage of a team",
 ];
 
+const color = "var(--color-result-m)";
+
 const categoryClass = "MaturityResult-category"
 const matchedCategoryClass = `${categoryClass} matched`
 const descrClass = "MaturityResult-description";
 const disabledDescrClass = `${descrClass} disabled`;
 
-const MaturityResult = ({ resultData, ongoing, colors, labels }) => {
+const MaturityResult = ({ resultData, ongoing }) => {
   const data = resultData || [0, 0, 0, 0];
 
   return <div className="MaturityResult">
@@ -30,9 +39,9 @@ const MaturityResult = ({ resultData, ongoing, colors, labels }) => {
           <ResultPie
             value={value}
             max={100}
-            color={colors[index]}
+            color={color}
             opacity={value > 75 ? "1.0" : "0.2"}
-            textColor={value > 75 ? colors[index] : "var(--color-result-nomatch)"}
+            textColor={value > 75 ? color : "var(--color-result-nomatch)"}
           />
           <div className={resultData ? descrClass : disabledDescrClass}>
             <span><p>{labels[index]}</p></span>

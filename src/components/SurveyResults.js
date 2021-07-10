@@ -11,20 +11,6 @@ import { Link } from "react-router-dom";
 
 import './SurveyResults.css';
 
-//The charts presented under this result page are partially styled via javascript
-//So, to align the colors between the latest result and the history plots the
-//colors are defined here (or at least which css-variables that hold them)
-const colorsM = ["m1", "m2", "m3", "m4"].map(c => `var(--color-result-${c})`);
-const colorE = `var(--color-result-e)`;
-
-const labelsM = [
-  "1. Dependency and Inclusion",
-  "2. Counter-Dependency and Fight",
-  "3. Trust and Structure",
-  "4. Work and Productivity"
-];
-const labelE = "Perceived Efficiency";
-
 const toolboxUrl = "https://proagileab.github.io/agile-team-development/";
 
 const SurveyResults = ({ teamId, manageUrl = null }) => {
@@ -93,13 +79,9 @@ const SurveyResults = ({ teamId, manageUrl = null }) => {
                     <MaturityResult 
                       resultData={latestResult.maturity}
                       ongoing={latestResult.meta.ongoing}
-                      colors = {colorsM}
-                      labels = {labelsM}
                     />
                     <EfficiencyResult 
                       resultData={latestResult.efficiency}
-                      color = {colorE}
-                      label = {labelE}
                     />
                   </div>
                   {results.length > 1 ? (

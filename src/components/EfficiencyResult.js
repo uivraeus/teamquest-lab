@@ -3,14 +3,17 @@ import ResultPie from "./ResultPie";
 
 import "./EfficiencyResult.css";
 
+
+const label = "Perceived Efficiency";
 const description = "How the team views its own productivity";
+const color = "var(--color-result-e)";
 
 const categoryClass = "EfficiencyResult-category";
 const activeCategoryClass = `${categoryClass} active`;
 const descrClass = "EfficiencyResult-description";
 const disabledDescrClass = `${descrClass} disabled`;
 
-const EfficiencyResult = ({ resultData, color, label }) => {
+const EfficiencyResult = ({ resultData }) => {
   const data = resultData || 0;
 
   return <div className="EfficiencyResult">

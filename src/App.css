@@ -25,10 +25,7 @@
   --color-link-focus: rgb(40, 98, 245);
   --color-link-hover: rgb(3, 65, 223);
   --color-result-void: rgb(192,192,192);
-  --color-result-m1: rgb(160,128,70);
-  --color-result-m2: rgb(128,160,70);
-  --color-result-m3: rgb(70,160,128);
-  --color-result-m4: rgb(70,128,160);
+  --color-result-m: rgb(70,128,160);
   --color-result-e: rgb(128,160,70);
   --color-result-nomatch: rgb(180,180,180);
   --font-big:  calc(17px + 2.7vw); 
