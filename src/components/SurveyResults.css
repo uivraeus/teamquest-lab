@@ -7,6 +7,7 @@
 
 .SurveyResults > .InfoBlock {
   margin-top: 0.5em;
+  margin-bottom: 1em;
 }
 
 /* Alignment and separation of different result types (either horizontal or vertical) */
