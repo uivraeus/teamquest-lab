@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
-import analyze from '../helpers/algorithm';
+import { splitResponses, verifyInput } from '../helpers/responses';
+import { analyzeEfficiency, analyzeMaturity } from '../helpers/algorithm';
 import useAppContext from "../hooks/AppContext"
 import useTeamTracker from "./TeamTracker";
 import { CompLev } from "../helpers/survey";
@@ -14,9 +15,11 @@ const isValidForAnalysis = (survey) => {
   return survey.meta.compLev === CompLev.SOME || survey.meta.compLev === CompLev.ALL;
 }
 
+const defaultResult =  { meta: null, maturity: null };
+
 //returns { results, latestResult, analysisError }
-// - every "result" in results has the shape {meta, analysis}
-// - latestResult may have analysis=null if still not ready (otherwise results[len-1])
+// - every "result" in results has the shape of defaultResult above
+// - latestResult may have null in the analysis parts if still not ready (otherwise results[len-1])
 function useTeamResults(teamId) {
   const { surveys, readError } = useTeamTracker(teamId);
 
@@ -32,15 +35,18 @@ function useTeamResults(teamId) {
         const validSurveys = surveys.filter(isValidForAnalysis);
 
         const newResults = validSurveys.map((survey) => {
-          const analysis = analyze(survey.respHandle.responses);
-          return { meta: survey.meta, analysis };
+          verifyInput(survey.respHandle.responses);
+          const resp = splitResponses(survey);
+          const efficiency = resp.efficiency ? analyzeEfficiency(resp.efficiency) : null;
+          const maturity = resp.maturity ? analyzeMaturity(resp.maturity) : null;
+          return { meta: survey.meta, efficiency, maturity };
         });
 
         //If the latest (last) entry was valid just point to the entry in results
-        //Otherwise create a new object without analysis
+        //Otherwise create a new object without analysis parts
         const newLatestResult = isValidForAnalysis(surveys[surveys.length - 1])
           ? newResults[newResults.length -1]
-          : {meta: surveys[surveys.length - 1].meta, analysis: null};
+          : { ...defaultResult, meta: surveys[surveys.length - 1].meta };
               
         //Update state and clear any previous error
         setResults({results: newResults, latestResult: newLatestResult});

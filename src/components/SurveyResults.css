@@ -4,3 +4,37 @@
   border-bottom: 1px solid var(--color-border-light);
   margin: 1em 0 1em 0;
 }
+
+.SurveyResults > .InfoBlock {
+  margin-top: 0.5em;
+  margin-bottom: 1em;
+}
+
+/* Alignment and separation of different result types (either horizontal or vertical) */
+.SurveyResults-latest-graphs {
+  display: flex;
+  flex-direction: column;
+}
+.SurveyResults-latest-graphs > *:not(:first-child) {
+  margin:0;
+  margin-top: .5em;
+  padding-top: .5em;
+  border: none;
+  border-top: 1px solid var(--color-border-light);
+}
+
+@media screen and (min-width: 800px) {
+  .SurveyResults-latest-graphs {
+    flex-direction: row;
+    justify-items: right;
+  }
+  .SurveyResults-latest-graphs > *:not(:first-child) {
+    margin:0;
+    margin-left: .5em;
+    padding: 0;
+    padding-left: .5em;
+    border: none;
+    border-left: 1px solid var(--color-border-light);
+  }
+  
+}

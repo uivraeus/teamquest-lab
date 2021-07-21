@@ -1,40 +1,70 @@
-/* Implement the algorithm for analyzing the responses of a specific survey run
- * Input: Array (#responders) of array (#questions) of numbers (answers, i.e. 0-4); 
- *        Note on #questions:
- *        13 questions are used in this implementation. But, the app also allows
- *        for additional questions which are not related to this algorithm.
- *        These additional answers are located from index [13] and upward. 
- * 
+/* Implement the algorithms for analyzing the responses of a specific survey run
+ */
+
+/* Team efficiency
+ * Input: Array (#responders) of array (3 questions) of numbers (answers, i.e. 0-4)
+ * Output: integer: 0-100 (no decimal points)
+ */
+const analyzeEfficiency = (responses) => {
+  //alg.specific
+  if (responses[0].length !== 3) {
+    throw new Error("Unexpected number of responses for efficiency estimation: " + responses[0].length);
+  }
+
+  //E1 + (4-E2) + E3
+  const sumAll = responses.reduce((acc, response) => {
+    return acc + (response[0] + (4-response[1]) + response[2])
+  }, 0);
+
+  //Average over three questions and #responders
+  //=> range 0-4
+  const avgAll = sumAll / (3 * responses.length);
+
+  //Scale output
+  return Math.round(100 * avgAll / 4);
+}
+
+
+/* Team maturity (stage matching)
+ * Input: Array (#responders) of array (13 questions) of numbers (answers, i.e. 0-4); 
  * Output: Array with four results in the range [0-100], one for each "category":
  *         [0]: "Dependency and Inclusion" ,
  *         [1]: "Counter-Dependency and Fight",
  *         [2]: "Trust and Structure",
  *         [3]: "Work and Productivity"
  */
-
-  //Will throw if there are errors
-const verifyInput = (responses) => {
-  const nV = 5;  // number of answer options (0-4)
-
-  if (responses.length === 0) {
-    throw new Error("Empty response input");
+const analyzeMaturity = (responses) => {
+  //alg.specific
+  if (responses[0].length !== 13) {
+    throw new Error("Unexpected number of responses for maturity matching: " + responses[0].length);
   }
-  const nQ = responses[0].length; // equal number of questions expected in all responses
-  if (nQ < 13) {
-    throw new Error("Unexpected number of responses: " + nQ);
+  
+  //[0]: "Dependency and Inclusion" (questions 1, 5, 9 and 13)
+  const r0 = computePercentile(avgSumQ(responses, [0,4,8,12]), interval0);
+  
+  //[1]: "Counter-Dependency and Fight" (questions 2,6 and 10)
+  const r1 = computePercentile(avgSumQ(responses, [1,5,9]), interval1);
+
+  //[2]: "Trust and Structure" (questions 3,7 and 11)
+  const r2 = computePercentile(avgSumQ(responses, [2,6,10]), interval2);
+
+  //[3]: "Work and Productivity" (questions 4,8,12)
+  const r3 = computePercentile(avgSumQ(responses, [3,7,11]), interval3);
+
+  return [r0, r1, r2, r3];  
+}
+
+/* Add-on/helper for team maturity (stage matching)
+ * Input: Maturity array (output from analyzeMaturity); 
+ * Output: Array with "matching" stage(s), 1-4, sorted in increasing numerical order
+ *         (array length may vary between 0 and 4, depending on results)
+ */
+const matchedMaturityStages = (maturityAnalysis) => {
+  if (!maturityAnalysis || maturityAnalysis.length !==4) {
+    return [];
   }
-
-  responses.forEach(r => {
-    if (nQ !== r.length) {
-      throw new Error("Unexpected number of responses: " + r.length);
-    }
-
-    r.forEach((v, i) => {
-      if (!Number.isInteger(v) || v >= nV) {
-        throw new Error("Unexpected answers: " + v);
-      }
-    });    
-  });
+  //A "match" is defined by a result value > 75
+  return maturityAnalysis.reduce((acc, v, i) => (v > 75) ? acc.concat(i + 1) : acc, []);
 }
 
 //Helper for summing specific questions for each responder
@@ -86,22 +116,4 @@ const computePercentile = (value, interval) => {
   return Math.round(intervalBase + rangeRatio(value, min, max) * intervalLength);
 }
 
-const analyze = (responses) => {
-  verifyInput(responses); //will throw if there are errors
-  
-  //[0]: "Dependency and Inclusion" (questions 1, 5, 9 and 13)
-  const r0 = computePercentile(avgSumQ(responses, [0,4,8,12]), interval0);
-  
-  //[1]: "Counter-Dependency and Fight" (questions 2,6 and 10)
-  const r1 = computePercentile(avgSumQ(responses, [1,5,9]), interval1);
-
-  //[2]: "Trust and Structure" (questions 3,7 and 11)
-  const r2 = computePercentile(avgSumQ(responses, [2,6,10]), interval2);
-
-  //[3]: "Work and Productivity" (questions 4,8,12)
-  const r3 = computePercentile(avgSumQ(responses, [3,7,11]), interval3);
-
-  return [r0, r1, r2, r3];  
-}
-
-export default analyze;
+export { analyzeEfficiency, analyzeMaturity, matchedMaturityStages };
