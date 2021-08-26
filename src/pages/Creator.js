@@ -112,7 +112,7 @@ const Creator = () => {
                     <ResultsIcon />
                   </AppBtn>
                   {allowTeamsOp ?
-                    <p><Link to={{pathname:pathResults, state:historyState}}>Results</Link> and analysis of previously created surveys</p> :
+                    <p><Link to={{pathname:pathResults, state:historyState}}>Analyze</Link> results of previously created surveys</p> :
                     <p>Results and analysis of previously created surveys</p>
                   }
                 </div>

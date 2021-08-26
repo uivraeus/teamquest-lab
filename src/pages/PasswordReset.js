@@ -83,11 +83,11 @@ const PasswordReset = () => {
       <InfoBlock>
         <h4>What happens next?</h4>
         <p>
-          You will receive an email with a link to an external site at which you
+          You will receive an email with a link to a separate site at which you
           can specify a new password for your account.
         </p>
         <p>
-          Afterwards, you can login using your updated credentials.
+          Afterwards, you can login here using your updated credentials.
         </p>
       </InfoBlock>
     </div>
