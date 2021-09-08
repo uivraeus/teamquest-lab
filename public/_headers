@@ -1,4 +1,4 @@
 # Note that this requires INLINE_RUNTIME_CHUNK=false 
 # [https://create-react-app.dev/docs/advanced-configuration/]
 /*
-  Content-Security-Policy: default-src 'self'; script-src 'self' https://*.firebaseio.com; connect-src 'self' https://*.googleapis.com https://teamquest-dev-default-rtdb.europe-west1.firebasedatabase.app; img-src 'self' data:; frame-ancestors 'none';
+  Content-Security-Policy: default-src 'self'; script-src 'self' https://*.firebaseio.com; connect-src 'self' https://*.googleapis.com https://teamquest-dev-default-rtdb.europe-west1.firebasedatabase.app wss://teamquest-dev-default-rtdb.europe-west1.firebasedatabase.app; frame-src https://teamquest-dev-default-rtdb.europe-west1.firebasedatabase.app; img-src 'self' data:; frame-ancestors 'none';
