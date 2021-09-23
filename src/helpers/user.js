@@ -1,5 +1,5 @@
-import { db } from '../services/firebase';
-import { authenticate, deleteAccount } from './auth';
+import { auth, db } from '../services/firebase';
+import { deleteAccount } from './auth';
 import { deleteTeam, fetchAllTeamId } from './team';
 
 //Misc functions for accessing and modifying user meta-data
@@ -13,7 +13,7 @@ export const deleteAccountAndData = async (user, password) => {
     //This is "hackable" but still convenient to prevent valid usage but
     //with the wrong password, which will fail at the actual account
     //deletion.
-    await authenticate(password);
+    await auth.reauthenticateCurrentUser(password);
     //-> will throw error from backend if not correct
 
     //First "suspend" the user to prevent concurrent creation of new teams etc
@@ -34,7 +34,7 @@ export const deleteAccountAndData = async (user, password) => {
     //Also add the user to the list of deleted/disabled users to ensure that
     //still-valid access tokens on other devices can't be used to perform
     //"authenticated operations"
-    await db.ref(`x_users/${user.uid}`).set({".sv": "timestamp"});
+    await db.set(`x_users/${user.uid}`, {".sv": "timestamp"});
     await deleteAccount(password);
 
   } catch (e) {

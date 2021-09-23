@@ -65,7 +65,7 @@ const AppContextProvider = ({ children }) => {
 
   //Setup detection of authentication changes
   useEffect ( () => {
-    auth().onAuthStateChanged((user) => {
+    auth.onAuthStateChanged((user) => {
       setContext({
         initialAuthChecked: true, //one-time toggling false->true
         user,

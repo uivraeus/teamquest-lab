@@ -24,13 +24,13 @@ const useOwnedTeams = () => {
   const [result, setResult] = useState(defaultResult);
   
   useEffect(() => {
-    let ref = null;
-    let onNewData = null; 
+    let query = null;
+    let unsubscribeFn = null; 
     if (user) {
       //Subscribe to teams data for the user;
-      ref = db.ref("teams").orderByChild("uid").equalTo(user.uid)
+      query = db.query("teams", db.orderByChild("uid"), db.equalTo(user.uid));
       try {
-        onNewData = ref.on("value", (snapshot) => {
+        unsubscribeFn = db.onValue(query, (snapshot) => {
           try {
             let dbTeams = [];
             snapshot.forEach((snap) => {
@@ -51,9 +51,9 @@ const useOwnedTeams = () => {
     }
 
     return () => {
-      if (ref) {
-        if (onNewData)
-          ref.off("value", onNewData);
+      if (query) {
+        if (unsubscribeFn)
+          unsubscribeFn();
       }
     };
   }, [user]);
