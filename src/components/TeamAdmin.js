@@ -5,7 +5,7 @@ import {
   createNewTeam,
   deleteTeam,
   renameTeam,
-  initTransfer /*, removeTransfer, commitTransfer*/,
+  initTransfer,
   removeTransfer,
   commitTransfer,
 } from "../helpers/team";

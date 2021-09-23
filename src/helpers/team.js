@@ -130,32 +130,6 @@ export const removeTransfer = async (transferId) => {
   }
 }
 
-//Remove any ongoing team transfer(s) initiated by the specified user
-export const abortInitiatedTransfers = async (user) => {
-  try {
-    //First find all (/any) transfers initiated by the specified user
-    const snapshot = await db.once(db.query("transfers", db.orderByChild("uid"), db.equalTo(user.uid)));
-    let transferIds = [];
-    snapshot.forEach(snap => {
-      transferIds.push(snap.key);
-    });
-
-    if (transferIds.length > 0) {
-      //Now blast them (most likely max one)
-      const delPromises = transferIds.map(tId => db.set(`transfers/${tId}`, null));
-      const delOutcome = await Promise.allSettled(delPromises);
-      const numFailed = (delOutcome.filter(o => o.status === "rejected")).length;
-      if (numFailed > 0) {
-        throw new Error(`${numFailed} transfers(s) could not be deleted`);
-      }
-    }        
-  } catch(e) {
-    const errMsg = "Could not abort/clean team transfer(s).";
-    console.log(errMsg, e);
-    throw new Error(errMsg);
-  }
-}
-
 //Initiate a new team transfer
 //Returns the transferId
 export const initTransfer = async (teamId, teamName, user) => {
