@@ -15,7 +15,7 @@ async function main() {
     await fs.promises.rm(outFile, { force: true })
     
     // This script only deals with CSP headers, so if those aren't activated just skip it.
-    const useHeaders = process.env.CSP_HEADERS_ACTIVATED === "1"
+    const useHeaders = process.env.CSP_HEADERS_ACTIVATED === "true"
     if (!useHeaders) {
       console.log("-> Application not configured for CSP headers")
       process.exit(0)
@@ -38,7 +38,7 @@ async function main() {
       headersContent = headersContent.replace(/CSP_PLACEHOLDER_SENTRY_INGEST/g, cspSentryIngest)
       console.log("- Configured CSP headers for Sentry ingest")
 
-      const useSentryErrorPage = process.env.REACT_APP_SENTRY_ERROR_PAGE === "1"
+      const useSentryErrorPage = process.env.REACT_APP_SENTRY_ERROR_PAGE === "true"
       if (useSentryErrorPage) {
         const cspSentryErrorPage = process.env.CSP_SENTRY_ERROR_PAGE
         if (!cspSentryErrorPage) throw new Error("CSP_SENTRY_ERROR_PAGE not defined (or zero-length)")
