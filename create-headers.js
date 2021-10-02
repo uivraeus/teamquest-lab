@@ -48,6 +48,8 @@ async function main() {
         const cspSentryErrorPage = process.env.CSP_SENTRY_ERROR_PAGE
         if (!cspSentryErrorPage) throw new Error("CSP_SENTRY_ERROR_PAGE not defined (or zero-length)")
         headersContent = headersContent.replace(/CSP_PLACEHOLDER_SENTRY_ERROR_PAGE/g, cspSentryErrorPage)
+        //Unfortunately the styles applied to the "error page" are inlined -> no other option than "unsafe..."
+        headersContent = headersContent.replace(/style-src/, "style-src 'unsafe-inline'")
         console.log("- Configured CSP headers for Sentry error page")
 
       } else {
