@@ -7,15 +7,20 @@ const fs = require("fs")
 const path = require("path")
 
 console.log("\nManage CSP headers definition...")
-// This script only deals with CSP headers, so if those aren't activated just skip it.
-const useHeaders = process.env.CSP_HEADERS_ACTIVATED === "1"
-if (!useHeaders) {
-  console.log("-> Application not configured for CSP headers")
-  process.exit(0)
-}
 
 async function main() {
   try {
+    // Ensure that there is no left-over from earlier runs
+    const outFile = path.join("public", "_headers")
+    await fs.promises.rm(outFile, { force: true })
+    
+    // This script only deals with CSP headers, so if those aren't activated just skip it.
+    const useHeaders = process.env.CSP_HEADERS_ACTIVATED === "1"
+    if (!useHeaders) {
+      console.log("-> Application not configured for CSP headers")
+      process.exit(0)
+    }
+
     // Iteratively modify the content with search/replace steps
     let headersContent = await fs.promises.readFile("./_headers_template", "utf-8")
 
@@ -58,7 +63,6 @@ async function main() {
     headersContent = headersContent.replace(/ ;/g, ";")
 
     // Create the actual _headers file (under public/)
-    const outFile = path.join("public", "_headers")
     await fs.promises.writeFile(outFile, headersContent, "utf-8")
     console.log("-> Wrote file: ", outFile, "\n")
 
