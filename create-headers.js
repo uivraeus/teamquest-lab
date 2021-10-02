@@ -12,7 +12,12 @@ async function main() {
   try {
     // Ensure that there is no left-over from earlier runs
     const outFile = path.join("public", "_headers")
-    await fs.promises.rm(outFile, { force: true })
+    try {
+      // don't rely on node version 14+ (when "rm" was introduced)
+      await fs.promises.unlink(outFile)
+    } catch(e) {
+      ;// will thrown ENOENT when file doesn't exist
+    }
     
     // This script only deals with CSP headers, so if those aren't activated just skip it.
     const useHeaders = process.env.CSP_HEADERS_ACTIVATED === "true"
