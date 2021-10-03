@@ -1,6 +1,7 @@
 import React, { createContext, useEffect, useState } from 'react';
 import AlertModal from './AlertModal';
-import QueryModal from './QueryModal'
+import { errorTracking } from '../services/sentry';
+import QueryModal from './QueryModal';
 
 //Auth & Data backend
 import { auth } from '../services/firebase'
@@ -42,6 +43,9 @@ const AppContextProvider = ({ children }) => {
   const openAlert = (heading, text, type, code ) => {
     if (!alert) {
       setAlert({ heading, text, type, code });
+      if (type === "Error") {
+        errorTracking.captureMessage(`${heading}: ${text}${code ? " | " + code : ""}`);
+      }
     } else {
       console.log("TODO/TBD: multiple concurrent or queued alerts?");
     }

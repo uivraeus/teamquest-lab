@@ -33,6 +33,15 @@ const PasswordReset = () => {
   const handlePasswordReset = async (e) => {
     e.preventDefault();
     try {
+      if (email === "crash@here.now") {
+        //Temporary (?) crash-logic for testing
+        console.log("Intentionally crashing...");
+        setEmail(() =>  e.dontExists());
+        return;
+      } else if (email === "error@here.now") {
+        showAlert("Intentional error", "Test message", "Error", "Resistance is futile");
+        return;
+      }
       setInitiated(true);
       await reset(email);
       if (user) {

@@ -124,6 +124,17 @@ Additional information on how Google deals with privacy for Firebase can be foun
 * **Retention:** IP addresses and user-agent information for a few days
 * **Place of processing:** United States
 
+### Sentry
+We use Sentry from Functional Software, Inc. d/b/a Sentry (45 Fremont Street, 8th Floor, San Francisco, CA 94105) for collecting information about and tracking of application instabilities and problems, e.g. crashes. No personal information is recorded, e.g. no user account details and no IP addresses.
+
+For integration with Sentry's services all data is sent securely via TLS to an HTTPS endpoint. All data is AES-256bit encrypted, both in transit and at rest. More details on Sentry's solution for managing and securing the service and related data can be found in the [Data Processing Addendum (DPA)](https://sentry.io/legal/dpa/3.0.0/in-app/) that we have entered into with them.
+
+* **Basis of use:** Log and track application errors and stability problems.
+* **Personal data collected:** Information about your device and user agent (browser)
+* **Personal data usage:** Grouping and categorization of application errors
+* **Retention:** 90 days
+* **Place of processing:** United States
+
 ## Your rights
 The GDPR was created to protect your privacy rights. You have the right to access, rectify, object to, or erase your personal data maintained by us according to to [Articles 12 – 23 of the GDPR](https://gdpr-info.eu/chapter-3/). 
 
@@ -132,3 +143,6 @@ Erasure of your personal data is available to you directly via the App as descri
 If, for some reason, the automatic functions within the App don't allow you to accomplish what is within your rights, please contact us so that we can assist you. See the [Contact](/contact) page for details.
 
 If you believe our processing of your personal data infringes data protection laws, you have a legal right to initiate a complaint with a supervisory authority responsible for data protection in accordance with [Article 77 of the GDPR](https://gdpr-info.eu/art-77-gdpr/).
+
+***
+_Last updated: October 3, 2021_
