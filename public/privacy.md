@@ -122,7 +122,7 @@ Additional information on how Google deals with privacy for Firebase can be foun
 * **Personal data collected:** User-agent and IP addresses
 * **Personal data usage:** May be used to profile usage trends and platform breakdowns
 * **Retention:** IP addresses and user-agent information for a few days
-* **Place of processing:** United States
+* **Place of processing:** Belgium
 
 ### Sentry
 We use Sentry from Functional Software, Inc. d/b/a Sentry (45 Fremont Street, 8th Floor, San Francisco, CA 94105) for collecting information about and tracking of application instabilities and problems, e.g. crashes. No personal information is recorded, e.g. no user account details and no IP addresses.
