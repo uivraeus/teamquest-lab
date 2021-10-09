@@ -42,3 +42,10 @@ export const deleteAccountAndData = async (user, password) => {
     throw new Error(errMsg);
   }
 }
+
+// Throws if the password doesn't apply for the currently logged in user
+export const confirmPassword = async (password) => {
+  //This is "hackable" but still convenient to prevent valid usage but
+  //with the wrong password
+  await auth.reauthenticateCurrentUser(password);   
+}

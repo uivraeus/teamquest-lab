@@ -5,7 +5,7 @@ import InfoBlock from "../components/InfoBlock";
 import TextInputModal from "../components/TextInputModal";
 import { fetchAllId } from "../helpers/survey";
 import { fetchAllTeamId } from "../helpers/team";
-import { deleteAccountAndData } from "../helpers/user";
+import { confirmPassword, deleteAccountAndData } from "../helpers/user";
 import { Link, useHistory } from "react-router-dom";
 import useAppContext from "../hooks/AppContext";
 
@@ -81,7 +81,12 @@ const TerminateAccount = () => {
   const onPassword = ({ value }) => {
     setQueryPassword(false);
     if (value.length > 0) {
-      doTerminate(value);
+      confirmPassword(value)
+      .then(() => doTerminate(value))
+      .catch(() => { 
+        showAlert("Authentication error", "Aborting termination of user account", "Info");
+        setConfirmed(false);
+      })
     }
   }
 
