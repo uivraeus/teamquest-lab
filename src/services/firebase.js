@@ -40,18 +40,18 @@ const app = initializeApp(config);
 
 //Exported (sometimes refined) auth functions
 export const auth = {
-  createUserWithEmailAndPassword: (email, password) => createUserWithEmailAndPassword(getAuth(app), email, password),
+  createUserWithEmailAndPassword: (email, password) => authWrap(createUserWithEmailAndPassword(getAuth(app), email, password)),
   deleteUser: deleteUser,
   onAuthStateChanged: (cb) => onAuthStateChanged(getAuth(app), cb),
-  sendPasswordResetEmail: (email, actionCodeSettings) => sendPasswordResetEmail(getAuth(app), email, actionCodeSettings),
-  signInWithEmailAndPassword: (email, password) => signInWithEmailAndPassword(getAuth(app), email, password),
+  sendPasswordResetEmail: (email, actionCodeSettings) => authWrap(sendPasswordResetEmail(getAuth(app), email, actionCodeSettings)),
+  signInWithEmailAndPassword: (email, password) => authWrap(signInWithEmailAndPassword(getAuth(app), email, password)),
   signOut: () => signOut(getAuth(app)),
   updatePassword: updatePassword,
-  //The reauth-function is abstraced a bit instead of just exporting every detail 
+  //The reauth-function is abstracted a bit instead of just exporting every detail 
   reauthenticateCurrentUser: (password) => {
     const user = getAuth(app).currentUser;
     const cred = EmailAuthProvider.credential(user.email, password);
-    return reauthenticateWithCredential(user, cred); 
+    return authWrap(reauthenticateWithCredential(user, cred)); 
   }
 }
 
@@ -79,3 +79,25 @@ export const db = {
 //Helper for supporting ref/query-strings
 const dbRef = (path) => ref(getDatabase(app), path);
 const makeQuery = (pathOrQuery) => (typeof pathOrQuery === "string" ? dbRef(pathOrQuery) : pathOrQuery );
+
+//Helper for parsing and adjusting some "common" auth (user/usage) errors
+const userErrorSignatures = {
+  "auth/wrong-password": "Wrong password",
+  "auth/user-not-found": "User not recognized",
+  "auth/email-already-in-use": "User account already exists",
+  "auth/network-request-failed": "Network error"
+}
+const authWrap = (promise) => {
+  return promise.catch(err => {
+    if ("string" === typeof err.message) {
+      for (const [signature, message] of Object.entries(userErrorSignatures)) {
+        if (err.message.includes(signature)) {
+          throw new Error(message) // found a match -> replace the with translated error
+        }
+      }
+      //Don't translate the error but remove any explicit "Firebase" references
+      throw new Error(err.message.replace("Firebase", "Backend service"))
+    }
+    throw(new Error("Unexpected authentication error")) // plan-B;
+  })
+}
