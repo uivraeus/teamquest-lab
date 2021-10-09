@@ -1,7 +1,7 @@
 ## App Terms and Conditions of Use
 
 ### 1\. Terms
-By accessing the _Mini-TMQ_ web application ("the App"), via [teamquest.uivraeus.net](https://teamquest.uivraeus.net), you are agreeing to be bound by these _App Terms and Conditions of Use_ ("the Terms") and agree that you are responsible for the agreement with any applicable local laws. If you disagree with any of these terms, you are prohibited from accessing this App. The materials contained in this App are protected by copyright and trade mark law.
+By accessing the _Mini-TMQ_ web application ("the App"), via _https://teamquest.uivraeus.net_, you are agreeing to be bound by these _App Terms and Conditions of Use_ ("the Terms") and agree that you are responsible for the agreement with any applicable local laws. If you disagree with any of these terms, you are prohibited from accessing this App. The materials contained in this App are protected by copyright and trade mark law.
 
 > Note that this version of _Mini-TMQ_ is only used for test and evaluation purposes. Its operation may be discontinued and any data collected may be deleted at any moment, without prior notice.
 
@@ -59,4 +59,4 @@ Please read our [Privacy Policy](/privacy).
 Any claim related to _uivraeus_'s App shall be governed by the laws of Sweden without regards to its conflict of law provisions.
 
 ***
-_Last updated: April 11, 2021_
+_Last updated: October 9, 2021_
