@@ -46,7 +46,9 @@ For operations and maintenance purposes we, or our service providers, collect an
 
 The data listed above is required for technical purposes in order to show you our content, process input and guarantee stability and security. The legal basis is a legitimate interest in accordance with [Article 6 (1) (f) GDPR](https://gdpr-info.eu/art-6-gdpr/). As this data is imperative for the operation of the App, users may not object to this.
 
-More details on where this information is stored and maintained can be found in the [Third Party Providers](#third-party-providers) section below.
+If you contact us via e-mail, as described on the [Contact](/contact) page, we will keep records of this communication, including any information you share with us in those e-mails, as long as it serves a business purpose.
+
+More details on where information is stored and maintained can be found in the [Third Party Providers](#third-party-providers) section below.
 
 ## Additional collection and processing of personal data for logged in users
 For users that create an account and _log in_ to access the various survey- and team administration functions, what is described in in [the section for all users](#data-all-users) is still valid. In _addition_ to that, the following also applies. 
@@ -93,7 +95,7 @@ We do not sell your personal information to others but we may disclose or share 
 If we wish to use your personal information for a purpose beyond that for which it was originally provided, we will ask for your consent or seek to rely on another valid legal ground to process your personal information in accordance with the applicable law.
 
 ## Third Party Providers {:#third-party-providers}
-We will share your personal information with our service providers from time to time who act as _data processors_. Some of our service providers may use further sub-processors.
+We will share your personal information with our service providers who act as our data _processors_ (for which we are _controllers_). Some of our service providers may use further sub-processors.
 
 ### Netlify
 We use Netlify, Inc. (2325 3rd Street, Suite 296, San Francisco, California 94107) for hosting of the App
@@ -135,6 +137,30 @@ For integration with Sentry's services all data is sent securely via TLS to an H
 * **Retention:** 90 days
 * **Place of processing:** United States
 
+### ImprovMX
+We use ImprovMX by Reflectiv SAS (128 Rue la Boétie,75008 Paris France) for e-mail forwarding when you contact us as described on the [Contact](/contact) page.
+
+* **Basis of use:** Forwarding e-mails as part of contact interaction
+* **Personal data collected:** Server IP addresses and names, FROM/TO e-mail addresses, mail subject and date information.
+* **Personal data usage:** Provide the service and help debug issues that might occur
+* **Retention:** 7 days
+* **Place of processing:** France
+
+Additional information can be found in their detailed description of [what they log](https://improvmx.com/guides/what-do-we-log/) and at [ImprovMX GDPR Compliance](https://improvmx.com/gdpr-compliance/).
+
+### Gmail
+We use Gmail/Google Services provided by Google Ireland Limited (Gordon House, Barrow Street, Dublin 4, Ireland) for handling and storing any e-mail interaction between you and us.
+
+* **Basis of use:** Contact interaction
+* **Personal data collected:** Your e-mail addresses, meta data and any personal data you explicitly provide in your mail
+* **Personal data usage:** Storage of received and sent e-mails
+* **Retention:** Up to two months after deletion
+* **Place of processing:** In any of Google's [world-wide data centers](https://www.google.com/about/datacenters/locations)
+
+Note that the _retention_ period reflects how long the information is available in Google's systems _after we have chosen to delete it_. We will delete e-mails when they do not serve a business purpose any longer.
+
+More information about Gmail in relation to security and privacy can be found in the [Google Safety Center](https://safety.google/intl/en_us/security-privacy/).
+
 ## Your rights
 The GDPR was created to protect your privacy rights. You have the right to access, rectify, object to, or erase your personal data maintained by us according to to [Articles 12 – 23 of the GDPR](https://gdpr-info.eu/chapter-3/). 
 
@@ -145,4 +171,4 @@ If, for some reason, the automatic functions within the App don't allow you to a
 If you believe our processing of your personal data infringes data protection laws, you have a legal right to initiate a complaint with a supervisory authority responsible for data protection in accordance with [Article 77 of the GDPR](https://gdpr-info.eu/art-77-gdpr/).
 
 ***
-_Last updated: October 3, 2021_
+_Last updated: October 9, 2021_
