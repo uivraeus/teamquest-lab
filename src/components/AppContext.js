@@ -2,6 +2,7 @@ import React, { createContext, useEffect, useState } from 'react';
 import AlertModal from './AlertModal';
 import { errorTracking } from '../services/sentry';
 import QueryModal from './QueryModal';
+import { validateAccess } from '../helpers/user';
 
 //Auth & Data backend
 import { auth } from '../services/firebase'
@@ -74,7 +75,15 @@ const AppContextProvider = ({ children }) => {
         initialAuthChecked: true, //one-time toggling false->true
         user,
         ...fixedContext
-      });      
+      });
+      
+      if (user) {
+        //TBD/TODO: add logic here for email-verification status? (or inside validateAccess?)
+        validateAccess(user).catch(e => {
+          errorTracking.captureException(e);
+          console.error(e);
+        });
+      }
     });
   }, [fixedContext]);
 
