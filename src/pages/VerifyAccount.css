@@ -1,0 +1,12 @@
+.VerifyAccount {
+  width: 100%;
+  max-width: 1024px;  
+}
+
+.VerifyAccount > p {
+  margin-top: .5em;
+}
+
+.VerifyAccount > button {
+  margin: 1em .5em;  
+}
