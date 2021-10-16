@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import AppBtn from "../components/AppBtn";
 import InfoBlock from "../components/InfoBlock";
 import { logout, verify } from "../helpers/auth";
@@ -10,8 +10,10 @@ import "./VerifyAccount.css";
 const VerifyAccount = () => {
   const { user, skipVerification, showAlert } = useAppContext();
   const history = useHistory();
+  const [pending, setPending] = useState(false);
 
   const triggerVerification = async (e) => {
+    setPending(true);
     try {
       await verify();
       showAlert("E-mail sent", "Check your in-box for an e-mail with further instructions");
@@ -19,6 +21,7 @@ const VerifyAccount = () => {
       await logout();
       history.replace("/login");
     } catch(e) {
+      setPending(false);
       showAlert("Operation failed", "Could not initiate sending of verification e-mail", "Error", e.message);
     }
   }
@@ -43,8 +46,10 @@ const VerifyAccount = () => {
       <h1>{headingText}</h1>
       <p>Your account, <i>{user.email}</i>, {situationText}</p>
       <p>{processText} You will then have to login again to synchronize your account status.</p>
-      <AppBtn text="Send verification mail" kind="accent" onClick={triggerVerification}/>
-      <AppBtn text="Skip this" onClick={skipVerification}/>
+      <div className="VerifyAccount-control">
+        <AppBtn text="Send verification mail" kind="accent" onClick={triggerVerification} disabled={pending}/>
+        <AppBtn text="Skip this" onClick={skipVerification} disabled={pending}/>
+      </div>
       <InfoBlock>
         <p>
           If you already did this but didn't receive any mail, you should try and click the button again.
