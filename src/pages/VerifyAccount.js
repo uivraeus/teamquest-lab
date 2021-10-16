@@ -1,17 +1,26 @@
 import React from "react";
 import AppBtn from "../components/AppBtn";
 import InfoBlock from "../components/InfoBlock";
+import { logout, verify } from "../helpers/auth";
 import useAppContext from "../hooks/AppContext";
-import { Link } from 'react-router-dom'
+import { Link, useHistory } from 'react-router-dom'
 
 import "./VerifyAccount.css";
 
 const VerifyAccount = () => {
-  const { user, skipVerification } = useAppContext();
-  //const history = useHistory();
+  const { user, skipVerification, showAlert } = useAppContext();
+  const history = useHistory();
 
-  const triggerVerification = (e) => {
-    console.log("TODO: trigger verification")
+  const triggerVerification = async (e) => {
+    try {
+      await verify();
+      showAlert("E-mail sent", "Check your in-box for an e-mail with further instructions");
+      //The user must log in again to sync the (verified) authentication state
+      await logout();
+      history.replace("/login");
+    } catch(e) {
+      showAlert("Operation failed", "Could not initiate sending of verification e-mail", "Error", e.message);
+    }
   }
   
   // Content depending on type of user
