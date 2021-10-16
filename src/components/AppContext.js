@@ -17,8 +17,10 @@ import { auth } from '../services/firebase'
 const AppContext = createContext({
   initialAuthChecked: false,
   user: null,
+  verifiedAccount: false,
   queryConfirm: (heading, text, resultCb, type) => {},
-  showAlert: (heading, text, type, code) => {}
+  showAlert: (heading, text, type, code) => {},
+  skipVerification: () => {}
 });
 
 const AppContextProvider = ({ children }) => {
@@ -58,35 +60,46 @@ const AppContextProvider = ({ children }) => {
   //The fixed (constant) part of the context, i.e. the functions
   const [ fixedContext ] = useState({
     queryConfirm: (...args) => openQuery(...args),
-    showAlert: (...args) => openAlert(...args)
+    showAlert: (...args) => openAlert(...args),
+    skipVerification: () => setContext(prev => ({ ...prev, verifiedAccount: !!prev.user }))
   });
 
   //The exported context (variable and fixed parts together)
   const [ context, setContext ] = useState({
     initialAuthChecked: false,
     user: null,
+    verifiedAccount: false,
     ...fixedContext
   });
 
   //Setup detection of authentication changes
   useEffect ( () => {
-    auth.onAuthStateChanged((user) => {
-      setContext({
+    //Given that "fixedContext" really is fixed, there should only be one (1)
+    //invocation of this function... but keep track of and apply "unsubscribe"
+    //anyway as some kind of extra (/over) defensive measure 
+    const unsubscribe = auth.onAuthStateChanged((user) => {
+      setContext(prev => ({
         initialAuthChecked: true, //one-time toggling false->true
         user,
+        verifiedAccount: user && (user.emailVerified || prev.verifiedAccount), 
         ...fixedContext
-      });
-      
-      if (user) {
-        //TBD/TODO: add logic here for email-verification status? (or inside validateAccess?)
-        validateAccess(user).catch(e => {
-          errorTracking.captureException(e);
-          console.error(e);
-        });
-      }
+      }));
     });
+    return () => {
+      unsubscribe();
+    }
   }, [fixedContext]);
-
+  
+  useEffect( () => {
+    if (context.verifiedAccount) {
+      validateAccess(context.user)
+      .catch(e => {
+        errorTracking.captureException(e);
+        console.error(e);
+      });
+    }
+  }, [context.verifiedAccount, context.user])
+  
   //Basically render all possible modals and then the actual (wrapped) components
   //if the initial authentication check has completed.
   return (

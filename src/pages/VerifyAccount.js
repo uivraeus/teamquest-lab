@@ -7,7 +7,7 @@ import { Link } from 'react-router-dom'
 import "./VerifyAccount.css";
 
 const VerifyAccount = () => {
-  const { user } = useAppContext();
+  const { user, skipVerification } = useAppContext();
   //const history = useHistory();
 
   const triggerVerification = (e) => {
@@ -26,7 +26,7 @@ const VerifyAccount = () => {
     ? "We will send you an e-mail, which contains a link for you to follow in order complete the verification."
     : "When you click the button we will send you an e-mail, which contains a link for you to follow in order to complete the signup process."
   const orElseText = legacyUser
-    ? "we will remind you again the next time you load the App."
+    ? "now we will remind you again."
     : "we will eventually terminate your account."
 
   return (
@@ -35,7 +35,7 @@ const VerifyAccount = () => {
       <p>Your account, <i>{user.email}</i>, {situationText}</p>
       <p>{processText} You will then have to login again to synchronize your account status.</p>
       <AppBtn text="Send verification mail" kind="accent" onClick={triggerVerification}/>
-      <AppBtn text="Skip this" onClick={() => null}/>
+      <AppBtn text="Skip this" onClick={skipVerification}/>
       <InfoBlock>
         <p>
           If you already did this but didn't receive any mail, you should try and click the button again.
