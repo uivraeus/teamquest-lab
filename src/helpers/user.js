@@ -58,7 +58,24 @@ export const confirmPassword = async (password) => {
 
 // Update user's entry in the validated-users list with (keep track of latest access)
 export const validateAccess = async (user) => {
-  //TBD/TODO: conditional logic here? (Matching security rules?)
-  //update existing entry or email verified?
+  // No check w.r.t. security rules here. Will throw if misused.
   await db.set(`v_users/${user.uid}`, {".sv": "timestamp"});
+}
+
+// Check if the user has been "validated" in the database (either automatically via
+// validateAccess or via some manual procedure)
+export const isValidated = async (user) => {
+  // If not validated the security rules should cause a "permission denied"
+  // Not so "clean" but it will have to do (will show as "denies" in rules monitor).
+  try {
+    const snapshot = await db.once(`v_users/${user.uid}`)
+    return snapshot.val() !== null;
+  } catch (e) {
+    if (e instanceof Error && e.message.includes("permission_denied")) {
+      return false;
+    } else {
+      // Some kind of other error... network?
+      throw (e);
+    }    
+  }
 }

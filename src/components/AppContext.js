@@ -81,7 +81,7 @@ const AppContextProvider = ({ children }) => {
       setContext(prev => ({
         initialAuthChecked: true, //one-time toggling false->true
         user,
-        verifiedAccount: user && (user.emailVerified || prev.verifiedAccount), 
+        verifiedAccount: !!user && (user.emailVerified || prev.verifiedAccount), 
         ...fixedContext
       }));
     });
