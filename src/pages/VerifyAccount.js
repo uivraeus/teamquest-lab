@@ -42,7 +42,7 @@ const VerifyAccount = () => {
         </p>
         <hr/>
         <p>
-          Already forgot your current password? <Link to="/reset">Reset</Link> it via email.
+          Forgot your current password? <Link to="/reset">Reset</Link> it via email.
         </p>
         <hr/>
         <p>If you don't proceed with this step {orElseText}</p>
