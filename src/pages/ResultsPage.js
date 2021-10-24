@@ -23,7 +23,7 @@ const ResultsPage = () => {
   
   //For signed in users; determine what to show in the team-control part
   const { teams, readError } = useOwnedTeams();
-  const { showAlert, user } = useAppContext();
+  const { showAlert, user, validatedAccess } = useAppContext();
   
   //Alert on db read error (but don't do anything... what _could_ be done?)
   useEffect( () => {
@@ -47,7 +47,7 @@ const ResultsPage = () => {
 
   return (
     <>
-      {user ?
+      {user && validatedAccess ?
         <div className="ResultsPage-signed-in">
           <div className="ResultsPage-team-control">
             {ownedTeams ?
