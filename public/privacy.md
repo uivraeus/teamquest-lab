@@ -60,10 +60,6 @@ To be able to _initiate_ surveys for your team(s), you have to register an accou
 
 This will be your credentials for subsequent logins to the App. 
 
-> Note that there is no validation of the e-mail address during sign-up. Technically, this enables anonymity via "dummy addresses" if that is desired. However, this is not recommended for two reasons:
-> 1. If you can't be contacted via the specified e-mail address it will not be possible to reset the password in the event it is lost (There is no way for you to claim ownership of the account or any data associated with it).
-> 2. In the event of problems or critical maintenance tasks associated with your account or the service as a whole, it may not be possible for us to communicate this to you.
-
 ### Managing teams and surveys
 Each survey created by you will be associated to a _team_. So, for each registered user we will collect and process as personal data:
 * Defined team(s)
@@ -171,4 +167,4 @@ If, for some reason, the automatic functions within the App don't allow you to a
 If you believe our processing of your personal data infringes data protection laws, you have a legal right to initiate a complaint with a supervisory authority responsible for data protection in accordance with [Article 77 of the GDPR](https://gdpr-info.eu/art-77-gdpr/).
 
 ***
-_Last updated: October 9, 2021_
+_Last updated: October 24, 2021_
