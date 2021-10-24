@@ -6,6 +6,7 @@ import {
   getAuth,
   onAuthStateChanged,
   reauthenticateWithCredential,
+  sendEmailVerification,
   sendPasswordResetEmail,
   signInWithEmailAndPassword,
   signOut,
@@ -52,7 +53,9 @@ export const auth = {
     const user = getAuth(app).currentUser;
     const cred = EmailAuthProvider.credential(user.email, password);
     return authWrap(reauthenticateWithCredential(user, cred)); 
-  }
+  },
+  //The verification-function is abstracted to always operate on the current user
+  sendEmailVerification: (actionCodeSettings) => authWrap(sendEmailVerification(getAuth(app).currentUser, actionCodeSettings))
 }
 
 //Exported (sometimes refined) db functions

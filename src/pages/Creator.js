@@ -16,6 +16,8 @@ import { ReactComponent as SettingsIcon } from "../icons/settings.svg";
 
 import './Creator.css';
 
+import VerifyAccount from './VerifyAccount';
+
 //Lazy loaded components for the sub-pages
 //(chunk names aren't required but makes it easier to analyze in dev tools )
 const SurveyInfo = lazy(() => import(/* webpackChunkName: 'SurveyInfo' */ './SurveyInfo'));
@@ -56,6 +58,7 @@ const Creator = () => {
   const pathInherit = `${path}/inherit`
   const pathTransfer = `${path}/transfer`
   const pathShareResults = `${path}/share-results`;
+  const pathVerify = `${path}/verify`;
 
   //Results are shown via a public route (also for signed in users)
   const pathResults = "/results";
@@ -72,7 +75,7 @@ const Creator = () => {
   //Alert on db read error
   useEffect( () => {
     if (readError && showAlert) {
-      showAlert("Error reading user's team data", readError, "Error");
+      showAlert("Data backend error", "Error reading user's team data", "Error", readError);
       //Don't really know what to do in this case... something is wrong with
       //the backend DB connection
     }
@@ -146,6 +149,7 @@ const Creator = () => {
           </div>
         </Route>
         
+        <Route exact path={pathVerify} component={VerifyAccount}></Route>
         <Route exact path={pathNew} render={ teamsPage(Create, teams, readError) } ></Route>
         <Route path={`${pathNew}/:teamId`} render={ teamsPage(Create, teams, readError) } ></Route>
         <Route exact path={pathMonitor} render={ teamsPage(SurveyCatalog, teams, readError) }></Route>

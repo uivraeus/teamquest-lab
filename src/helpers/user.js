@@ -58,7 +58,19 @@ export const confirmPassword = async (password) => {
 
 // Update user's entry in the validated-users list with (keep track of latest access)
 export const validateAccess = async (user) => {
-  //TBD/TODO: conditional logic here? (Matching security rules?)
-  //update existing entry or email verified?
+  // No check w.r.t. security rules here. Will throw if misused.
   await db.set(`v_users/${user.uid}`, {".sv": "timestamp"});
+}
+
+// Subscribe to changes in the user's entry in the validated-users list
+// Expects a callback-function with signature (bool, error|undefined) => {},
+// ie. true if validated
+// Returns an unsubscribe-function
+export const onValidatedAccess = (user, callback) => {
+  const unsubscribeFn = db.onValue(db.query(`v_users/${user.uid}`), snapshot => {
+    callback(!!snapshot.val());
+  }, error => {
+    callback(false, error);
+  });
+  return unsubscribeFn;
 }

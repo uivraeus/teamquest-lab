@@ -22,6 +22,11 @@ export function update(oldPassword, password) {
     .then(({ user }) => auth.updatePassword(user, password));
 }
 
+export function verify(redirectUrl = null) {
+  var actionCodeSettings = redirectUrl ? { url: redirectUrl } : undefined;
+  return auth.sendEmailVerification(actionCodeSettings);
+}
+
 export function deleteAccount(password) {
   return auth.reauthenticateCurrentUser(password)
     .then(({ user }) => auth.deleteUser(user));
