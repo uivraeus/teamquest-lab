@@ -62,20 +62,15 @@ export const validateAccess = async (user) => {
   await db.set(`v_users/${user.uid}`, {".sv": "timestamp"});
 }
 
-// Check if the user has been "validated" in the database (either automatically via
-// validateAccess or via some manual procedure)
-export const isValidated = async (user) => {
-  // If not validated the security rules should cause a "permission denied"
-  // Not so "clean" but it will have to do (will show as "denies" in rules monitor).
-  try {
-    const snapshot = await db.once(`v_users/${user.uid}`)
-    return snapshot.val() !== null;
-  } catch (e) {
-    if (e instanceof Error && e.message.includes("permission_denied")) {
-      return false;
-    } else {
-      // Some kind of other error... network?
-      throw (e);
-    }    
-  }
+// Subscribe to changes in the user's entry in the validated-users list
+// Expects a callback-function with signature (bool, error|undefined) => {},
+// ie. true if validated
+// Returns an unsubscribe-function
+export const onValidatedAccess = (user, callback) => {
+  const unsubscribeFn = db.onValue(db.query(`v_users/${user.uid}`), snapshot => {
+    callback(!!snapshot.val());
+  }, error => {
+    callback(false, error);
+  });
+  return unsubscribeFn;
 }

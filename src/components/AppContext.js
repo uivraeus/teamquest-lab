@@ -2,9 +2,9 @@ import React, { createContext, useEffect, useState } from 'react';
 import AlertModal from './AlertModal';
 import { errorTracking } from '../services/sentry';
 import QueryModal from './QueryModal';
-import { validateAccess } from '../helpers/user';
+import { onValidatedAccess, validateAccess } from '../helpers/user';
 
-//Auth & Data backend
+//Auth backend
 import { auth } from '../services/firebase'
 
 /**
@@ -69,6 +69,7 @@ const AppContextProvider = ({ children }) => {
     initialAuthChecked: false,
     user: null,
     verifiedAccount: false,
+    validatedAccess: null, // null until status fetched from backend (then true/false)
     ...fixedContext
   });
 
@@ -81,7 +82,8 @@ const AppContextProvider = ({ children }) => {
       setContext(prev => ({
         initialAuthChecked: true, //one-time toggling false->true
         user,
-        verifiedAccount: !!user && (user.emailVerified || prev.verifiedAccount), 
+        verifiedAccount: !!user && (user.emailVerified || prev.verifiedAccount),
+        validatedAccess: !!user ? prev.validatedAccess : null,
         ...fixedContext
       }));
     });
@@ -90,15 +92,45 @@ const AppContextProvider = ({ children }) => {
     }
   }, [fixedContext]);
   
+  //In addition to "auth" status, access to private data also relies on an explicit
+  //validation entry (/field) for the user account. For a verified account it shall
+  //be possible to validate the access. For an unverified account, any attempt to
+  //validate the access shall result in rejection (due to backend security policies).
+  //There is a known "issue" here:
+  //If, for some reason, `validateAccess` fails, there will be a successful (true)
+  //indication via the `onValidatedAccess`-callback (probably because of local
+  //caching in the Firebase SDK). Then, a short moment later the truth is reviled
+  //and the callback will trigger again with "false". So the `validatedAccess`
+  //property in the context will "lie" for a while. This means that there will be
+  //a subsequent access issue when fetching of "private" data is attempted.
+  //(Not so nice but not a big issue either)
+  //Possible solutions:
+  //- only set `validatedAccess=true` in a `.then` of `validateAccess`, OR
+  //- keep track of local action and ignore the first callback-response
+  //- (TODO: Think of multiple devices...)
   useEffect( () => {
     if (context.verifiedAccount) {
       validateAccess(context.user)
       .catch(e => {
-        errorTracking.captureException(e);
-        console.error(e);
+        fixedContext.showAlert("Data backend error", "Couldn't validate access to private data", "Error", e.message || e);
       });
     }
-  }, [context.verifiedAccount, context.user])
+  }, [context.verifiedAccount, context.user, fixedContext])
+  useEffect( () => {
+    let unsubscribeFn = null;
+    if (context.user) {
+      unsubscribeFn = onValidatedAccess(context.user, (validated, e) => {
+        if (e) {
+          fixedContext.showAlert("Data backend error", "Couldn't retrieve access validation status", "Error", e.message || e);
+        }
+        setContext(prev => ({ ...prev, validatedAccess: validated }))
+      });
+    }        
+    return () => {
+      if (unsubscribeFn)
+        unsubscribeFn();
+    };      
+  }, [context.user, fixedContext])
   
   //Basically render all possible modals and then the actual (wrapped) components
   //if the initial authentication check has completed.

@@ -75,7 +75,7 @@ const Creator = () => {
   //Alert on db read error
   useEffect( () => {
     if (readError && showAlert) {
-      showAlert("Error reading user's team data", readError, "Error");
+      showAlert("Data backend error", "Error reading user's team data", "Error", readError);
       //Don't really know what to do in this case... something is wrong with
       //the backend DB connection
     }

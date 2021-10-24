@@ -20,15 +20,16 @@ import { db } from "../services/firebase";
 
 const defaultResult = { teams: null, readError:null };
 const useOwnedTeams = () => {
-  const { user } = useAppContext();
+  const { user, validatedAccess } = useAppContext();
   const [result, setResult] = useState(defaultResult);
   
+  const uid = user ? user.uid : null;
   useEffect(() => {
     let query = null;
     let unsubscribeFn = null; 
-    if (user) {
+    if (uid && validatedAccess) {
       //Subscribe to teams data for the user;
-      query = db.query("teams", db.orderByChild("uid"), db.equalTo(user.uid));
+      query = db.query("teams", db.orderByChild("uid"), db.equalTo(uid));
       try {
         unsubscribeFn = db.onValue(query, (snapshot) => {
           try {
@@ -40,24 +41,26 @@ const useOwnedTeams = () => {
             //TODO: sort teams by "alias"?
             setResult({ ...defaultResult, teams: dbTeams });
           } catch (e) {
-            console.log(e);
             setResult({ ...defaultResult, readError: e.message });
           }
+        }, e => {
+          setResult({ ...defaultResult, readError: e.message });
         });
       } catch (e) {
         console.log(e);
         setResult({ ...defaultResult, readError: e.message });
       }
+    } else {
+      setResult({ ...defaultResult});
     }
 
     return () => {
-      if (query) {
-        if (unsubscribeFn)
-          unsubscribeFn();
-      }
+      if (unsubscribeFn) {
+        unsubscribeFn();
+      }          
     };
-  }, [user]);
-  
+  }, [uid, validatedAccess]);
+
   return result;
 }
 

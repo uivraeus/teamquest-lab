@@ -28,7 +28,7 @@ const ResultsPage = () => {
   //Alert on db read error (but don't do anything... what _could_ be done?)
   useEffect( () => {
     if (readError && showAlert) {
-      showAlert("Error reading user's team data", readError, "Error");
+      showAlert("Data backend error", "Error reading user's team data", "Error", readError);
     }
   }, [readError, showAlert])
 

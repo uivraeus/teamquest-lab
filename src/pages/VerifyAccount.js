@@ -1,30 +1,24 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import AppBtn from "../components/AppBtn";
 import InfoBlock from "../components/InfoBlock";
 import LoadingIndicator from '../components/LoadingIndicator';
 import { logout, verify } from "../helpers/auth";
-import { isValidated } from "../helpers/user";
 import useAppContext from "../hooks/AppContext";
 import { Link, useHistory } from 'react-router-dom'
 
 import "./VerifyAccount.css";
 
 const VerifyAccount = () => {
-  const { user, skipVerification, showAlert } = useAppContext();
+  const { user, validatedAccess, skipVerification, showAlert } = useAppContext();
   const history = useHistory();
   const [pending, setPending] = useState(false);
-  const [legacyUser, setLegacyUser] = useState(null); // null until known, then bool
-
-  useEffect(() => {
-    isValidated(user)
-    .then(validated => setLegacyUser(validated)) //a user with unverified email but still validated
-    .catch(error => {
-      const msg = error.message ? error.message : error
-      showAlert("Data backend error", "Could not read user configuration", "Error", msg);
-      logout(); // Why not... at least not getting stuck on this page
-    });
-  },[user, showAlert])
-
+  
+  //If we end up here it means that the user hasn't verified the e-mail address
+  //But if, at the same time, this user has a validated access it must imply that
+  //it was granted "manually". This would typically correspond to a "legacy user",
+  //ie. one who signed up before verification became mandatory.
+  const legacyUser = validatedAccess; //null until status in known, then true/false
+  
   const triggerVerification = async (e) => {
     setPending(true);
     try {
