@@ -18,6 +18,7 @@ const AppContext = createContext({
   initialAuthChecked: false,
   user: null,
   verifiedAccount: false,
+  validatedAccess: null, // null until status fetched from backend (then true/false)
   queryConfirm: (heading, text, resultCb, type) => {},
   showAlert: (heading, text, type, code) => {},
   skipVerification: () => {}
