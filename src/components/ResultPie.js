@@ -43,7 +43,7 @@ const ResultPie = ( {value, max, color="#D000E0", opacity="1.0", textColor="#000
               <Cell key={`slice-${index}`} fill={entry.name==="void" ? "#00000000": color} opacity={opacity}/>
             ))}
             <Label position="center" fill={textColor}>
-              {`${value}%`}
+              {`${value}`}
             </Label>
           </Pie>
         </PieChart>

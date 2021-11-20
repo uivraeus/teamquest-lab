@@ -56,14 +56,14 @@ const splitMaturity = (results) => {
   return [matMin, matMid, matMax];
 };
 
-//Helper for collecting efficiency samples. Ideally this should be a simple "map"
-//but there may be old survey instances where efficiency wasn't collected
+//Helper for collecting and rescaling efficiency samples. Ideally this should be a
+//simple "map" but there may be old survey instances where efficiency wasn't collected
 const collectEfficiency = (results) => {
   const firstIx = results.findIndex((result) => !!result.efficiency);
   if (firstIx !== -1) {
     return results.slice(firstIx).map((result) => ({
       date: result.meta.createTime,
-      value: result.efficiency || 0,
+      value: result.efficiency ? Math.round(result.efficiency/10) : 0,
     }));
   } else {
     return [];
@@ -146,10 +146,9 @@ const HistoryChart = ({ results }) => {
           <YAxis
             yAxisId="right"
             orientation="right"
-            domain={[0, 100]}
+            domain={[0, 10]}
             dataKey="value"
             name="Efficiency"
-            unit="%"
             stroke="var(--color-result-e)"
             hide
           />

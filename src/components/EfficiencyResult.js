@@ -14,7 +14,7 @@ const descrClass = "EfficiencyResult-description";
 const disabledDescrClass = `${descrClass} disabled`;
 
 const EfficiencyResult = ({ resultData }) => {
-  const data = resultData || 0;
+  const data = resultData ? Math.round(resultData/10) : 0;
 
   return <div className="EfficiencyResult">
     <h4>Productivity</h4>
@@ -22,7 +22,7 @@ const EfficiencyResult = ({ resultData }) => {
       <div className={resultData ? activeCategoryClass : categoryClass}>
         <ResultPie
           value={data}
-          max={100}
+          max={10}
           color={color}
           textColor={data > 0 ? color : "var(--color-result-nomatch)"}
         />
