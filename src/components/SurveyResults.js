@@ -13,34 +13,37 @@ import './SurveyResults.css';
 
 const toolboxUrl = "https://proagileab.github.io/agile-team-development/";
 
-const SurveyResults = ({ teamId, manageUrl = null }) => {
+const SurveyResults = ({ teamId, selectedSurveyId = null, manageUrl = null }) => {
   const { results, latestResult, analysisError } = useTeamResults(teamId);
 
-  //Derive information/text to render for the "latest result"
-  //TODO (?): replace with "selected" instead of "latest"
-  let showLatestResult = false;
-  let latestDescrStr = null;
-  if (latestResult) {
-    const meta = latestResult.meta;
-    latestDescrStr =
+  //Show the latest result if there is no (valid) selection
+  const selectedResult = (selectedSurveyId && results && results.find(r => r.meta.id === selectedSurveyId)) || latestResult;
+  const oldSurveySelected = selectedResult !== latestResult;
+  
+  //Derive information/text to render for the selected (or latest) result
+  let showSelectedResult = false;
+  let selectedDescrStr = null;
+  if (selectedResult) {
+    const meta = selectedResult.meta;
+    selectedDescrStr =
       new Date(meta.createTime).toLocaleDateString() + ", ";
-    showLatestResult = !!latestResult.maturity; //maturity is always present in survey
+    showSelectedResult = !!selectedResult.maturity; //maturity is always present in survey
     let resultDescr = "results not yet available";
-    if (showLatestResult) {
+    if (showSelectedResult) {
       resultDescr = meta.ongoing ? "not yet completed" : "completed";
     }
     if (meta.compLev === CompLev.CANCELED) {
-      latestDescrStr += "cancelled";
+      selectedDescrStr += "cancelled";
     } else if (!meta.ongoing && meta.compLev === CompLev.TOO_FEW) {
-      latestDescrStr += "never completed (too few responders)";
+      selectedDescrStr += "never completed (too few responders)";
     } else {
       const n = meta.numResponders;
-      latestDescrStr +=
+      selectedDescrStr +=
         `${n} responder` + (n !== 1 ? "s (" : " (") + resultDescr + ")";
     }
   }
-  //Interpretation of current maturity result
-  const matchingStages = showLatestResult ? matchedMaturityStages(latestResult.maturity) : [];
+  //Interpretation of selected maturity result
+  const matchingStages = showSelectedResult ? matchedMaturityStages(selectedResult.maturity) : [];
   const detailsFile = `stage-details-${matchingStages.length ? matchingStages.join('') : 0}`;
 
   //Hint to the users waiting for analysis results due to ongoing survey
@@ -57,7 +60,7 @@ const SurveyResults = ({ teamId, manageUrl = null }) => {
   
   return (
     <div className="SurveyResults">
-      <h3>Latest survey</h3>
+      <h3>{ oldSurveySelected ? "Selected" : "Latest"} survey</h3>
       {analysisError ? (
         <p><em>Could not obtain any results</em></p>
       ) : (
@@ -66,10 +69,10 @@ const SurveyResults = ({ teamId, manageUrl = null }) => {
             <p>Loading...</p>
           ) : (
             <>
-              {latestResult ? (
+              {selectedResult ? (
                 <>
-                  <em>{latestDescrStr}</em>
-                  {latestResult.meta.ongoing && latestResult.meta.compLev === CompLev.SOME ?
+                  <em>{selectedDescrStr}</em>
+                  {selectedResult.meta.ongoing && selectedResult.meta.compLev === CompLev.SOME ?
                     <InfoBlock>
                       <CompletionHint/>
                     </InfoBlock> : null                    
@@ -77,11 +80,11 @@ const SurveyResults = ({ teamId, manageUrl = null }) => {
                   <hr/>
                   <div className="SurveyResults-latest-graphs">
                     <MaturityResult 
-                      resultData={latestResult.maturity}
-                      ongoing={latestResult.meta.ongoing}
+                      resultData={selectedResult.maturity}
+                      ongoing={selectedResult.meta.ongoing}
                     />
                     <EfficiencyResult 
-                      resultData={latestResult.efficiency}
+                      resultData={selectedResult.efficiency}
                     />
                   </div>
                   {results.length > 1 ? (
@@ -92,7 +95,7 @@ const SurveyResults = ({ teamId, manageUrl = null }) => {
                     </>) : null
                   }
                   <hr/>
-                  {(!latestResult.meta.ongoing && latestResult.maturity) ?
+                  {(!selectedResult.meta.ongoing && selectedResult.maturity) ?
                     <>
                       <MarkdownBlock mdFileName={detailsFile} />
                       <InfoBlock>

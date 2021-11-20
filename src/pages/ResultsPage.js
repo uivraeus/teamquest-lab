@@ -1,9 +1,9 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useMemo } from "react";
 import AppBtn from "../components/AppBtn";
 import InfoBlock from "../components/InfoBlock";
 import RouteSelect from "../components/RouteSelect";
 import SurveyResults from "../components/SurveyResults";
-import { useHistory, useParams } from "react-router-dom";
+import { useHistory, useLocation, useParams } from "react-router-dom";
 import useAppContext from '../hooks/AppContext'
 import useOwnedTeams from '../hooks/OwnedTeams';
 
@@ -17,8 +17,15 @@ import './ResultsPage.css';
  * (A signed in user might still view the results from a team he/whe doesn't own)
  */
 
+// Helper hook [https://v5.reactrouter.com/web/example/query-parameters]
+function useQuery() {
+  const { search } = useLocation();
+  return useMemo(() => new URLSearchParams(search), [search]);
+}
+
 const ResultsPage = () => {
   const { teamId } = useParams();
+  const query = useQuery();
   const history = useHistory();
   
   //For signed in users; determine what to show in the team-control part
@@ -77,7 +84,11 @@ const ResultsPage = () => {
         </div> : null
       }
       {teamId ?
-        <SurveyResults teamId={teamId} manageUrl={manageUrl} /> : null
+        <SurveyResults 
+          teamId={teamId}
+          selectedSurveyId={query.get("sId")}
+          manageUrl={manageUrl}
+        /> : null
       }
       
     </>
