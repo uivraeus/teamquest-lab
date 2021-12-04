@@ -78,12 +78,11 @@ const HighlightBar = (props) => {
 //- efficiency (when available)
 //NOTE: we don't do any "filtering" on completion level or similar here as
 //that is the responsibility of the parent, i.e. just try to plot everything.
-const HistoryChart = ({ results }) => {
+const HistoryChart = ({ results, selectedId = null, updateSelection = (id) => {} }) => {
   //Align plot's right end to the current date. The left corresponds to first sample.
   const [now] = useState(new Date().getTime());
   const oldest = results[0].meta.date;
 
-  const [selectedId, setSelectedId] = useState(null); //TODO replace with prop and callback
   const [hoverId, setHoverId] = useState(null)
   const samples = collectSamples(results, hoverId, selectedId);
   
@@ -166,7 +165,7 @@ const HistoryChart = ({ results }) => {
             //dataKey not even used here, the custom shape doesn't use any value anyway
             legendType="none"
             shape={MyBar}
-            onClick={s => setSelectedId(s.id)} //TODO: replace with callback to parent
+            onClick={s => updateSelection(s.id)}
             onMouseEnter={s => setHoverId(s.id)}
             onMouseOut={s => setHoverId(null)}            
           />

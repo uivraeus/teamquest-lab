@@ -7,7 +7,7 @@ import MarkdownBlock from "./MarkdownBlock";
 import MaturityResult from "./MaturityResult";
 import useTeamResults from "../hooks/TeamResults";
 import { matchedMaturityStages } from "../helpers/algorithm";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 
 import './SurveyResults.css';
 
@@ -20,6 +20,13 @@ const SurveyResults = ({ teamId, selectedSurveyId = null, manageUrl = null }) =>
   const selectedResult = (selectedSurveyId && results && results.find(r => r.meta.id === selectedSurveyId)) || latestResult;
   const oldSurveySelected = selectedResult !== latestResult;
   
+  //Helper for navigating among survey instances
+  const history = useHistory();
+  const updateSelection = (id) => {
+    const selectedUri = `${history.location.pathname}?sId=${id}`;
+    history.replace(selectedUri);
+  }
+
   //Derive information/text to render for the selected (or latest) result
   let showSelectedResult = false;
   let selectedDescrStr = null;
@@ -91,7 +98,11 @@ const SurveyResults = ({ teamId, selectedSurveyId = null, manageUrl = null }) =>
                     <>
                       <hr/>
                       <h3>Team history</h3>
-                      <HistoryChart results={results.filter(r => !r.meta.ongoing)} />
+                      <HistoryChart
+                        results={results.filter(r => !r.meta.ongoing)}
+                        selectedId={selectedSurveyId}
+                        updateSelection={updateSelection}
+                      />
                     </>) : null
                   }
                   <hr/>
