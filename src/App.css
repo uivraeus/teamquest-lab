@@ -28,7 +28,7 @@
   --color-result-m: rgb(70,128,160);
   --color-result-e: rgb(128,160,70);
   --color-result-nomatch: rgb(180,180,180);
-  --color-result-hover: rgba(200,128,128,0.3);
+  --color-result-hover: rgba(170,128,128,0.2);
   --color-result-selected: rgba(255,128,128,0.5);
   --font-big:  calc(17px + 2.7vw); 
   --font-medium: calc(11px + 2.7vw);
