@@ -5,6 +5,7 @@ import HistoryChart from "./HistoryChart";
 import InfoBlock from "./InfoBlock";
 import MarkdownBlock from "./MarkdownBlock";
 import MaturityResult from "./MaturityResult";
+import ResultsNav from "./ResultsNav";
 import useTeamResults from "../hooks/TeamResults";
 import { matchedMaturityStages } from "../helpers/algorithm";
 import { Link, useHistory } from "react-router-dom";
@@ -19,7 +20,7 @@ const SurveyResults = ({ teamId, selectedSurveyId = null, manageUrl = null }) =>
   //Show the latest result if there is no (valid) selection
   const selectedResult = (selectedSurveyId && results && results.find(r => r.meta.id === selectedSurveyId)) || latestResult;
   const oldSurveySelected = selectedResult !== latestResult;
-  
+ 
   //Helper for navigating among survey instances
   const history = useHistory();
   const updateSelection = (id) => {
@@ -65,9 +66,23 @@ const SurveyResults = ({ teamId, selectedSurveyId = null, manageUrl = null }) =>
         are expected.
       </p>  
   
+  //Only include completed results when plotting and browsing the history
+  //But for navigation, it makes most sense to always (unconditionally) include the latest entry
+  const completedResults = results ? results.filter(r => !r.meta.ongoing) : [];
+  const navigableResults = latestResult && latestResult.meta.ongoing
+    ? [ ...completedResults, latestResult]
+    : completedResults;
+  
   return (
     <div className="SurveyResults">
-      <h3>{ oldSurveySelected ? "Selected" : "Latest"} survey</h3>
+      <div className="SelectionHeading">
+        <h3>{ oldSurveySelected ? "Selected" : "Latest"} survey</h3>
+        <ResultsNav
+          results={navigableResults}
+          currentId={selectedResult ? selectedResult.meta.id : null}
+          updateCurrentId={updateSelection}
+        />
+      </div>
       {analysisError ? (
         <p><em>Could not obtain any results</em></p>
       ) : (
@@ -99,7 +114,7 @@ const SurveyResults = ({ teamId, selectedSurveyId = null, manageUrl = null }) =>
                       <hr/>
                       <h3>Team history</h3>
                       <HistoryChart
-                        results={results.filter(r => !r.meta.ongoing)}
+                        results={completedResults}
                         selectedId={selectedSurveyId}
                         updateSelection={updateSelection}
                       />
