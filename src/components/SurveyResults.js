@@ -24,8 +24,9 @@ const SurveyResults = ({ teamId, selectedSurveyId = null, manageUrl = null }) =>
   //Helper for navigating among survey instances
   const history = useHistory();
   const updateSelection = (id) => {
-    const selectedUri = `${history.location.pathname}?sId=${id}`;
-    history.replace(selectedUri);
+    const query = id ? `?sId=${id}` : "";
+    const uri = `${history.location.pathname}${query}`;
+    history.replace(uri);
   }
 
   //Derive information/text to render for the selected (or latest) result

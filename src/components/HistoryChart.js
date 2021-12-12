@@ -93,6 +93,16 @@ const HistoryChart = ({ results, selectedId = null, updateSelection = (id) => {}
     hoverId={hoverId}
   />
 
+  //Clicks on samples (MyBar) selects a survey instance. Clicks outside clears the
+  //selection.
+  //The signatures for the recharts callbacks are not well documented, so empirical
+  //experiments were used to get these right.
+  const onChartClick = () => updateSelection(null)
+  const onBarClick = (s, _, e) => {
+    e.stopPropagation(); //prevent onChartClick from running afterwards
+    updateSelection(s.id)
+  }
+
   return (
     <div className="HistoryChart">
       <ResponsiveContainer minWidth={360} minHeight={200}>
@@ -104,6 +114,8 @@ const HistoryChart = ({ results, selectedId = null, updateSelection = (id) => {}
             bottom: 0,
             left: 0,
           }}
+          onClick={onChartClick}
+          onMouseLeave={()=>setHoverId(null)} //"plan b" - the bar's mouse-out is lost sometimes (?)
         > 
           <CartesianGrid vertical={false} />
 
@@ -165,9 +177,9 @@ const HistoryChart = ({ results, selectedId = null, updateSelection = (id) => {}
             //dataKey not even used here, the custom shape doesn't use any value anyway
             legendType="none"
             shape={MyBar}
-            onClick={s => updateSelection(s.id)}
+            onClick={onBarClick}
             onMouseEnter={s => setHoverId(s.id)}
-            onMouseOut={s => setHoverId(null)}            
+            onMouseOut={() => setHoverId(null)}            
           />
 
           
