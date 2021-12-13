@@ -70,7 +70,8 @@ const SurveyResults = ({ teamId, selectedSurveyId = null, manageUrl = null }) =>
   //Only include completed results when plotting and browsing the history
   //But for navigation, it makes most sense to always (unconditionally) include the latest entry
   const completedResults = results ? results.filter(r => !r.meta.ongoing) : [];
-  const navigableResults = latestResult && latestResult.meta.ongoing
+  const lastCompleted = completedResults.length ? completedResults[completedResults.length - 1] : null;
+  const navigableResults = latestResult && lastCompleted && latestResult !== lastCompleted
     ? [ ...completedResults, latestResult]
     : completedResults;
   
