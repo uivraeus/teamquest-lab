@@ -37,8 +37,8 @@ const MaturityResult = ({ resultData, ongoing }) => {
       {data.map((value, index) => (
         <div key={index} className={value > 75 ? matchedCategoryClass : categoryClass}>
           <ResultPie
-            value={Math.round(value/10)}
-            max={10}
+            value={value}
+            max={100}
             color={color}
             opacity={value > 75 ? "1.0" : "0.2"}
             textColor={value > 75 ? color : "var(--color-result-nomatch)"}
