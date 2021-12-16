@@ -18,12 +18,16 @@ const collectSamples = (results) => {
   return results.map((result) => {
     const stages = matchedMaturityStages(result.maturity);
     const id=result.meta.id;
-    return {
+    const sample = {
       id,
       date: result.meta.createTime,
-      maturity: stages.length > 0 ? stages[0] : 0,
-      efficiency: result.efficiency !== null ? Math.round(result.efficiency) : 0      
-    } 
+      minMaturity: stages.length > 0 ? stages[0] : 0,
+      maxMaturity: stages.length > 0 ? stages[stages.length - 1] : 0,
+      midMaturity1: stages.length > 2 ? stages[1] : null,
+      midMaturity2: stages.length > 3 ? stages[2] : null,
+      efficiency: result.efficiency !== null ? result.efficiency : 0
+    };
+    return sample;
   });
 };
 
@@ -58,7 +62,7 @@ const HighlightBar = (props) => {
   //derive highlight-status
   const fill = selectedId === payload.id ? "var(--color-result-selected)" : (
     hoverId === payload.id ? "var(--color-result-hover)" : "rgba(0,0,0,0)"
-  );//var(--color-result-hover)
+  );
 
   return (
     <rect
@@ -133,11 +137,9 @@ const HistoryChart = ({ results, selectedId = null, updateSelection = (id) => {}
           <YAxis
             yAxisId="left"
             domain={[0, 4]}
-            dataKey="maturity"
             name="Stage"
             stroke="var(--color-result-m)"
             width={20}
-            //hide
           />
           <YAxis
             yAxisId="right"
@@ -153,10 +155,41 @@ const HistoryChart = ({ results, selectedId = null, updateSelection = (id) => {}
           
           <Scatter
             yAxisId="left"
+            opacity="0.5"
+            dataKey="midMaturity1"
+            fill="var(--color-result-m)"
+            legendType="none"
+            tooltipType="none"
+          />
+
+          <Scatter
+            yAxisId="left"
+            opacity="0.5"
+            dataKey="midMaturity2"
+            fill="var(--color-result-m)"
+            legendType="none"
+            tooltipType="none"
+          />
+
+          <Scatter
+            yAxisId="left"
+            line
+            lineJointType="monotoneX"
+            opacity="0.5"
+            dataKey="maxMaturity"
+            fill="var(--color-result-m)"
+            strokeWidth={1}
+            strokeDasharray="3 3"
+            legendType="none"
+            tooltipType="none"
+          />
+
+          <Scatter
+            yAxisId="left"
             name="Matched stage(s)"
             line
             lineJointType="monotoneX"
-            dataKey="maturity"
+            dataKey="minMaturity"
             fill="var(--color-result-m)"
             strokeWidth={2}
           />
@@ -181,7 +214,6 @@ const HistoryChart = ({ results, selectedId = null, updateSelection = (id) => {}
             onMouseEnter={s => setHoverId(s.id)}
             onMouseOut={() => setHoverId(null)}            
           />
-
           
         </ComposedChart>
         
