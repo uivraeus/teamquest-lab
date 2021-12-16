@@ -10,6 +10,12 @@
   margin-bottom: 1em;
 }
 
+.SurveyResults > .SelectionHeading {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
 /* Alignment and separation of different result types (either horizontal or vertical) */
 .SurveyResults-latest-graphs {
   display: flex;

@@ -1,94 +1,41 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import {
   ResponsiveContainer,
-  ScatterChart,
+  ComposedChart,
   XAxis,
   YAxis,
   Scatter,
   CartesianGrid,
   Legend,
+  Bar
 } from "recharts";
 import { matchedMaturityStages } from "../helpers/algorithm";
 
 import "./HistoryChart.css";
 
-//Helper for splitting the maturity results into separate arrays of date/value
-//pairs (matching the rechart API for scatter plots)
-//returns arrays of three arrays: [min, min, max]
-const splitMaturity = (results) => {
-  const dates = results.map((result) => result.meta.createTime);
-  const matHistory = results.map((result) =>
-    matchedMaturityStages(result.maturity)
-  );
-  const matMin = matHistory.map((matches, index) => ({
-    date: dates[index],
-    value: matches.length > 0 ? matches[0] : 0,
-  }));
-  const matMax = matHistory.map((matches, index) => ({
-    date: dates[index],
-    value: matches.length > 0 ? matches[matches.length - 1] : 0,
-  }));
-  //Add any stage-matches between min and max to a separate common array (with different length)
-  const matMid = matHistory.reduce((acc, matches, index) => {
-    if (matches.length === 3) {
-      return acc.concat([
-        {
-          date: dates[index],
-          value: matches[1],
-        },
-      ]);
-    } else if (matches.length === 4) {
-      return acc.concat([
-        {
-          date: dates[index],
-          value: matches[1],
-        },
-        {
-          date: dates[index],
-          value: matches[2],
-        },
-      ]);
-    } else {
-      return acc; //nothing to add
-    }
-  }, []);
-
-  return [matMin, matMid, matMax];
-};
-
-//Helper for collecting efficiency samples. Ideally this should be a simple "map"
-//but there may be old survey instances where efficiency wasn't collected
-const collectEfficiency = (results) => {
-  const firstIx = results.findIndex((result) => !!result.efficiency);
-  if (firstIx !== -1) {
-    return results.slice(firstIx).map((result) => ({
+//Create combined samples array, incl metadata, to match how we use the ComposedChart
+const collectSamples = (results) => {
+  return results.map((result) => {
+    const stages = matchedMaturityStages(result.maturity);
+    const id=result.meta.id;
+    const sample = {
+      id,
       date: result.meta.createTime,
-      value: result.efficiency || 0,
-    }));
-  } else {
-    return [];
-  }
+      minMaturity: stages.length > 0 ? stages[0] : 0,
+      maxMaturity: stages.length > 0 ? stages[stages.length - 1] : 0,
+      midMaturity1: stages.length > 2 ? stages[1] : null,
+      midMaturity2: stages.length > 3 ? stages[2] : null,
+      efficiency: result.efficiency !== null ? result.efficiency : 0
+    };
+    return sample;
+  });
 };
 
 //Compact format to save space (essential on mobile)
 //const dateStringOptions = { year: '2-digit', month: 'short', day: 'numeric' };
 const dateStringOptions = { month: "short", day: "numeric" };
 
-//Helpers for tweaking the scatter's "shape"
-// const MyCircle = (props) => {
-//   const { cx, cy, fill, strokeWidth } = props;
-//   return (
-//     <circle
-//       cx={cx}
-//       cy={cy}
-//       r={5}
-//       stroke={fill}
-//       strokeWidth={strokeWidth}
-//       fill="var(--color-bkg-default)"
-//     />
-//   );
-// };
-
+// Very similar to the builtin "dot" (or circle) but a smaller radius
 const MyDot = (props) => {
   const { cx, cy, fill } = props;
   return (
@@ -103,32 +50,85 @@ const MyDot = (props) => {
   );
 };
 
+//This helper shape is used for implementing hover, click and selection highlighting
+//props correspond to what recharts/Bar's shape override provides (+ selected/hoverId)
+const HighlightBar = (props) => {
+  const { background, payload, hoverId, selectedId } = props;
+  
+  //don't allow too narrow bars (hard to click on)
+  const width = Math.max(9, background.width);
+  const xAdjust = width > background.width ? (width - background.width)/2 : 0;
+
+  //derive highlight-status
+  const fill = selectedId === payload.id ? "var(--color-result-selected)" : (
+    hoverId === payload.id ? "var(--color-result-hover)" : "rgba(0,0,0,0)"
+  );
+
+  return (
+    <rect
+      x={background.x - xAdjust}
+      y={background.y}
+      width={width}
+      height={background.height}
+      fill={fill}
+    />
+  );
+};
+
+
 //Input is a list of "result objects" with shape {meta, maturity, efficiency ...})
 //Plot different series for:
 //- matched maturity stages
 //- efficiency (when available)
 //NOTE: we don't do any "filtering" on completion level or similar here as
 //that is the responsibility of the parent, i.e. just try to plot everything.
-const HistoryChart = ({ results }) => {
+const HistoryChart = ({ results, selectedId = null, updateSelection = (id) => {} }) => {
   //Align plot's right end to the current date. The left corresponds to first sample.
-  const [now, setNow] = useState(null);
-  useEffect(() => setNow(new Date().getTime()), []);
+  const [now] = useState(new Date().getTime());
   const oldest = results[0].meta.date;
 
-  const [matMin, matMid, matMax] = splitMaturity(results);
-  const effEst = collectEfficiency(results);
+  const [hoverId, setHoverId] = useState(null)
+  const samples = collectSamples(results, hoverId, selectedId);
+  
+  //Helper component for propagating current state and props to HighlightBar
+  const MyBar = (props) => <HighlightBar 
+    {...props}
+    selectedId={selectedId}
+    hoverId={hoverId}
+  />
+
+  //Clicks on samples (MyBar) selects a survey instance. Clicks outside clears the
+  //selection.
+  //The signatures for the recharts callbacks are not well documented, so empirical
+  //experiments were used to get these right.
+  const onChartClick = () => updateSelection(null)
+  const onBarClick = (s, _, e) => {
+    e.stopPropagation(); //prevent onChartClick from running afterwards
+    updateSelection(s.id)
+  }
 
   return (
     <div className="HistoryChart">
       <ResponsiveContainer minWidth={360} minHeight={200}>
-        <ScatterChart margin= {{top: 6, right: 6, bottom: 0, left: 0}}>
+        <ComposedChart
+          data={samples}
+          margin={{
+            top: 6,
+            right: 6,
+            bottom: 0,
+            left: 0,
+          }}
+          onClick={onChartClick}
+          onMouseLeave={()=>setHoverId(null)} //"plan b" - the bar's mouse-out is lost sometimes (?)
+        > 
           <CartesianGrid vertical={false} />
+
           <XAxis
             domain={[oldest, now]}
             type="number"
             dataKey="date"
             name="Date"
-            ticks={matMin.map((m) => m.date)}
+            ticks={samples.map((s) => s.date)}
             tickFormatter={(date) =>
               new Date(date).toLocaleDateString("en-us", dateStringOptions)
             }
@@ -137,52 +137,59 @@ const HistoryChart = ({ results }) => {
           <YAxis
             yAxisId="left"
             domain={[0, 4]}
-            dataKey="value"
             name="Stage"
             stroke="var(--color-result-m)"
             width={20}
-            //hide
           />
           <YAxis
             yAxisId="right"
             orientation="right"
             domain={[0, 100]}
-            dataKey="value"
+            dataKey="efficiency"
             name="Efficiency"
             unit="%"
             stroke="var(--color-result-e)"
             hide
           />
           <Legend iconSize={7} />
+          
           <Scatter
             yAxisId="left"
-            //shape={MyCircle}
             opacity="0.5"
-            data={matMid}
+            dataKey="midMaturity1"
             fill="var(--color-result-m)"
             legendType="none"
             tooltipType="none"
           />
+
+          <Scatter
+            yAxisId="left"
+            opacity="0.5"
+            dataKey="midMaturity2"
+            fill="var(--color-result-m)"
+            legendType="none"
+            tooltipType="none"
+          />
+
           <Scatter
             yAxisId="left"
             line
             lineJointType="monotoneX"
-            //shape={MyCircle}
             opacity="0.5"
-            data={matMax}
+            dataKey="maxMaturity"
             fill="var(--color-result-m)"
             strokeWidth={1}
             strokeDasharray="3 3"
             legendType="none"
             tooltipType="none"
           />
+
           <Scatter
             yAxisId="left"
             name="Matched stage(s)"
             line
             lineJointType="monotoneX"
-            //shape={MyCircle}
-            data={matMin}
+            dataKey="minMaturity"
             fill="var(--color-result-m)"
             strokeWidth={2}
           />
@@ -193,11 +200,23 @@ const HistoryChart = ({ results }) => {
             line
             lineJointType="monotoneX"
             shape={MyDot}
-            data={effEst}
+            dataKey="efficiency"
             fill="var(--color-result-e)"
             strokeWidth={2}
           />
-        </ScatterChart>
+
+          <Bar
+            yAxisId="left"
+            //dataKey not even used here, the custom shape doesn't use any value anyway
+            legendType="none"
+            shape={MyBar}
+            onClick={onBarClick}
+            onMouseEnter={s => setHoverId(s.id)}
+            onMouseOut={() => setHoverId(null)}            
+          />
+          
+        </ComposedChart>
+        
       </ResponsiveContainer>
     </div>
   );
