@@ -14,7 +14,7 @@ const ChangePassword = () => {
   const [submitted, setSubmitted] = useState(false);
   const [response, setResponse] = useState(null);
 
-  const { showAlert } = useAppContext();
+  const { showAlert, user } = useAppContext();
   const history = useHistory();
   
   //TODO (?): common helper for signup and this component
@@ -91,11 +91,17 @@ const ChangePassword = () => {
 
       <form onSubmit={handleSubmit}>
         <div className="ChangePassword-control">
+          <input //hidden - just to please password managers
+            className="hidden-input"
+            type="text" value={user.email} 
+            autocomplete="username">
+          </input>
           <input
             className="app-input"
             placeholder="Current password"
             name="current password"
             type="password"
+            autocomplete="current-password"
             onChange={handleChange}
             value={oldPassword}
           ></input>
@@ -104,6 +110,7 @@ const ChangePassword = () => {
             placeholder="New password"
             name="password"
             type="password"
+            autocomplete="new-password"
             onChange={handleChange}
             value={password}
           ></input>
@@ -112,6 +119,7 @@ const ChangePassword = () => {
             placeholder="Confirm new password"
             name="password2"
             type="password"
+            autocomplete="new-password"
             onChange={handleChange}
             value={password2}
           ></input>

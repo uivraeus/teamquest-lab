@@ -189,3 +189,9 @@ input[type=number] {
   -moz-appearance:textfield;
 }
 
+/* In password-related forms where the username is implicitly given we still include it as a hidden input.
+ * All to please password managers [https://www.chromium.org/developers/design-documents/create-amazing-password-forms] 
+ */
+.hidden-input {
+  display: none;
+}

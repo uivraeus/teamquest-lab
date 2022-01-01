@@ -130,6 +130,8 @@ const TerminateAccount = () => {
             id={queryPassword ? "password" : null}
             label="Please re-enter your account password"
             type="password"
+            autocomplete="current-password"
+            hiddenUsernameInputValue={user.email}
             onResult={onPassword}
             validateFn={(value) => value.length >= 6}
           />
