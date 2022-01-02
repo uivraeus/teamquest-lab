@@ -1,6 +1,7 @@
 import { initializeApp } from "firebase/app";
 import {
   browserLocalPersistence,
+  browserSessionPersistence,
   createUserWithEmailAndPassword,
   deleteUser,
   EmailAuthProvider,
@@ -44,7 +45,7 @@ const app = initializeApp(config);
 // Avoid unnecessary iframe on mobile/safari by not using getAuth()
 // 👉 https://github.com/firebase/firebase-js-sdk/issues/4946#issuecomment-87843361 
 const appAuth = initializeAuth(app, {
-  persistence: [indexedDBLocalPersistence, browserLocalPersistence]
+  persistence: [indexedDBLocalPersistence, browserLocalPersistence, browserSessionPersistence]
 });
 
 //Exported (sometimes refined) auth functions
