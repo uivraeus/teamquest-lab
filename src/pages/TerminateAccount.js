@@ -80,7 +80,7 @@ const TerminateAccount = () => {
 
   const onPassword = ({ value }) => {
     setQueryPassword(false);
-    if (value.length > 0) {
+    if (value && value.length > 0) {
       confirmPassword(value)
       .then(() => doTerminate(value))
       .catch(() => { 
