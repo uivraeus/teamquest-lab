@@ -18,7 +18,7 @@ const TextInputModal = ({
   label = "Enter your input",
   validateFn = (value) => value.length > 0,
   type = "text",
-  autocomplete,
+  autoComplete,
   hiddenUsernameInputValue,
   onResult,
 }) => {
@@ -69,7 +69,8 @@ const TextInputModal = ({
             <input //hidden - just to please password managers
               className="hidden-input"
               type="text" value={hiddenUsernameInputValue} 
-              autocomplete="username">
+              autoComplete="username"
+              readOnly>
             </input>
           : null }
           <input
@@ -78,7 +79,7 @@ const TextInputModal = ({
             onChange={(e) => setValue(e.target.value)}
             value={value}
             type={type}
-            autocomplete={autocomplete}
+            autoComplete={autoComplete}
             name="modal-text-input"
             id={`input-${id}`}
           ></input>

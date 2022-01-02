@@ -94,14 +94,15 @@ const ChangePassword = () => {
           <input //hidden - just to please password managers
             className="hidden-input"
             type="text" value={user.email} 
-            autocomplete="username">
+            autoComplete="username"
+            readOnly>
           </input>
           <input
             className="app-input"
             placeholder="Current password"
             name="current password"
             type="password"
-            autocomplete="current-password"
+            autoComplete="current-password"
             onChange={handleChange}
             value={oldPassword}
           ></input>
@@ -110,7 +111,7 @@ const ChangePassword = () => {
             placeholder="New password"
             name="password"
             type="password"
-            autocomplete="new-password"
+            autoComplete="new-password"
             onChange={handleChange}
             value={password}
           ></input>
@@ -119,7 +120,7 @@ const ChangePassword = () => {
             placeholder="Confirm new password"
             name="password2"
             type="password"
-            autocomplete="new-password"
+            autoComplete="new-password"
             onChange={handleChange}
             value={password2}
           ></input>

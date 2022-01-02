@@ -53,7 +53,7 @@ const Login = () => {
             placeholder="Email"
             name="email"
             type="email"
-            autocomplete="username"
+            autoComplete="username"
             onChange={handleChange}
             value={email}
           ></input>
@@ -63,7 +63,7 @@ const Login = () => {
             placeholder="Password"
             name="password"
             type="password"
-            autocomplete="current-password"
+            autoComplete="current-password"
             onChange={handleChange}
             value={password}
           ></input>
