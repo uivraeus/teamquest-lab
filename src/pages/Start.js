@@ -1,6 +1,7 @@
 import React from "react";
 import InfoBlock from "../components/InfoBlock";
 import { Link } from "react-router-dom";
+import { absAppPath } from "../RoutePaths";
 
 import "./Start.css";
 
@@ -49,7 +50,7 @@ const Start = () => {
           surveys.
         </p>
         <p>
-          Don't have an account? <Link to="/signup">Sign up</Link> to create
+          Don't have an account? <Link to={absAppPath("signup")}>Sign up</Link> to create
           one.
         </p>
       </div>
@@ -63,7 +64,7 @@ const Start = () => {
           statistics on the team-level, using anonymous team-URLs.
         </p>
         <hr/>
-        <p>See the <Link to="/privacy">Privacy Policy</Link> for details</p>
+        <p>See the <Link to={absAppPath("privacy")}>Privacy Policy</Link> for details</p>
       </InfoBlock>
     </div>
   );

@@ -3,9 +3,10 @@ import AppBtn from "../components/AppBtn";
 import InfoBlock from "../components/InfoBlock";
 import RouteSelect from "../components/RouteSelect";
 import SurveyResults from "../components/SurveyResults";
-import { useHistory, useLocation, useParams } from "react-router-dom";
+import { useNavigate, useLocation, useParams } from "react-router-dom";
 import useAppContext from '../hooks/AppContext'
 import useOwnedTeams from '../hooks/OwnedTeams';
+import { absAppPath, absCreatorPath } from "../RoutePaths";
 
 import { ReactComponent as ShareIcon } from "../icons/share.svg";
 
@@ -26,7 +27,8 @@ function useQuery() {
 const ResultsPage = () => {
   const { teamId } = useParams();
   const query = useQuery();
-  const history = useHistory();
+  const navigate = useNavigate();
+  const location = useLocation();
   
   //For signed in users; determine what to show in the team-control part
   const { teams, readError } = useOwnedTeams();
@@ -41,16 +43,16 @@ const ResultsPage = () => {
 
   //If we were directed to this page from the Creator, then we have a hand-over
   //of information on owned teams. Use that before useOwnedTeams returns a value.
-  const ownedTeams = teams || (history.location.state && history.location.state.teams) || null;
+  const ownedTeams = teams || (location.state && location.state.teams) || null;
   const mySelectedTeam = (ownedTeams && ownedTeams.find(t => t.id === teamId));
 
   //An owner of a selected team can share the results page via the team-control section
   const onShare = () => {
-    history.push(`/creator/share-results/${teamId}`, {prevPage: "Results page", teams:ownedTeams});
+    navigate(`${absCreatorPath("shareResults")}/${teamId}`, { state: {prevPage: "Results page", teams:ownedTeams} });
   };
   
   //When the owner of a team, pass a long a "manage surveys link" to SurveyResult
-  const manageUrl = mySelectedTeam ? `/creator/tracker/${teamId}` : null;
+  const manageUrl = mySelectedTeam ? `${absCreatorPath("monitor")}/${teamId}` : null;
 
   return (
     <>
@@ -74,7 +76,7 @@ const ResultsPage = () => {
                 </> :
                 <InfoBlock>
                   <p>This is not one of your managed teams</p>
-                  <AppBtn text="Show my teams" onClick={()=>history.push("/results")} />
+                  <AppBtn text="Show my teams" onClick={()=>navigate(absAppPath("results"))} />
                 </InfoBlock>
               :
               <p>Loading team ownership information...</p>

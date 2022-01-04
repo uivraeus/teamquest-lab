@@ -5,6 +5,7 @@ import { getClosingTime, load } from "../helpers/survey";
 import { Link, useParams } from "react-router-dom";
 import { ReactComponent as CopyIcon } from "../icons/copy.svg";
 import QRCode from "qrcode.react";
+import { absAppPath } from "../RoutePaths";
 
 import './SurveyInfo.css';
 
@@ -35,9 +36,9 @@ const SurveyInfo = () => {
   }, [surveyId]);
 
   const myHost = `${window.location.protocol}//${window.location.host}`;
-  const fullUrlQ = `${myHost}/run/${surveyId}`;
+  const fullUrlQ = `${myHost}${absAppPath("run")}/${surveyId}`;
   const pathR =
-    `/results` + (surveyObject ? `/${surveyObject.meta.teamId}` : ``);
+    absAppPath("results") + (surveyObject ? `/${surveyObject.meta.teamId}` : ``);
   let closingTimeStr = "";
   if (surveyObject) {
     closingTimeStr = (new Date(getClosingTime(surveyObject))).toLocaleString();

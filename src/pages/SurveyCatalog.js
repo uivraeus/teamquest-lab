@@ -7,18 +7,19 @@ import SurveyItem from "../components/SurveyItem";
 import useAppContext from "../hooks/AppContext";
 import useTeamTracker from "../hooks/TeamTracker";
 import { CompLev, deleteSurvey } from "../helpers/survey";
-import { Link, useHistory } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { absAppPath, absCreatorPath } from "../RoutePaths";
 
 import "./SurveyCatalog.css";
 
 const SurveyCatalog = ({ teams }) => {
   const { queryConfirm, showAlert } = useAppContext();
-  const history = useHistory();
+  const navigate = useNavigate();
   const [selectedTeam, setSelectedTeam] = useState(null);
   let { surveys, readError } = useTeamTracker(selectedTeam ? selectedTeam.id : null);
   
   const onShare = ({ id }) => {
-    history.push(`/creator/info/${id}`);
+    navigate(`${absCreatorPath("info")}/${id}`);
   };
 
   /* Edit button sets ID, which is used to set "meta" via effect to ensure
@@ -48,9 +49,9 @@ const SurveyCatalog = ({ teams }) => {
   //TODO: fix this in Creator with some custom "TeamsRoute" or similar
   useEffect(() => {
     if (teams.length === 0) {
-      history.push(`/creator/manage`);
+      navigate(absCreatorPath("manage"));
     }
-  }, [teams, history]);
+  }, [teams, navigate]);
   if (teams.length === 0) {
     return null;
   }
@@ -80,7 +81,7 @@ const SurveyCatalog = ({ teams }) => {
     );
   };
 
-  const pathR = `/results/${selectedTeam ? selectedTeam.id : ""}`;
+  const pathR = `${absAppPath("results")}/${selectedTeam ? selectedTeam.id : ""}`;
   
   //Sort the surveys according to their completion status
   //Here it makes most sense to present newest surveys first
@@ -115,7 +116,7 @@ const SurveyCatalog = ({ teams }) => {
         <>
           <InfoBlock>
             <p>
-              The <Link to={{pathname:pathR, state:{teams}}}>analysis result page</Link> for
+              The <Link to={pathR} state={teams}>analysis result page</Link> for
               this team is continuously updated when new responses are received.
             </p>
           </InfoBlock>

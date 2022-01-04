@@ -1,9 +1,10 @@
 import React from "react";
 import AppBtn from "../components/AppBtn";
 import BackBtnLink from "../components/BackBtnLink";
-import { Link, useHistory } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import TeamAdmin from "../components/TeamAdmin";
 import useAppContext from "../hooks/AppContext";
+import { absCreatorPath } from "../RoutePaths";
 
 import { ReactComponent as PasswordIcon } from "../icons/password.svg";
 import { ReactComponent as TerminateIcon } from "../icons/terminate.svg";
@@ -13,11 +14,11 @@ import "./Manage.css";
 const Manage = ({ teams }) => {
   const { user } = useAppContext();
   
-  const pathPassword = `/creator/password`;
-  const pathTerminate = `/creator/terminate`;
-  const history = useHistory();
+  const pathPassword = absCreatorPath("changePassword");
+  const pathTerminate = absCreatorPath("terminate");
+  const navigate = useNavigate();
   const goTo = (path) => {
-    history.push(path);
+    navigate(path);
   }
   
   //Routing helpers shall ensure that we never end up here with user==null, but...

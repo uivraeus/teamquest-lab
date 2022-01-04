@@ -2,8 +2,9 @@ import React, { useEffect, useState } from "react";
 import AppBtn from "../components/AppBtn";
 import InfoBlock from "../components/InfoBlock";
 import { logout, reset } from "../helpers/auth";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import useAppContext from "../hooks/AppContext";
+import { absAppPath } from "../RoutePaths";
 
 import "./PasswordReset.css";
 
@@ -12,7 +13,7 @@ const PasswordReset = () => {
   const [response, setResponse] = useState(null);
   const [initiated, setInitiated] = useState(false);
   const { user, showAlert } = useAppContext();
-  const history = useHistory();
+  const navigate = useNavigate();
 
   //In case we land here when logged in
   useEffect(() => {
@@ -52,7 +53,7 @@ const PasswordReset = () => {
         await logout();
       }
       showAlert("Email sent", "Check your in-box for an email with further instructions");
-      history.replace("/login");
+      navigate(absAppPath("login"), { replace: true });
     } catch (err) {
       setResponse(err.message);
     }
