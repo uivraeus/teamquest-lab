@@ -56,7 +56,7 @@ export const confirmPassword = async (password) => {
   await auth.reauthenticateCurrentUser(password);   
 }
 
-// Update user's entry in the validated-users list with (keep track of latest access)
+// Update user's entry in the validated-users list (keep track of latest access)
 export const validateAccess = async (user) => {
   // No check w.r.t. security rules here. Will throw if misused.
   await db.set(`v_users/${user.uid}`, {".sv": "timestamp"});
