@@ -1,0 +1,17 @@
+/* Make the icons appear with equal spacing regardless of 1 or 2 lines of text;
+ * - min-height: 3.5em   -> room for two lines
+ */
+ 
+.BtnLinkItem {
+  display: flex;
+  align-items: center;
+  min-height: 3.5em; /* see above */
+}
+
+.BtnLinkItem > p {
+  margin-left: 1em;
+}
+
+.BtnLinkItem-disabled * {
+  color: var(--color-text-disabled);
+}
