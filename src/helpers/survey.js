@@ -186,8 +186,6 @@ export const pushResponse = async (surveyId, answers) => {
     // - This is a workaround that is based on the fact that we know:
     //   - fixed number of 1-digit numbers (allows for "simple" firebase rule)
     //   - we must "array:ify" the response when we later extract it anyway
-    // TODO (?): obscure the insertion order to prevent fixed relation between
-    //           answers and answer-time order
     const answersStr = JSON.stringify(answers);
     await db.runTransaction(`surveys/${surveyId}/responses`, prev =>
       (prev ? `${prev},` : " ") + answersStr);

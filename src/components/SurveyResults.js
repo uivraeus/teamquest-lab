@@ -8,7 +8,7 @@ import MaturityResult from "./MaturityResult";
 import ResultsNav from "./ResultsNav";
 import useTeamResults from "../hooks/TeamResults";
 import { matchedMaturityStages } from "../helpers/algorithm";
-import { Link, useHistory } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 
 import './SurveyResults.css';
 
@@ -22,11 +22,12 @@ const SurveyResults = ({ teamId, selectedSurveyId = null, manageUrl = null }) =>
   const oldSurveySelected = selectedResult !== latestResult;
  
   //Helper for navigating among survey instances
-  const history = useHistory();
+  const navigate = useNavigate();
+  const location = useLocation();
   const updateSelection = (id) => {
     const query = id ? `?sId=${id}` : "";
-    const uri = `${history.location.pathname}${query}`;
-    history.replace(uri);
+    const uri = `${location.pathname}${query}`;
+    navigate(uri, { replace: true });
   }
 
   //Derive information/text to render for the selected (or latest) result
@@ -59,7 +60,7 @@ const SurveyResults = ({ teamId, selectedSurveyId = null, manageUrl = null }) =>
   const CompletionHint = () =>
     manageUrl ?
       <p>
-        You can mark the survey as completed by <Link to={{pathname:manageUrl, state:{prevPage:"Results page"}}}>
+        You can mark the survey as completed by <Link to={manageUrl} state={{prevPage:"Results page"}}>
         editing the survey settings</Link> if no additional responses are expected.
       </p> : 
       <p>

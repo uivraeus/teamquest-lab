@@ -3,7 +3,8 @@ import AppBtn from "../components/AppBtn";
 import InfoBlock from "../components/InfoBlock";
 import { update } from "../helpers/auth";
 import useAppContext from "../hooks/AppContext";
-import { Link, useHistory } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
+import { absAppPath } from "../RoutePaths";
 
 import "./ChangePassword.css";
 
@@ -15,7 +16,7 @@ const ChangePassword = () => {
   const [response, setResponse] = useState(null);
 
   const { showAlert, user } = useAppContext();
-  const history = useHistory();
+  const navigate = useNavigate();
   
   //TODO (?): common helper for signup and this component
   //(but the logic is only similar - not identical)
@@ -77,7 +78,7 @@ const ChangePassword = () => {
       await update(oldPassword, password);
       showAlert("Update complete", "The password for your account has now been updated");
       //go back, probably to account management if the user didn't explicitly enter the URL.
-      history.goBack();
+      navigate(-1);
     } catch (error) {
       setResponse(error.message);
     }
@@ -130,7 +131,7 @@ const ChangePassword = () => {
       </form>
       <InfoBlock>
         <p>
-          Forgot your current password? <Link to="/reset">Reset</Link> it via email.
+          Forgot your current password? <Link to={absAppPath("passwordReset")}>Reset</Link> it via email.
         </p>
       </InfoBlock>
     </div>

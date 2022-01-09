@@ -4,13 +4,13 @@ import InfoBlock from "../components/InfoBlock";
 import LoadingIndicator from '../components/LoadingIndicator';
 import { logout, verify } from "../helpers/auth";
 import useAppContext from "../hooks/AppContext";
-import { Link, useHistory } from 'react-router-dom'
+import { Link } from 'react-router-dom'
+import { absAppPath } from "../RoutePaths";
 
 import "./VerifyAccount.css";
 
 const VerifyAccount = () => {
   const { user, validatedAccess, skipVerification, showAlert } = useAppContext();
-  const history = useHistory();
   const [pending, setPending] = useState(false);
   
   //If we end up here it means that the user hasn't verified the e-mail address
@@ -26,7 +26,7 @@ const VerifyAccount = () => {
       showAlert("E-mail sent", "Check your in-box for an e-mail with further instructions");
       //The user must log in again to sync the (verified) authentication state
       await logout();
-      history.replace("/login");
+      //navigate(absAppPath("login"), { replace: true });  <-- won't work due to AuthRoute race... will end up at /start
     } catch(e) {
       setPending(false);
       showAlert("Operation failed", "Could not initiate sending of verification e-mail", "Error", e.message);
@@ -60,7 +60,7 @@ const VerifyAccount = () => {
           </p>
           <hr/>
           <p>
-            Forgot your current password? <Link to="/reset">Reset</Link> it via email.
+            Forgot your current password? <Link to={absAppPath("passwordReset")}>Reset</Link> it via email.
           </p>
           <hr/>
           <p>If you don't proceed with this step {orElseText}</p>

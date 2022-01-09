@@ -3,6 +3,7 @@ import AppBtn from "../components/AppBtn";
 import InfoBlock from "../components/InfoBlock";
 import { Link } from "react-router-dom";
 import { signup } from "../helpers/auth";
+import { absAppPath } from "../RoutePaths";
 
 import "./Signup.css";
 
@@ -77,7 +78,7 @@ const Signup = () => {
     <div className="Signup">
       <h1>Sign up for the Mini-TMQ tool</h1>
       <p>You need an account to create and manage surveys for your team.</p>
-      <p>By signing up for an account you are agreeing to the <Link to="/terms">Terms and Conditions of Use</Link>.</p>
+      <p>By signing up for an account you are agreeing to the <Link to={absAppPath("terms")}>Terms and Conditions of Use</Link>.</p>
       <hr></hr>
       <p className={error ? "error-response" : null}>{status}</p>
 
@@ -116,14 +117,14 @@ const Signup = () => {
       </form>
       <InfoBlock>
         <p>
-          The email address you specify will be used if you forget your password and need to <Link to="/reset">reset</Link> it. 
+          The email address you specify will be used if you forget your password and need to <Link to={absAppPath("passwordReset")}>reset</Link> it. 
         </p>
         <p>
-          Learn more about how user information is managed in the <Link to="/privacy">privacy policy</Link>.
+          Learn more about how user information is managed in the <Link to={absAppPath("privacy")}>privacy policy</Link>.
         </p>
         <hr></hr>
         <p>
-          Already have an account? <Link to="/login">Login</Link>
+          Already have an account? <Link to={absAppPath("login")}>Login</Link>
         </p>
         
       </InfoBlock>
