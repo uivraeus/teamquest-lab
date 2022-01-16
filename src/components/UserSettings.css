@@ -17,5 +17,5 @@
 
   /* Dirty short-cut for this "special" button*/
 .UserSettings svg {
-    fill: white !important;
+    stroke: white !important;
   }
