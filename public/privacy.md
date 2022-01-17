@@ -1,11 +1,11 @@
 ## Privacy Policy
-Your privacy is important and we take is seriously. This Privacy Policy explains how we use any personal information about you that is collected or generated through your use of the _Mini-TMQ_ web application ("the App").
+Your privacy is important and we take it seriously. This Privacy Policy explains how we use any personal information about you that is collected or generated through your use of the _Mini-TMQ_ web application (below referred to as "the App").
 
 The App is accessed via [teamquest.uivraeus.net](https://teamquest.uivraeus.net) and is operated by _uivraeus_ ("we", "our", "us"). Please refer to the [Contact](/contact) page for how to reach out to us.
 >Note that this version of _Mini-TMQ_ is only used for test and evaluation purposes. Account information and data collected may be deleted at any moment, without prior notice. See the [Terms and Conditions of Use](/terms) for further details.
 
 ## Principle of anonymous data {:#anon-principles}
-In principle the App can be used without providing personal data. The main function of the App is to collect and process answers to a set of survey question, but the individuals who provide these answers don't authenticate themselves via login or by other means. This is possible because all answers are stored and made available without any record of _who_ provided them. 
+In principle the App can be used without providing personal data. The main function of the App is to collect and process answers to a set of survey questions, but the individuals who provide these answers don't authenticate themselves via login or by other means. This is possible because all answers are stored and made available without any record of _who_ provided them. 
 
 Because of this, we do not classify the answers in survey responses as "personal data" (according to [Article 4 (1) GDPR](https://gdpr-info.eu/art-4-gdpr/)). This is important as we make the survey results available without any access restrictions.
 
@@ -18,11 +18,11 @@ The team identifier, which is also random and openly disclosed, doesn't tell any
 
 
 ### General notes on Internet anonymity
-When you access our App (or any other website), some information, such as your IP address, is transferred. You are also providing information about the your device (computer, smartphone, tablet etc.) and your browser (Chrome, Safari, Firefox etc.). In addition, other information is given or can be derived such as time and duration of visit etc.
+When you access our App (or any other website), some information, such as your IP address, is transferred. You are also providing information about your device (computer, smartphone, tablet etc.) and your browser (Chrome, Safari, Firefox etc.). In addition, other information is given or can be derived such as time and duration of visit etc.
 
 We cannot use this data to identify an individual user but, via our service providers, this type of information can be used to derive aggregated statistics on how our App is used and if there are performance or stability issues for certain groups of users. To some extent it may also be used to implement or secure specific functions. Read more about this in the [Third Party Providers](#third-party-providers) section below.
 
-Please bear in mind that in the case of a _static IP address_, personal identification is possible by RIPE query in individual cases, although we do not perform this. Our App is accessible for both static and dynamically assigned IP addresses.
+Please bear in mind that in the case of a _static IP address_, personal identification is possible by RIPE query in individual cases, although we do not perform this. The App is accessible for both static and dynamically assigned IP addresses.
 
 ## How we use survey data
 Although the survey answers are not considered as personal data we still think it is important for us to be transparent about how the data we collect may be used.
@@ -54,7 +54,7 @@ More details on where information is stored and maintained can be found in the [
 For users that create an account and _log in_ to access the various survey- and team administration functions, what is described in in [the section for all users](#data-all-users) is still valid. In _addition_ to that, the following also applies. 
 
 ### Registering an account
-To be able to _initiate_ surveys for your team(s), you have to register an account via an automatic sign-up process. For this purpose you specify the following information that we will collect and process as personal data:
+To be able to _initiate_ surveys, you have to register an account via an automatic sign-up process. For this purpose you specify the following information that we will collect and process as personal data:
 * e-mail address
 * password
 
@@ -167,4 +167,4 @@ If, for some reason, the automatic functions within the App don't allow you to a
 If you believe our processing of your personal data infringes data protection laws, you have a legal right to initiate a complaint with a supervisory authority responsible for data protection in accordance with [Article 77 of the GDPR](https://gdpr-info.eu/art-77-gdpr/).
 
 ***
-_Last updated: October 24, 2021_
+_Last updated: January 17, 2022_

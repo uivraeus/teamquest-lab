@@ -1,7 +1,7 @@
 ## App Terms and Conditions of Use
 
 ### 1\. Terms
-By accessing the _Mini-TMQ_ web application ("the App"), via _https://teamquest.uivraeus.net_, you are agreeing to be bound by these _App Terms and Conditions of Use_ ("the Terms") and agree that you are responsible for the agreement with any applicable local laws. If you disagree with any of these terms, you are prohibited from accessing this App. The materials contained in this App are protected by copyright and trade mark law.
+By accessing the _Mini-TMQ_ web application (below referred to as "the App"), via _https://teamquest.uivraeus.net_, you are agreeing to be bound by these _App Terms and Conditions of Use_ (below referred to as "the Terms") and agree that you are responsible for the agreement with any applicable local laws. If you disagree with any of these terms, you are prohibited from accessing this App. The materials contained in this App are protected by copyright and trade mark law.
 
 > Note that this version of _Mini-TMQ_ is only used for test and evaluation purposes. Its operation may be discontinued and any data collected may be deleted at any moment, without prior notice.
 
@@ -23,7 +23,7 @@ This is the grant of a license, not a transfer of title, and under this license 
 * use the App as part of any illegal activities
 
 ### 2.2\. Age and Eligibility
-You certify that you are a person at least 16 years of age. The App may only be used or accessed through an electronic device controlled of you at all times. This is in line with [Article 8 GDPR](https://gdpr-info.eu/art-8-gdpr/).
+You certify that you are a person at least 16 years of age. The App may only be used or accessed through an electronic device controlled by you at all times. This is in line with [Article 8 GDPR](https://gdpr-info.eu/art-8-gdpr/).
 
 If you register an account within the App, you are responsible for maintaining the confidentiality of the account credentials. You are also responsible for selecting a secure password, which is not reused for any other service or App where you have registered an account.
 
@@ -41,7 +41,7 @@ See also the [limitations](#limitations) section below.
 All the materials on the App's website are provided "as is". _uivraeus_ makes no warranties, may it be expressed or implied, therefore negates all other warranties. Furthermore, _uivraeus_ does not make any representations concerning the accuracy or reliability of the use of the materials on its Website or otherwise relating to such materials or any sites linked to this Website.
 
 ### 4\. Limitations  {:#limitations}
-_uivraeus_ or its suppliers will not be hold accountable for any damages that will arise with the use or inability to use the materials on the App's website, even if _uivraeus_ or an authorize representative of this App has been notified, orally or written, of the possibility of such damage. Some jurisdiction does not allow limitations on implied warranties or limitations of liability for incidental damages, these limitations may not apply to you.
+_uivraeus_ or its suppliers will not be held accountable for any damages that will arise with the use or inability to use the materials on the App's website, even if _uivraeus_ or an authorized representative of this App has been notified, orally or written, of the possibility of such damage. Some jurisdiction does not allow limitations on implied warranties or limitations of liability for incidental damages, these limitations may not apply to you.
 
 ### 5\. Revisions and Errata
 The materials appearing in the App may include technical, typographical, or photographic errors. _uivraeus_ will not promise that any of the materials in this App are accurate, complete, or current. _uivraeus_ may change the materials contained in the App at any time without notice. _uivraeus_ does not make any commitment to update the materials.
@@ -59,4 +59,4 @@ Please read our [Privacy Policy](/privacy).
 Any claim related to _uivraeus_'s App shall be governed by the laws of Sweden without regards to its conflict of law provisions.
 
 ***
-_Last updated: October 9, 2021_
+_Last updated: January 17, 2022_
