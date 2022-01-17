@@ -37,15 +37,14 @@
 .AppHeader-home-logo > svg {
   /* border: 1px dotted red; */
   margin: 0 0 0 .25em;
-  fill: white !important; /* TEMP UNTIL SVG REPLACED */
-  stroke-width: 0; /* TEMP UNTIL SVG REPLACED */
+  stroke-width: .08em;
   width: calc(4.3 * var(--font-big));
   height:auto;
 }
 
 /* Keep Home button smaller to make it better fit next to the logo */
 .AppHeader-home-logo > button {
-  margin-bottom: .35em;
+  margin-bottom: .2em;
   width: 1.7em;
   height: 1.7em;
   min-width: 1.7em;
