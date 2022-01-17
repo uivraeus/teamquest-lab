@@ -19,7 +19,7 @@
 }
 
 .InfoBlock-icon > svg {
-  stroke: var(--color-border-light);
+  stroke: var(--color-border);
   stroke-width: .2em;
 }
 
