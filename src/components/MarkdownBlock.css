@@ -1,3 +1,7 @@
+.MarkdownBlock {
+    min-height: var(--prev-content-height);
+}
+
 .MarkdownBlock h2 {
     margin-top: 1em;
     margin-bottom: .5em;

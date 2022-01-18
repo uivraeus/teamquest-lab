@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import ControlledSelect from "./ControlledSelect";
-import { useHistory, useRouteMatch } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 
 /* Generic select-component which keeps track of the current selection via a route
  * parameter, as defined for react-router's "Route". The set of available options
@@ -8,7 +8,7 @@ import { useHistory, useRouteMatch } from "react-router-dom";
  * The parent must provide the key names for an "ID" and a "Text" field in the
  * option objects (The text is what shows up in the select)
  * 
- * The parent can specify and "auto select"; i.e. a text that, if present among
+ * The parent can specify an "auto select"; i.e. a text that, if present among
  * the options, it will always be selected (enforced)
  * 
  * Any history state set externally for the current route will be preserved through
@@ -26,14 +26,28 @@ import { useHistory, useRouteMatch } from "react-router-dom";
  *   -> the user can change selection to "One option"
  *      -> the route will change (replaced:ed) to /my/route/to/page/1000
  *      -> if provided, the parent's onSelected will be called with the selected option, i.e. 
- *         {id: 1234, text: "Another option"}
+ *         {id: 1000, text: "One option"}
  *          
  */
 
-//Derive base part of current rout (just crop from "/:" to the end)
-const getBasePath = (routeMatch) => routeMatch.path.replace(/\/:.+/, "");
+// Based on current location, extract parameter part and base-part (without it)
+// Route composition with RR6 may result in additional "param" for sub-routes
+// (e.g. "*" for everything under creator/*")
+// Skip those and extract the value of the one indicated by (e.g.) ":id" in the
+// Route path (if it exists, return null otherwise)
+const getBasePathAndParamValue = (location, params) => {
+  const paramsArray = Object.entries(params).filter(([key, value]) => !key.includes("*"));
+  let paramValue = null;
+  let basePath = location.pathname;
+  if (paramsArray.length === 1) {
+    paramValue = paramsArray[0][1];
+    basePath = basePath.replace(`/${paramValue}`, "");
+  }
+  return [basePath, paramValue];  
+}
 
 const dummyOnSelected = () => { };
+
 //Really recommended to apply useCallback for the onSelected prop
 const RouteSelect = ({
   options,
@@ -43,40 +57,39 @@ const RouteSelect = ({
   autoSelectText = null,
   onSelected = dummyOnSelected
 }) => {
-  const history = useHistory();
-  const routeMatch = useRouteMatch();
+  const navigate = useNavigate();
+  const location = useLocation();
+  const params = useParams();
+  const [basePath, routeId] = getBasePathAndParamValue(location, params);
   
   //Validate the route's "id part" against the available options and notify parent on the outcome
   useEffect(() => {
     //Don't make any decisions before the options are known
     if (options) {
-      //Only support 0 or 1 parameter
-      const paramValues = Object.values(routeMatch.params);
-      if (paramValues.length === 1) {
+      if (routeId) {
         //something selected, ensure that it corresponds to one of the options
-        const routeId = paramValues[0];
         const option = options.find(o => o[idKey] === routeId) || null;
         if (option) {
-          //Notify parent on current selection.
+          //Notify parent on current selection (might not be a "change").
           onSelected(option)
         } else {
           //Either the user has entered an invalid URL explicitly, or the
           //team that was selected got deleted.
           //console.log("Invalid ID parameter in URL:", routeId);
-          history.replace(`${getBasePath(routeMatch)}`, history.location.state);
+          navigate(basePath, {replace: true, state: location.state});
         }
       } else {
         //nothing selected (yet)
         if (options.length === 1) {
           //Only one option available, auto-select it */
-          history.replace(`${getBasePath(routeMatch)}/${options[0][idKey]}`, history.location.state);
+          navigate(`${basePath}/${options[0][idKey]}`, { replace: true, state: location.state });
         } else {
           //Ensure that the parent know that nothing is selected
           onSelected(null);
         }
       }
     }
-  }, [routeMatch, options, idKey, history, onSelected]);
+  }, [routeId, basePath, options, idKey, location, navigate, onSelected]);
 
 
   // Manage auto selection; treat as a "hint", i.e. don't treat a mismatch w.r.t.
@@ -88,29 +101,25 @@ const RouteSelect = ({
       const option = options.find(o => o[textKey] === autoSelectText) || null;
       if (option) {
         //Is it not selected yet?
-        const paramValues = Object.values(routeMatch.params);
-        const selectedId = (paramValues.length === 1) ? paramValues[0] : null;
-        if (option[idKey] !== selectedId) {
+        if (option[idKey] !== routeId) {
           //Select it
-          history.replace(`${getBasePath(routeMatch)}/${option[idKey]}`, history.location.state)
+          navigate(`${basePath}/${option[idKey]}`, { replace: true, state: location.state })
         }
       }
     }
-  }, [routeMatch, options, idKey, textKey, history, autoSelectText]);
+  }, [routeId, basePath, options, idKey, textKey, location, navigate, autoSelectText]);
 
   //Only show the select when there is something to select
   if (options.length === 0) {
     return null;
   }
   
-  const values = Object.values(routeMatch.params);
-  const routeId = values.length === 1 ? values[0] : null;
   return (
     <ControlledSelect
       elementId={elementId}
       defaultText="- select -"
       options={options ? options.map(o => ({ id: o[idKey], text: o[textKey] })) : []}
-      onSelected={id => history.replace(`${getBasePath(routeMatch)}/${id}`, history.location.state)}
+      onSelected={id => navigate(`${basePath}/${id}`, { replace: true, state: location.state })}
       selectedId={routeId}
     />
   );

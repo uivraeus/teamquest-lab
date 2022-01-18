@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { loadMarkdown, MdLink, MdHeading, MdBlockquote } from "../helpers/markdown";
 import ReactMarkdown from "react-markdown";
 
@@ -10,11 +10,25 @@ import './MarkdownBlock.css';
 const MarkdownBlock = ({mdFileName = "undefined", onLoaded=null}) => {
   //Actual content comes from the markdown file
   const [content, setContent] = useState(null);
+
+  //When switching content (loading a new md-file), the "natural" height will be 0 during
+  //the transition. This may (often) result in an overall page height small enough to make
+  //the scroll bar disappear for a short while, which implies short periods of "wider"
+  //layout area. The net effect is a very unwelcome flickering experience. Avoid that by
+  //maintaining the height of the old content until the new is loaded.
+  const blockRef = useRef();
+  useLayoutEffect(() => {
+    if (content) {
+      //Forget the previous content's height
+      blockRef.current.style.setProperty('--prev-content-height', "0px");
+    }
+  }, [content])
+
   useEffect(() => {
-    //avoid confusing scroll-pos after changing "page"
-    //(keeping the old content would avoid a "white flash" but any "scroll-to-top"
-    //is hard to get synchronized to the exact content switch)
+    //Remember the old content's height for min-height styling during the transition
+    blockRef.current.style.setProperty('--prev-content-height', blockRef.current.clientHeight + "px");
     setContent(null);
+
     let abort = false;
     loadMarkdown(mdFileName)
       .then((text) => {
@@ -40,19 +54,20 @@ const MarkdownBlock = ({mdFileName = "undefined", onLoaded=null}) => {
   
   //No "loading" indicator for now...
   return (
-    <ReactMarkdown 
-      className="MarkdownBlock"
-      children={content ? content : ""} 
-      components={{
-        a: MdLink,
-        h1: MdHeading,
-        h2: MdHeading,
-        h3: MdHeading,
-        h4: MdHeading,
-        h5: MdHeading,
-        h6: MdHeading,
-        blockquote: MdBlockquote
-      }} />
+    <div ref={blockRef} className="MarkdownBlock">
+      <ReactMarkdown
+        children={content ? content : ""} 
+        components={{
+          a: MdLink,
+          h1: MdHeading,
+          h2: MdHeading,
+          h3: MdHeading,
+          h4: MdHeading,
+          h5: MdHeading,
+          h6: MdHeading,
+          blockquote: MdBlockquote
+        }} />
+    </div>
   );
 };
 

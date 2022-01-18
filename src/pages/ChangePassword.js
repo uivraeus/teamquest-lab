@@ -3,7 +3,8 @@ import AppBtn from "../components/AppBtn";
 import InfoBlock from "../components/InfoBlock";
 import { update } from "../helpers/auth";
 import useAppContext from "../hooks/AppContext";
-import { Link, useHistory } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
+import { absAppPath } from "../RoutePaths";
 
 import "./ChangePassword.css";
 
@@ -14,8 +15,8 @@ const ChangePassword = () => {
   const [submitted, setSubmitted] = useState(false);
   const [response, setResponse] = useState(null);
 
-  const { showAlert } = useAppContext();
-  const history = useHistory();
+  const { showAlert, user } = useAppContext();
+  const navigate = useNavigate();
   
   //TODO (?): common helper for signup and this component
   //(but the logic is only similar - not identical)
@@ -77,7 +78,7 @@ const ChangePassword = () => {
       await update(oldPassword, password);
       showAlert("Update complete", "The password for your account has now been updated");
       //go back, probably to account management if the user didn't explicitly enter the URL.
-      history.goBack();
+      navigate(-1);
     } catch (error) {
       setResponse(error.message);
     }
@@ -91,11 +92,18 @@ const ChangePassword = () => {
 
       <form onSubmit={handleSubmit}>
         <div className="ChangePassword-control">
+          <input //hidden - just to please password managers
+            className="hidden-input"
+            type="text" value={user.email} 
+            autoComplete="username"
+            readOnly>
+          </input>
           <input
             className="app-input"
             placeholder="Current password"
             name="current password"
             type="password"
+            autoComplete="current-password"
             onChange={handleChange}
             value={oldPassword}
           ></input>
@@ -104,6 +112,7 @@ const ChangePassword = () => {
             placeholder="New password"
             name="password"
             type="password"
+            autoComplete="new-password"
             onChange={handleChange}
             value={password}
           ></input>
@@ -112,6 +121,7 @@ const ChangePassword = () => {
             placeholder="Confirm new password"
             name="password2"
             type="password"
+            autoComplete="new-password"
             onChange={handleChange}
             value={password2}
           ></input>
@@ -121,7 +131,7 @@ const ChangePassword = () => {
       </form>
       <InfoBlock>
         <p>
-          Forgot your current password? <Link to="/reset">Reset</Link> it via email.
+          Forgot your current password? <Link to={absAppPath("passwordReset")}>Reset</Link> it via email.
         </p>
       </InfoBlock>
     </div>

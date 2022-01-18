@@ -1,0 +1,11 @@
+.ResultsNav {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items:center;
+}
+
+/* Use prev's icon also for next */
+.ResultsNav button#next {
+    transform: rotate(180deg);
+}

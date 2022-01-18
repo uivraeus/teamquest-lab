@@ -1,6 +1,6 @@
 import React from "react";
 import AppBtn from "../components/AppBtn";
-import { Link, useHistory } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 
 import { ReactComponent as BackIcon } from "../icons/left-arrow.svg";
 
@@ -11,15 +11,16 @@ import "./BackBtnLink.css";
  */
 
 const BackBtnLink = ({ separator }) => {
-  const history = useHistory();
-  const backPage = history.location.state && history.location.state.prevPage;
+  const navigate = useNavigate();
+  const location = useLocation();
+  const backPage = location.state && location.state.prevPage;
   if (!backPage) {
     return null;
   }
 
   const onBack = (e) => {
     e && e.preventDefault();
-    history.goBack()
+    navigate(-1);
   }
   return (
     <>

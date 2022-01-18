@@ -4,7 +4,8 @@ import InfoBlock from "../components/InfoBlock"
 import { ackTransfer, grabTransfer } from "../helpers/team";
 import useAppContext from "../hooks/AppContext";
 import useTransferTracker from "../hooks/TransferTracker";
-import { Link, useParams, useHistory } from "react-router-dom";
+import { Link, useParams, useNavigate } from "react-router-dom";
+import { absCreatorPath } from "../RoutePaths";
 
 import "./Inherit.css";
 
@@ -16,7 +17,7 @@ const Inherit = ({ teams }) => {
   const [grab, setGrab] = useState(null);
   const [acknowledged, setAcknowledged] = useState(false);
   const [dbError, setDbError] = useState(null);
-  const history = useHistory();
+  const navigate = useNavigate();
   
   //Keep track of owned teams to detect successful transfer
   const [outcome, setOutcome] = useState(null);
@@ -78,9 +79,9 @@ const Inherit = ({ teams }) => {
       showAlert("Invalid transfer ID", 
         "Can't access transfer information. Maybe the transfer has already been completed or cancelled?",
         "Info", dbError);
-      history.replace("/creator/manage"); //just somewhere.
+      navigate(absCreatorPath("manage"), { replace: true }); //just somewhere.
     }
-  }, [dbError, showAlert, history]);
+  }, [dbError, showAlert, navigate]);
 
   //Detect completed transfer (nice feedback - nothing really important)
   //(This only works if the user has kept this page open - not if revisiting it
@@ -97,13 +98,12 @@ const Inherit = ({ teams }) => {
     if (outcome !== null) {
       if (outcome) {
         showAlert("Transfer completed", "You are now the new owner of the team", "Info");
-        history.replace("/creator/manage");
       } else {
         showAlert("Transfer cancelled", "The original owner never completed the transfer", "Info");
-        history.replace("/"); //just somewhere.
       }
+      navigate(absCreatorPath("manage"), { replace: true });
     }
-  }, [outcome, showAlert, history])
+  }, [outcome, showAlert, navigate])
 
   const onAcknowledge = async () => {
     try {
@@ -145,7 +145,7 @@ const Inherit = ({ teams }) => {
               You can then manage it and create surveys like for any other team you own.
             </p>
             <p>
-              All your teams are listed in the <Link to={"/creator/manage"}>Manage</Link> section.
+              All your teams are listed in the <Link to={absCreatorPath("manage")}>Manage</Link> section.
             </p>
             <InfoBlock>
               <p>

@@ -36,7 +36,7 @@ export const validateNewName = (newName, oldNames) => {
 export const createNewTeam = async (user, teamName, oldTeamNames) => {
   try {
     validateNewName(teamName, oldTeamNames);
-    await db.ref(`teams`).push({
+    await db.push(`teams`, {
       uid: user.uid,
       alias: teamName,
       createTime: { ".sv": "timestamp" }, //server-side timestamp generation
@@ -51,7 +51,7 @@ export const createNewTeam = async (user, teamName, oldTeamNames) => {
 export const renameTeam = async (teamId, teamName, oldTeamNames) => {
   try {
     validateNewName(teamName, oldTeamNames);
-    await db.ref(`teams/${teamId}`).update({
+    await db.update(`teams/${teamId}`, {
       alias: teamName,
       lastRenameTime: { ".sv": "timestamp" }, //server-side timestamp generation
     });
@@ -66,12 +66,12 @@ export const renameTeam = async (teamId, teamName, oldTeamNames) => {
 export const deleteTeam = async (teamId, user) => {
   try {
     //First "suspend" the team to prevent concurrent creation of new surveys
-    await db.ref(`teams/${teamId}`).update({
+    await db.update(`teams/${teamId}`, {
       suspendTime: {".sv": "timestamp"}
     });
 
     //Also remove any ongoing transfers of this team (should be max 1 but also look for dangling left-overs)
-    const txSnapshots = await db.ref("transfers").orderByChild("uid").equalTo(user.uid).once("value");
+    const txSnapshots = await db.once(db.query("transfers", db.orderByChild("uid"), db.equalTo(user.uid)));
     let removePromises=[];
     txSnapshots.forEach(snap => {
       if (snap.val().tid === teamId) {
@@ -93,7 +93,7 @@ export const deleteTeam = async (teamId, user) => {
     }
 
     //Finally, delete the actual team node
-    await db.ref(`teams/${teamId}`).set(null);
+    await db.set(`teams/${teamId}`, null);
 
   } catch (e) {
     const errMsg = "Error during deletion of team. " + e.message;
@@ -105,8 +105,8 @@ export const deleteTeam = async (teamId, user) => {
 //Result is array if IDs
 export const fetchAllTeamId = async (user) => {
   try {
-    const ref = db.ref("teams").orderByChild("uid").equalTo(user.uid);
-    const snapshot = await ref.once("value");
+    const query = db.query("teams", db.orderByChild("uid") , db.equalTo(user.uid));
+    const snapshot = await db.once(query);
     let teamIds = [];
     snapshot.forEach(snap => {
       teamIds.push(snap.key);
@@ -122,35 +122,9 @@ export const fetchAllTeamId = async (user) => {
 //Remove ongoing transfer (~ abort or "done" depending on how far it proceeded)
 export const removeTransfer = async (transferId) => {
   try {
-    await db.ref(`transfers/${transferId}`).set(null);
+    await db.set(`transfers/${transferId}`, null);
   } catch(e) {
     const errMsg = "Could not remove team transfer";
-    console.log(errMsg, e);
-    throw new Error(errMsg);
-  }
-}
-
-//Remove any ongoing team transfer(s) initiated by the specified user
-export const abortInitiatedTransfers = async (user) => {
-  try {
-    //First find all (/any) transfers initiated by the specified user
-    const snapshot = await db.ref("transfers").orderByChild("uid").equalTo(user.uid).once("value");
-    let transferIds = [];
-    snapshot.forEach(snap => {
-      transferIds.push(snap.key);
-    });
-
-    if (transferIds.length > 0) {
-      //Now blast them (most likely max one)
-      const delPromises = transferIds.map(tId => db.ref(`transfers/${tId}`).set(null));
-      const delOutcome = await Promise.allSettled(delPromises);
-      const numFailed = (delOutcome.filter(o => o.status === "rejected")).length;
-      if (numFailed > 0) {
-        throw new Error(`${numFailed} transfers(s) could not be deleted`);
-      }
-    }        
-  } catch(e) {
-    const errMsg = "Could not abort/clean team transfer(s).";
     console.log(errMsg, e);
     throw new Error(errMsg);
   }
@@ -160,7 +134,7 @@ export const abortInitiatedTransfers = async (user) => {
 //Returns the transferId
 export const initTransfer = async (teamId, teamName, user) => {
   try {
-    const r = await db.ref(`transfers`).push({
+    const r = await db.push(`transfers`, {
       uid: user.uid,
       email: user.email,
       alias: teamName,
@@ -180,7 +154,7 @@ export const initTransfer = async (teamId, teamName, user) => {
 //(after this, no other user can do that)
 export const grabTransfer = async (transferId, user) => {
   try {
-    await db.ref(`transfers/${transferId}/receiver`).set({
+    await db.set(`transfers/${transferId}/receiver`, {
       uid: user.uid,
       email: user.email
     });
@@ -196,7 +170,7 @@ export const grabTransfer = async (transferId, user) => {
 //team name and current owner)
 export const ackTransfer = async (transferId, user) => {
   try {
-    await db.ref(`transfers/${transferId}/recConfirmUid`).set(user.uid);
+    await db.set(`transfers/${transferId}/recConfirmUid`, user.uid);
   } catch(e) {
     const errMsg = "Could not acknowledge transfer.";
     console.log(errMsg, e);
@@ -216,10 +190,10 @@ export const commitTransfer = async (transferObject) => {
   try {
     const newUid = transferObject.recConfirmUid;
     const teamId = transferObject.tid;
-    await db.ref(`teams/${teamId}`).update({
+    await db.update(`teams/${teamId}`, {
       uid: newUid,
       lastTransferTime: {".sv": "timestamp"},
-    })
+    });
   } catch (e) {
     const errMsg = "Could not change owner of the team.";
     console.log(errMsg, e);
@@ -244,7 +218,7 @@ export const loadTransferData = async (transferId, isInitiator, user) => {
   //from "/transfers/<transferId>"
   try {
     const qChild = isInitiator ? "uid" : "receiver/uid";
-    const snapshot = await db.ref("transfers").orderByChild(qChild).equalTo(user.uid).once("value");
+    const snapshot = await db.once(db.query("transfers", db.orderByChild(qChild), db.equalTo(user.uid)));
     let obj = null;
     snapshot.forEach(snap => {
       const fields = snap.val();
@@ -271,17 +245,17 @@ export const loadTransferData = async (transferId, isInitiator, user) => {
 //Parameter "isInitiator": true => transfer _from_ the user
 //                         false = transfer _to_ the user
 //Data will be provided to callback function as array with oldest first
-//This function returns a "reference" that shall be provided to
+//This function returns a "unsubscribe function" that shall be provided to
 //cancelAllTransferData to end the subscription (at some point)
 export const getAllTransferData = (user, isInitiator, cb) => {
-  let dataRef = null; //default return value
+  let unsubscribeFn = null; //default return value
   try {
     if (!cb) //A "better" check would also cover type and signature etc.
       throw new Error("No callback function specified");
 
     const qChild = isInitiator ? "uid" : "receiver/uid";
-    const ref = db.ref("transfers").orderByChild(qChild).equalTo(user.uid);
-    dataRef = ref.on("value", snapshot => {
+    const query = db.query("transfers", db.orderByChild(qChild), db.equalTo(user.uid));
+    unsubscribeFn = db.onValue(query, snapshot => {
       let transfers = [];
       //!: Debug experiments show that a futile* attempt to write a receiver
       //   sub-node (see Grab-function) will result in a short-lived entry
@@ -306,15 +280,13 @@ export const getAllTransferData = (user, isInitiator, cb) => {
     throw new Error(errMsg);
   }
 
-  return dataRef;
+  return unsubscribeFn;
 };
 
 //Cancel subscription for team transfer data (see getAllTransferData above)
-export const cancelAllTransferData = (user, isInitiator, dbDataRef) => {
+export const cancelAllTransferData = (unsubscribeFn) => {
   try {
-    const qChild = isInitiator ? "uid" : "receiver/uid";
-    const ref = db.ref("transfers").orderByChild(qChild).equalTo(user.uid);
-    ref.off("value", dbDataRef);
+    unsubscribeFn();
   } catch(e) {
     const errMsg = "Could not cancel transfer data subscription.";
     console.log(errMsg, e);

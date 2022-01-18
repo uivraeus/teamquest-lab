@@ -1,11 +1,11 @@
 ## Privacy Policy
-Your privacy is important and we take is seriously. This Privacy Policy explains how we use any personal information about you that is collected or generated through your use of the _Mini-TMQ_ web application ("the App").
+Your privacy is important and we take it seriously. This Privacy Policy explains how we use any personal information about you that is collected or generated through your use of the _Mini-TMQ_ web application (below referred to as "the App").
 
 The App is accessed via _https://app.minitmq.org_ and is operated by _TBD_ ("we", "our", "us"). Please refer to the [Contact](/contact) page for how to reach out to us.
 >Note that this version of _Mini-TMQ_ is only used for test and evaluation purposes. Account information and data collected may be deleted at any moment, without prior notice. See the [Terms and Conditions of Use](/terms) for further details.
 
 ## Principle of anonymous data {:#anon-principles}
-In principle the App can be used without providing personal data. The main function of the App is to collect and process answers to a set of survey question, but the individuals who provide these answers don't authenticate themselves via login or by other means. This is possible because all answers are stored and made available without any record of _who_ provided them. 
+In principle the App can be used without providing personal data. The main function of the App is to collect and process answers to a set of survey questions, but the individuals who provide these answers don't authenticate themselves via login or by other means. This is possible because all answers are stored and made available without any record of _who_ provided them. 
 
 Because of this, we do not classify the answers in survey responses as "personal data" (according to [Article 4 (1) GDPR](https://gdpr-info.eu/art-4-gdpr/)). This is important as we make the survey results available without any access restrictions.
 
@@ -18,11 +18,11 @@ The team identifier, which is also random and openly disclosed, doesn't tell any
 
 
 ### General notes on Internet anonymity
-When you access our App (or any other website), some information, such as your IP address, is transferred. You are also providing information about the your device (computer, smartphone, tablet etc.) and your browser (Chrome, Safari, Firefox etc.). In addition, other information is given or can be derived such as time and duration of visit etc.
+When you access our App (or any other website), some information, such as your IP address, is transferred. You are also providing information about your device (computer, smartphone, tablet etc.) and your browser (Chrome, Safari, Firefox etc.). In addition, other information is given or can be derived such as time and duration of visit etc.
 
 We cannot use this data to identify an individual user but, via our service providers, this type of information can be used to derive aggregated statistics on how our App is used and if there are performance or stability issues for certain groups of users. To some extent it may also be used to implement or secure specific functions. Read more about this in the [Third Party Providers](#third-party-providers) section below.
 
-Please bear in mind that in the case of a _static IP address_, personal identification is possible by RIPE query in individual cases, although we do not perform this. Our App is accessible for both static and dynamically assigned IP addresses.
+Please bear in mind that in the case of a _static IP address_, personal identification is possible by RIPE query in individual cases, although we do not perform this. The App is accessible for both static and dynamically assigned IP addresses.
 
 ## How we use survey data
 Although the survey answers are not considered as personal data we still think it is important for us to be transparent about how the data we collect may be used.
@@ -46,21 +46,19 @@ For operations and maintenance purposes we, or our service providers, collect an
 
 The data listed above is required for technical purposes in order to show you our content, process input and guarantee stability and security. The legal basis is a legitimate interest in accordance with [Article 6 (1) (f) GDPR](https://gdpr-info.eu/art-6-gdpr/). As this data is imperative for the operation of the App, users may not object to this.
 
-More details on where this information is stored and maintained can be found in the [Third Party Providers](#third-party-providers) section below.
+If you contact us via e-mail, as described on the [Contact](/contact) page, we will keep records of this communication, including any information you share with us in those e-mails, as long as it serves a business purpose.
+
+More details on where information is stored and maintained can be found in the [Third Party Providers](#third-party-providers) section below.
 
 ## Additional collection and processing of personal data for logged in users
 For users that create an account and _log in_ to access the various survey- and team administration functions, what is described in in [the section for all users](#data-all-users) is still valid. In _addition_ to that, the following also applies. 
 
 ### Registering an account
-To be able to _initiate_ surveys for your team(s), you have to register an account via an automatic sign-up process. For this purpose you specify the following information that we will collect and process as personal data:
+To be able to _initiate_ surveys, you have to register an account via an automatic sign-up process. For this purpose you specify the following information that we will collect and process as personal data:
 * e-mail address
 * password
 
 This will be your credentials for subsequent logins to the App. 
-
-> Note that there is no validation of the e-mail address during sign-up. Technically, this enables anonymity via "dummy addresses" if that is desired. However, this is not recommended for two reasons:
-> 1. If you can't be contacted via the specified e-mail address it will not be possible to reset the password in the event it is lost (There is no way for you to claim ownership of the account or any data associated with it).
-> 2. In the event of problems or critical maintenance tasks associated with your account or the service as a whole, it may not be possible for us to communicate this to you.
 
 ### Managing teams and surveys
 Each survey created by you will be associated to a _team_. So, for each registered user we will collect and process as personal data:
@@ -93,7 +91,7 @@ We do not sell your personal information to others but we may disclose or share 
 If we wish to use your personal information for a purpose beyond that for which it was originally provided, we will ask for your consent or seek to rely on another valid legal ground to process your personal information in accordance with the applicable law.
 
 ## Third Party Providers {:#third-party-providers}
-We will share your personal information with our service providers from time to time who act as _data processors_. Some of our service providers may use further sub-processors.
+We will share your personal information with our service providers who act as our data _processors_ (for which we are _controllers_). Some of our service providers may use further sub-processors.
 
 ### Netlify
 We use Netlify, Inc. (2325 3rd Street, Suite 296, San Francisco, California 94107) for hosting of the App
@@ -107,7 +105,7 @@ We use Netlify, Inc. (2325 3rd Street, Suite 296, San Francisco, California 9410
 Additional information on how Netlify deals with privacy for their services can be found in their [Privacy Policy](https://www.netlify.com/privacy/) and on their [GDPR/CCPA page](https://www.netlify.com/gdpr-ccpa/)
  
 ### Google Firebase
-We use Firebase from Google, LLC (1600 Amphitheatre Parkway, Mountain View, California 94043, United States) to implement some of the functionality that is essential to the App. Firebase offers numerous services, with a full list available in their [Terms of Service](https://firebase.google.com/terms/) of which we use the ones listed below.
+We use Firebase from Google Cloud EMEA Ltd. (Gordon House Barrow Street Dublin 4) to implement some of the functionality that is essential to the App. Firebase offers numerous services, with a full list available in their [Terms of Service](https://firebase.google.com/terms/) of which we use the ones listed below.
  
 Additional information on how Google deals with privacy for Firebase can be found in their [Data Processing and Security Terms](https://firebase.google.com/terms/data-processing-terms) and [Google Cloud Platform Terms of Service](https://cloud.google.com/terms/)
 
@@ -122,7 +120,42 @@ Additional information on how Google deals with privacy for Firebase can be foun
 * **Personal data collected:** User-agent and IP addresses
 * **Personal data usage:** May be used to profile usage trends and platform breakdowns
 * **Retention:** IP addresses and user-agent information for a few days
+* **Place of processing:** Belgium
+
+### Sentry
+We use Sentry from Functional Software, Inc. d/b/a Sentry (45 Fremont Street, 8th Floor, San Francisco, CA 94105) for collecting information about and tracking of application instabilities and problems, e.g. crashes. No personal information is recorded, e.g. no user account details and no IP addresses.
+
+For integration with Sentry's services all data is sent securely via TLS to an HTTPS endpoint. All data is AES-256bit encrypted, both in transit and at rest. More details on Sentry's solution for managing and securing the service and related data can be found in the [Data Processing Addendum (DPA)](https://sentry.io/legal/dpa/3.0.0/in-app/) that we have entered into with them.
+
+* **Basis of use:** Log and track application errors and stability problems.
+* **Personal data collected:** Information about your device and user agent (browser)
+* **Personal data usage:** Grouping and categorization of application errors
+* **Retention:** 90 days
 * **Place of processing:** United States
+
+### ImprovMX
+We use ImprovMX by Reflectiv SAS (128 Rue la Boétie,75008 Paris France) for e-mail forwarding when you contact us as described on the [Contact](/contact) page.
+
+* **Basis of use:** Forwarding e-mails as part of contact interaction
+* **Personal data collected:** Server IP addresses and names, FROM/TO e-mail addresses, mail subject and date information.
+* **Personal data usage:** Provide the service and help debug issues that might occur
+* **Retention:** 7 days
+* **Place of processing:** France
+
+Additional information can be found in their detailed description of [what they log](https://improvmx.com/guides/what-do-we-log/) and at [ImprovMX GDPR Compliance](https://improvmx.com/gdpr-compliance/).
+
+### Gmail
+We use Gmail/Google Services provided by Google Ireland Limited (Gordon House, Barrow Street, Dublin 4, Ireland) for handling and storing any e-mail interaction between you and us.
+
+* **Basis of use:** Contact interaction
+* **Personal data collected:** Your e-mail addresses, meta data and any personal data you explicitly provide in your mail
+* **Personal data usage:** Storage of received and sent e-mails
+* **Retention:** Up to two months after deletion
+* **Place of processing:** In any of Google's [world-wide data centers](https://www.google.com/about/datacenters/locations)
+
+Note that the _retention_ period reflects how long the information is available in Google's systems _after we have chosen to delete it_. We will delete e-mails when they do not serve a business purpose any longer.
+
+More information about Gmail in relation to security and privacy can be found in the [Google Safety Center](https://safety.google/intl/en_us/security-privacy/).
 
 ## Your rights
 The GDPR was created to protect your privacy rights. You have the right to access, rectify, object to, or erase your personal data maintained by us according to to [Articles 12 – 23 of the GDPR](https://gdpr-info.eu/chapter-3/). 
@@ -134,4 +167,4 @@ If, for some reason, the automatic functions within the App don't allow you to a
 If you believe our processing of your personal data infringes data protection laws, you have a legal right to initiate a complaint with a supervisory authority responsible for data protection in accordance with [Article 77 of the GDPR](https://gdpr-info.eu/art-77-gdpr/).
 
 ***
-_Last updated: June 06, 2021_
+_Last updated: January 18, 2022_

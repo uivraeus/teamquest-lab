@@ -11,14 +11,15 @@
 .TerminateAccount > svg {
   max-width: 4em;
   margin-top: .5em;
-  fill: var(--color-bkg-btn-accent);
+  stroke: var(--color-bkg-btn-accent);
+  stroke-width: .25em;
   transition: fill .3s ease-in;
 }
 
 .TerminateAccount-confirmed > svg {
-  fill: var(--color-text-warning);
+  stroke: var(--color-text-warning);
 }
 
 .TerminateAccount-terminating > svg {
-  fill: var(--color-text-error);
+  stroke: var(--color-text-error);
 }

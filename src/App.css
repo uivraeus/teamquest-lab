@@ -28,6 +28,8 @@
   --color-result-m: rgb(70,128,160);
   --color-result-e: rgb(128,160,70);
   --color-result-nomatch: rgb(180,180,180);
+  --color-result-hover: rgba(170,128,128,0.3);
+  --color-result-selected: rgba(255,128,128,0.5);
   --font-big:  calc(17px + 2.7vw); 
   --font-medium: calc(11px + 2.7vw);
   --font-small: calc(8px + 2.2vw);
@@ -187,3 +189,9 @@ input[type=number] {
   -moz-appearance:textfield;
 }
 
+/* In password-related forms where the username is implicitly given we still include it as a hidden input.
+ * All to please password managers [https://www.chromium.org/developers/design-documents/create-amazing-password-forms] 
+ */
+.hidden-input {
+  display: none;
+}

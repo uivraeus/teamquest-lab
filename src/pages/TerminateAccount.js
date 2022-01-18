@@ -5,16 +5,17 @@ import InfoBlock from "../components/InfoBlock";
 import TextInputModal from "../components/TextInputModal";
 import { fetchAllId } from "../helpers/survey";
 import { fetchAllTeamId } from "../helpers/team";
-import { deleteAccountAndData } from "../helpers/user";
-import { Link, useHistory } from "react-router-dom";
+import { confirmPassword, deleteAccountAndData } from "../helpers/user";
+import { Link, useNavigate } from "react-router-dom";
 import useAppContext from "../hooks/AppContext";
+import { absCreatorPath } from "../RoutePaths";
 
 import { ReactComponent as TerminateImage } from "../icons/terminate.svg";
 
 import "./TerminateAccount.css";
 
 const TerminateAccount = () => {
-  const history = useHistory();
+  const navigate = useNavigate();
   const { queryConfirm, showAlert, user } = useAppContext();
   const [summary, setSummary] = useState(null);
   const [error, setError] = useState(null);
@@ -66,7 +67,7 @@ const TerminateAccount = () => {
             })
             .catch((err) => {
               showAlert("Data backend error", err.message, "Error");
-              history.push("/creator/manage"); // just go somewhere...
+              navigate(absCreatorPath("manage")); // just go somewhere...
             });
         }
       },
@@ -80,8 +81,13 @@ const TerminateAccount = () => {
 
   const onPassword = ({ value }) => {
     setQueryPassword(false);
-    if (value.length > 0) {
-      doTerminate(value);
+    if (value && value.length > 0) {
+      confirmPassword(value)
+      .then(() => doTerminate(value))
+      .catch(() => { 
+        showAlert("Authentication error", "Aborting termination of user account", "Info");
+        setConfirmed(false);
+      })
     }
   }
 
@@ -125,6 +131,8 @@ const TerminateAccount = () => {
             id={queryPassword ? "password" : null}
             label="Please re-enter your account password"
             type="password"
+            autoComplete="current-password"
+            hiddenUsernameInputValue={user.email}
             onResult={onPassword}
             validateFn={(value) => value.length >= 6}
           />
@@ -147,7 +155,7 @@ const TerminateAccount = () => {
                   </p>
                   <p>
                     Transfers are initiated from the{" "}
-                    <Link to="/creator/manage">Manage</Link> section.
+                    <Link to={absCreatorPath("manage")}>Manage</Link> section.
                   </p>
                 </InfoBlock>
               ) : null}

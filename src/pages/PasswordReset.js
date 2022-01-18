@@ -2,8 +2,9 @@ import React, { useEffect, useState } from "react";
 import AppBtn from "../components/AppBtn";
 import InfoBlock from "../components/InfoBlock";
 import { logout, reset } from "../helpers/auth";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import useAppContext from "../hooks/AppContext";
+import { absAppPath } from "../RoutePaths";
 
 import "./PasswordReset.css";
 
@@ -12,7 +13,7 @@ const PasswordReset = () => {
   const [response, setResponse] = useState(null);
   const [initiated, setInitiated] = useState(false);
   const { user, showAlert } = useAppContext();
-  const history = useHistory();
+  const navigate = useNavigate();
 
   //In case we land here when logged in
   useEffect(() => {
@@ -33,6 +34,15 @@ const PasswordReset = () => {
   const handlePasswordReset = async (e) => {
     e.preventDefault();
     try {
+      if (email === "crash@here.now") {
+        //Temporary (?) crash-logic for testing
+        console.log("Intentionally crashing...");
+        setEmail(() =>  e.dontExists());
+        return;
+      } else if (email === "error@here.now") {
+        showAlert("Intentional error", "Test message", "Error", "Resistance is futile");
+        return;
+      }
       setInitiated(true);
       await reset(email);
       if (user) {
@@ -43,7 +53,7 @@ const PasswordReset = () => {
         await logout();
       }
       showAlert("Email sent", "Check your in-box for an email with further instructions");
-      history.replace("/login");
+      navigate(absAppPath("login"), { replace: true });
     } catch (err) {
       setResponse(err.message);
     }
@@ -83,11 +93,11 @@ const PasswordReset = () => {
       <InfoBlock>
         <h4>What happens next?</h4>
         <p>
-          You will receive an email with a link to an external site at which you
+          You will receive an email with a link to a separate site at which you
           can specify a new password for your account.
         </p>
         <p>
-          Afterwards, you can login using your updated credentials.
+          Afterwards, you can login here using your updated credentials.
         </p>
       </InfoBlock>
     </div>

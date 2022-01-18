@@ -37,10 +37,10 @@ function useTeamTracker(teamId) {
   
   useEffect( () => {
     //Subscribe to all raw survey data
-    let dbDataRef = null;
+    let unsubscribeFn = null;
     if (teamId !== null) {
       try {
-        dbDataRef = getAll(teamId, (rawSurveys, anyError) => {
+        unsubscribeFn = getAll(teamId, (rawSurveys, anyError) => {
           if (anyError) { //TBD;
             console.log("anyError set when reding surveys for teamId:", teamId);
           }
@@ -62,10 +62,10 @@ function useTeamTracker(teamId) {
     return () => {
       //Don't provide obsolete results when the teamId changes
       setResult(defaultResult);
-      if (dbDataRef) {
+      if (unsubscribeFn) {
         //Unsubscribe from prev team's updates
         try {
-          cancelAll(teamId, dbDataRef);
+          cancelAll(unsubscribeFn);
         } catch(e) {
           console.log("Could not cancel subscription", e);
         }

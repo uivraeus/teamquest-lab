@@ -3,6 +3,7 @@ import AppBtn from "../components/AppBtn";
 import InfoBlock from "../components/InfoBlock";
 import { Link } from "react-router-dom";
 import { login } from "../helpers/auth";
+import { absAppPath } from "../RoutePaths";
 
 import "./Login.css";
 
@@ -53,6 +54,7 @@ const Login = () => {
             placeholder="Email"
             name="email"
             type="email"
+            autoComplete="username"
             onChange={handleChange}
             value={email}
           ></input>
@@ -62,6 +64,7 @@ const Login = () => {
             placeholder="Password"
             name="password"
             type="password"
+            autoComplete="current-password"
             onChange={handleChange}
             value={password}
           ></input>
@@ -76,11 +79,11 @@ const Login = () => {
       </form>
       <InfoBlock>
         <p>
-          Forgot your password? <Link to="/reset">Reset</Link> it via email.
+          Forgot your password? <Link to={absAppPath("passwordReset")}>Reset</Link> it via email.
         </p>
         <hr></hr>
         <p>
-          No account? <Link to="/signup">Sign up</Link> to create one.
+          No account? <Link to={absAppPath("signup")}>Sign up</Link> to create one.
         </p>
       </InfoBlock>
     </div>

@@ -18,6 +18,8 @@ const TextInputModal = ({
   label = "Enter your input",
   validateFn = (value) => value.length > 0,
   type = "text",
+  autoComplete,
+  hiddenUsernameInputValue,
   onResult,
 }) => {
   //Controlled input
@@ -63,12 +65,21 @@ const TextInputModal = ({
       <h4>{label}</h4>
       <form onSubmit={onCommit}>
         <div className="TextInputModal-input-control">
+          { hiddenUsernameInputValue ? 
+            <input //hidden - just to please password managers
+              className="hidden-input"
+              type="text" value={hiddenUsernameInputValue} 
+              autoComplete="username"
+              readOnly>
+            </input>
+          : null }
           <input
             className="app-input"
             autoFocus
             onChange={(e) => setValue(e.target.value)}
             value={value}
             type={type}
+            autoComplete={autoComplete}
             name="modal-text-input"
             id={`input-${id}`}
           ></input>

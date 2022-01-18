@@ -15,10 +15,10 @@ function useTransferTracker(user, isInitiator=true) {
   
   useEffect( () => {
     //Subscribe to all transfer data changes for the specified user
-    let dbDataRef = null;
+    let unsubscribeFn = null;
     if (user !== null) {
       try {
-        dbDataRef = getAllTransferData(user, isInitiator, (transfers) => {
+        unsubscribeFn = getAllTransferData(user, isInitiator, (transfers) => {
           if (transfers && transfers.length)
             setTransfers(transfers);
           else
@@ -34,10 +34,10 @@ function useTransferTracker(user, isInitiator=true) {
     }
 
     return () => {
-      if (dbDataRef) {
+      if (unsubscribeFn) {
         //Unsubscribe from prev user's transfer data
         try {
-          cancelAllTransferData(user, isInitiator, dbDataRef);
+          cancelAllTransferData(unsubscribeFn);
         } catch(e) {
           console.log("Could not cancel subscription", e);
         }
