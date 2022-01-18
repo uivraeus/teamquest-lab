@@ -1,7 +1,7 @@
 ## Privacy Policy
 Your privacy is important and we take it seriously. This Privacy Policy explains how we use any personal information about you that is collected or generated through your use of the _Mini-TMQ_ web application (below referred to as "the App").
 
-The App is accessed via _https://app.minitmq.org_ and is operated by _TBD_ ("we", "our", "us"). Please refer to the [Contact](/contact) page for how to reach out to us.
+The App is accessed via _https://app.minitmq.org_ and is operated by _Behavior and Technology Sweden AB_ ("we", "our", "us"). Please refer to the [Contact](/contact) page for how to reach out to us.
 >Note that this version of _Mini-TMQ_ is only used for test and evaluation purposes. Account information and data collected may be deleted at any moment, without prior notice. See the [Terms and Conditions of Use](/terms) for further details.
 
 ## Principle of anonymous data {:#anon-principles}
@@ -133,16 +133,16 @@ For integration with Sentry's services all data is sent securely via TLS to an H
 * **Retention:** 90 days
 * **Place of processing:** United States
 
-### ImprovMX
-We use ImprovMX by Reflectiv SAS (128 Rue la Boétie,75008 Paris France) for e-mail forwarding when you contact us as described on the [Contact](/contact) page.
+### TBD/TODO: Email Service?
+We use <Company> (<Address>) for e-mail forwarding when you contact us as described on the [Contact](/contact) page.
 
 * **Basis of use:** Forwarding e-mails as part of contact interaction
-* **Personal data collected:** Server IP addresses and names, FROM/TO e-mail addresses, mail subject and date information.
-* **Personal data usage:** Provide the service and help debug issues that might occur
-* **Retention:** 7 days
-* **Place of processing:** France
+* **Personal data collected:** <TODO>
+* **Personal data usage:** <TODO>
+* **Retention:** <TODO>
+* **Place of processing:** <TODO>
 
-Additional information can be found in their detailed description of [what they log](https://improvmx.com/guides/what-do-we-log/) and at [ImprovMX GDPR Compliance](https://improvmx.com/gdpr-compliance/).
+<Any additional information of what is logged or otherwise relevant here - any link?>
 
 ### Gmail
 We use Gmail/Google Services provided by Google Ireland Limited (Gordon House, Barrow Street, Dublin 4, Ireland) for handling and storing any e-mail interaction between you and us.
