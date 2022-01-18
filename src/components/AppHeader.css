@@ -44,7 +44,7 @@
 
 /* Keep Home button smaller to make it better fit next to the logo */
 .AppHeader-home-logo > button {
-  margin-bottom: .2em;
+  margin-bottom: .21em;
   width: 1.7em;
   height: 1.7em;
   min-width: 1.7em;
