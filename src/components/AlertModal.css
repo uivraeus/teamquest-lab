@@ -26,7 +26,6 @@
 
 .Alert-Info svg {
   stroke: var(--color-text-info);
-  fill: var(--color-text-info);
 }
 
 .Alert-Warning svg {
