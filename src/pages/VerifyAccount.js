@@ -27,7 +27,6 @@ const VerifyAccount = () => {
       //The user must log in again to sync the (verified) authentication state
       await logout();
       //navigate(absAppPath("login"), { replace: true });  <-- won't work due to AuthRoute race... will end up at /start
-      window.location.href = window.location.origin + "/login"; //plan B (this will cause a page reload)      
     } catch(e) {
       setPending(false);
       showAlert("Operation failed", "Could not initiate sending of verification e-mail", "Error", e.message);
