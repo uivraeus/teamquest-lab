@@ -51,7 +51,7 @@ If you contact us via e-mail, as described on the [Contact](/contact) page, we w
 More details on where information is stored and maintained can be found in the [Third Party Providers](#third-party-providers) section below.
 
 ## Additional collection and processing of personal data for logged in users
-For users that create an account and _log in_ to access the various survey- and team administration functions, what is described in in [the section for all users](#data-all-users) is still valid. In _addition_ to that, the following also applies. 
+For users that create an account and _log in_ to access the various survey- and team administration functions, what is described in [the section for all users](#data-all-users) is still valid. In _addition_ to that, the following also applies. 
 
 ### Registering an account
 To be able to _initiate_ surveys, you have to register an account via an automatic sign-up process. For this purpose you specify the following information that we will collect and process as personal data:
@@ -61,30 +61,30 @@ To be able to _initiate_ surveys, you have to register an account via an automat
 This will be your credentials for subsequent logins to the App. 
 
 ### Managing teams and surveys
-Each survey created by you will be associated to a _team_. So, for each registered user we will collect and process as personal data:
+Each survey created by you will be associated with a _team_. For each registered user we will collect and process as personal data:
 * Defined team(s)
 
 As an owner of a team, you will give it a _name_ but publicly, e.g. when any _other user_ of the App views results and trends for the team, an anonymous (random) identifier is used. Other users will not have access to information on which (or the number of) teams that are defined and associated with your registered account.
 
 ### Terminating your account {:#termination}
-If you want to terminated (delete) your account you can do this from within the App itself. You don't have to contact us separately for that. The only requirement is that you can prove ownership of the account by entering your normal login credentials.
+If you want to terminate (delete) your account you can do this in the App itself. You don't have to contact us separately. The only requirement is that you can prove ownership of the account by entering your normal login credentials.
 
 When the account is deleted, all personal data stored for this account will be deleted from our databases and services. In addition, all associations to (anonymous) team-identifiers and survey data are removed. Aggregated survey data, i.e. anonymous answers from you and others, may still be retained but without anything linking it to your deleted account.
 
 >The service providers we use in our infrastructure may retain data, or backups of it, for a limited period of time also after we have requested its removal via our App. Read more about this in the [Third Party Providers](#third-party-providers) section below.
 
 ## Storage of your personal data
-We aim to store most of our data in the European Economic Area (EEA) when feasible. However, we do use some service providers who are based outside the EEA. In these circumstances, your personal data may be transferred to the United States (US) if the service provider ensures similar protection to personal data, for example by using the European Commission’s standard contractual clauses or in accordance with the Privacy Shield Framework.
+We aim to store most of our data in the European Economic Area (EEA) when feasible. However, we do use some service providers who are based outside the EEA. Under these circumstances, your personal data may be transferred to the United States (US) if the service provider ensures similar protection of personal data, for example by using the European Commission’s standard contractual clauses.
 
 ## Securing your personal data
 We take precautions to protect your personal information. Communication between your browser and any of our services is secured using HTTPS through a TLS Certificate, aka. "SSL", which ensures encryption of all data being sent.
 
-The external services we rely on in our application infrastructure have been chosen with security in mind to minimize the risk of data breaches. This includes encryption of stored data associated to your account if you are a registered user.
+The external services we rely on in our application's infrastructure have been chosen with security in mind to minimize the risk of data breaches. This includes encryption of stored data associated with your account if you are a registered user.
 
 We will notify you and any applicable regulator of a suspected data security breach where we are legally required to do so.
 
 ## Transfer of your personal data to third parties
-We rely on third party service providers in our application infrastructure and, when necessary for the function and operation of the App, personal data may be shared with those providers (see [Third Party Providers](#third-party-providers) section below).
+We rely on third party service providers in our application's infrastructure and, when necessary for the function and operation of the App, personal data may be shared with those providers (see [Third Party Providers](#third-party-providers) section below).
 
 We do not sell your personal information to others but we may disclose or share it if required to comply with any legal, regulatory or tax obligation.
 
@@ -94,7 +94,7 @@ If we wish to use your personal information for a purpose beyond that for which 
 We will share your personal information with our service providers who act as our data _processors_ (for which we are _controllers_). Some of our service providers may use further sub-processors.
 
 ### Netlify
-We use Netlify, Inc. (2325 3rd Street, Suite 296, San Francisco, California 94107) for hosting of the App
+We use Netlify, Inc. (2325 3rd Street, Suite 296, San Francisco, California 94107) for hosting the App
 
 * **Basis of use:** Hosting the App, incl. domain registration
 * **Personal data collected:** Information about your access, including your IP address
@@ -158,7 +158,7 @@ Note that the _retention_ period reflects how long the information is available 
 More information about Gmail in relation to security and privacy can be found in the [Google Safety Center](https://safety.google/intl/en_us/security-privacy/).
 
 ## Your rights
-The GDPR was created to protect your privacy rights. You have the right to access, rectify, object to, or erase your personal data maintained by us according to to [Articles 12 – 23 of the GDPR](https://gdpr-info.eu/chapter-3/). 
+The GDPR was created to protect your privacy rights. You have the right to access, rectify, object to, or erase your personal data maintained by us according to [Articles 12 – 23 of the GDPR](https://gdpr-info.eu/chapter-3/). 
 
 Erasure of your personal data is available to you directly via the App as described in the [section on account termination](#termination) above. You can also _change_ your personal data directly via various App functions, e.g. changing team names or your account password.
 
@@ -167,4 +167,4 @@ If, for some reason, the automatic functions within the App don't allow you to a
 If you believe our processing of your personal data infringes data protection laws, you have a legal right to initiate a complaint with a supervisory authority responsible for data protection in accordance with [Article 77 of the GDPR](https://gdpr-info.eu/art-77-gdpr/).
 
 ***
-_Last updated: January 17, 2022_
+_Last updated: January 20, 2022_
