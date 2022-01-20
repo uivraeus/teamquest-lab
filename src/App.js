@@ -37,11 +37,11 @@ const App = () => {
 
               <Route path={paths.start} element = {requireSignedOut(<Start/>)}/>
               <Route path={paths.signup} element = {requireSignedOut(<Signup/>)}/>
-              <Route path={paths.login} element = {requireSignedOut(<Login/>)}/>
-              
+
               <Route path={paths.results} element = {requireSignedIn(<ResultsPage/>)}/>
               <Route path={paths.creator + "/*"} element = {requireSignedIn(<CreatorApp/>)}/>
-              
+
+              <Route path={paths.login} element = {<Login/>}/>
               <Route path={paths.run + "/:surveyId"} element={<Run/>}/>
               <Route path={paths.results +"/:teamId"} element={<ResultsPage/>}/>
               <Route path={paths.contact} element={<Contact/>}/>

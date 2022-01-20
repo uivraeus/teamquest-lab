@@ -14,6 +14,10 @@
   margin-left: .5em;
 }
 
+.AlertModal > p {
+  white-space: pre-wrap;
+}
+
 .AlertModal > .AppBtn {
   margin-top: .5em;
 }

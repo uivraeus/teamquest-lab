@@ -1,7 +1,7 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import AppBtn from "../components/AppBtn";
 import InfoBlock from "../components/InfoBlock";
-import { Link } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { login } from "../helpers/auth";
 import { absAppPath } from "../RoutePaths";
 
@@ -12,7 +12,15 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const [response, setResponse] = useState(null);
   const [initiated, setInitiated] = useState(false);
-
+  const navigate = useNavigate();
+  
+  const location = useLocation();
+  useEffect(() => {
+    if (location.state && location.state.emailHint) {
+      setEmail(location.state.emailHint);
+    }
+  }, [location])
+  
   const handleChange = (e) => {
     if (e.target.name === "email") setEmail(e.target.value);
     else if (e.target.name === "password") setPassword(e.target.value);
@@ -28,6 +36,7 @@ const Login = () => {
     try {
       setInitiated(true);
       await login(email, password);
+      navigate(absAppPath("creator"), { replace: true });
     } catch (err) {
       setResponse(err.message);
     }
