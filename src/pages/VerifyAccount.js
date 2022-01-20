@@ -4,7 +4,7 @@ import InfoBlock from "../components/InfoBlock";
 import LoadingIndicator from '../components/LoadingIndicator';
 import { logout, verify } from "../helpers/auth";
 import useAppContext from "../hooks/AppContext";
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { absAppPath } from "../RoutePaths";
 
 import "./VerifyAccount.css";
@@ -12,7 +12,8 @@ import "./VerifyAccount.css";
 const VerifyAccount = () => {
   const { user, validatedAccess, skipVerification, showAlert } = useAppContext();
   const [pending, setPending] = useState(false);
-  
+  const navigate = useNavigate();
+
   //If we end up here it means that the user hasn't verified the e-mail address
   //But if, at the same time, this user has a validated access it must imply that
   //it was granted "manually". This would typically correspond to a "legacy user",
@@ -23,10 +24,10 @@ const VerifyAccount = () => {
     setPending(true);
     try {
       await verify();
-      showAlert("E-mail sent", "Check your in-box for an e-mail with further instructions");
+      showAlert("E-mail sent", "Check your in-box for an e-mail with further instructions.\nAfter following those, you can login again.");
       //The user must log in again to sync the (verified) authentication state
-      await logout();
-      //navigate(absAppPath("login"), { replace: true });  <-- won't work due to AuthRoute race... will end up at /start
+      navigate(absAppPath("login"), { replace: true, state: { emailHint: user.email } });
+      logout();
     } catch(e) {
       setPending(false);
       showAlert("Operation failed", "Could not initiate sending of verification e-mail", "Error", e.message);

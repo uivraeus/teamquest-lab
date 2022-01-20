@@ -44,7 +44,7 @@ All the materials on the App's website are provided "as is". _Behavior and Techn
 _Behavior and Technology Sweden AB_ or its suppliers will not be held accountable for any damages that will arise with the use or inability to use the materials on the App's website, even if _Behavior and Technology Sweden AB_ or an authorized representative of this App has been notified, orally or written, of the possibility of such damage. Some jurisdiction does not allow limitations on implied warranties or limitations of liability for incidental damages, these limitations may not apply to you.
 
 ### 5\. Revisions and Errata
-The materials appearing in the App may include technical, typographical, or photographic errors. _Behavior and Technology Sweden AB_ will not promise that any of the materials in this App are accurate, complete, or current. _Behavior and Technology Sweden AB_ may change the materials contained in the App at any time without notice. _Behavior and Technology Sweden AB_ does not make any commitment to update the materials.
+The materials appearing in the App may include technical, typographical, or photographic errors. _Behavior and Technology Sweden AB_ does not promise that any of the material in this App is accurate, complete, or current. _Behavior and Technology Sweden AB_ may change the material contained in the App at any time without notice. _Behavior and Technology Sweden AB_ does not make any commitment to update the material.
 
 ### 6\. Links
 _Behavior and Technology Sweden AB_ has not reviewed all of the sites linked to the App and is not responsible for the contents of any such linked site. The presence of any link does not imply endorsement by _Behavior and Technology Sweden AB_ of the site. The use of any linked website is at the user's own risk.
@@ -59,4 +59,4 @@ Please read our [Privacy Policy](/privacy).
 Any claim related to _Behavior and Technology Sweden AB_'s App shall be governed by the laws of Sweden without regards to its conflict of law provisions.
 
 ***
-_Last updated: January 18, 2022_
+_Last updated: January 20, 2022_
