@@ -6,10 +6,10 @@
   stroke-linecap="round"
   stroke-linejoin="round"
 >
-  <circle cx=83 cy=17 r=15 />
-  <circle cx=17 cy=50 r=15 />
-  <circle cx=83 cy=83 r=15 />
+  <circle cx="83" cy="17" r="15" />
+  <circle cx="17" cy="50" r="15" />
+  <circle cx="83" cy="83" r="15" />
   <path d="
-    M 69 23.7, l -38.5 18.7
-    M 30.5 57.5, l 38.5 18.7 " />
+    M 69 23.7 l -38.5 18.7
+    M 30.5 57.5 l 38.5 18.7 " />
 </svg>

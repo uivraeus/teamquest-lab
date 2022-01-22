@@ -6,10 +6,10 @@
   stroke-linecap="round"
   stroke-linejoin="round"
 >
-  <circle cx=15 cy=85 r=7 />
-  <circle cx=40 cy=50 r=7 />
-  <circle cx=65 cy=55 r=7 />
-  <circle cx=90 cy=20 r=7 />
+  <circle cx="15" cy="85" r="7" />
+  <circle cx="40" cy="50" r="7" />
+  <circle cx="65" cy="55" r="7" />
+  <circle cx="90" cy="20" r="7" />
   <path d="M 2 2 v 96 h 96" />
   <path stroke-linecap="butt" d="
     M 19 79.5 l 16.6 -23.5
