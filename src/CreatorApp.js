@@ -8,7 +8,6 @@ import LoadingIndicator from './components/LoadingIndicator';
 
 //Lazy loaded components for the sub-pages
 //(chunk names aren't required but makes it easier to analyze in dev tools )
-const SurveyInfo = lazy(() => import(/* webpackChunkName: 'SurveyInfo' */ './pages/SurveyInfo'));
 const Inherit = lazy(() => import(/* webpackChunkName: 'Inherit' */ './pages/Inherit'));
 const TransferInfo = lazy(() => import(/* webpackChunkName: 'TransferInfo' */ './pages/TransferInfo'));
 const ChangePassword = lazy(() => import(/* webpackChunkName: 'ChangePassword' */ './pages/ChangePassword'));
@@ -20,10 +19,12 @@ const CreatorMainPromise = import(/* webpackChunkName: 'CreatorMain' */ './pages
 const CreatePromise = import(/* webpackChunkName: 'Create' */ './pages/Create');
 const ManagePromise = import(/* webpackChunkName: 'Manage' */ './pages/Manage');
 const SurveyCatalogPromise = import(/* webpackChunkName: 'SurveyCatalog' */ './pages/SurveyCatalog');
+const SurveyInfoPromise = import(/* webpackChunkName: 'SurveyInfo' */ './pages/SurveyInfo');
 const CreatorMain = lazy(() => CreatorMainPromise);
 const Create = lazy(() => CreatePromise);
 const Manage = lazy(() => ManagePromise);
 const SurveyCatalog = lazy(() => SurveyCatalogPromise);
+const SurveyInfo = lazy(() => SurveyInfoPromise);
 
 const CreatorApp = () => {
   const { teams, readError } = useOwnedTeams();
