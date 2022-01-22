@@ -13,6 +13,8 @@ const SurveySetup = ({ teamId, onCreated }) => {
   
   const {showAlert} = useAppContext();
 
+  const [initiated, setInitiated] = useState(false);
+
   const onEdit = (e) => {
     const value =
       isNaN(e.target.value) || e.target.value <= 0 ? "" : Number(e.target.value);
@@ -22,9 +24,12 @@ const SurveySetup = ({ teamId, onCreated }) => {
 
   const startSurvey = async (e) => {
     e.preventDefault();
-
+    
+    if (initiated)
+      return; //should not happen thanks to button disabling... but just in case.
+    setInitiated(true);
     try {
-      const surveyId = await createSurvey(teamId, minAnswers, expAnswers, hoursOpen)
+      const surveyId = await createSurvey(teamId, minAnswers, expAnswers, hoursOpen);
       onCreated(surveyId);
     } catch (e) {
       console.log(e);
@@ -40,7 +45,7 @@ const SurveySetup = ({ teamId, onCreated }) => {
   return (
     <div className="SurveySetup">
       <form onSubmit={startSurvey}>
-        <fieldset className="param-list">
+        <fieldset disabled={initiated} className="param-list">
           <legend>Survey parameters</legend>
           <li className="param-list-entry">
             <label htmlFor="exp">Expected number of responders (≥3)</label>
@@ -63,7 +68,7 @@ const SurveySetup = ({ teamId, onCreated }) => {
             />
           </li>
         </fieldset>
-        <AppBtn text="Start Survey" kind="accent" type="submit" id="start" disabled={!validSettings}/>
+        <AppBtn text="Start Survey" kind="accent" type="submit" id="start" disabled={!validSettings || initiated}/>
       </form>
     </div>
   );
