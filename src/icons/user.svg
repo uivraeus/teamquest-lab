@@ -7,5 +7,5 @@
   stroke-linejoin="round"
 >
   <circle cx="50" cy="26" r="24" />
-  <path d="M 2 98, a 48 48 0 1 1 96 0" />
+  <path d="M 2 98 a 48 48 0 1 1 96 0" />
 </svg>
