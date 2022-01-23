@@ -167,4 +167,4 @@ If, for some reason, the automatic functions within the App don't allow you to a
 If you believe our processing of your personal data infringes data protection laws, you have a legal right to initiate a complaint with a supervisory authority responsible for data protection in accordance with [Article 77 of the GDPR](https://gdpr-info.eu/art-77-gdpr/).
 
 ***
-_Last updated: January 20, 2022_
+_Last updated: January 23, 2022_
