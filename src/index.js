@@ -6,7 +6,6 @@ import { AppContextProvider } from './components/AppContext'
 import { BrowserRouter } from 'react-router-dom'
 import ErrorFallback from './components/ErrorFallback'
 import { errorTracking } from './services/sentry'
-//import reportWebVitals from './reportWebVitals';
 
 errorTracking.init();
 
@@ -22,6 +21,3 @@ ReactDOM.render(
   </React.StrictMode>,
   document.getElementById('root')
 );
-
-//https://create-react-app.dev/docs/measuring-performance/
-//reportWebVitals(console.log);
