@@ -29,7 +29,7 @@ Although the survey answers are not considered as personal data we still think i
 
 The most direct usage of the data is what we present within the App itself such as team maturity results.
 
-We may also use the collected anonymous survey data in private or academic research. 
+We may also use the collected anonymous survey data in private or academic research on group development. 
 
 ## Collection and processing of personal data for all users {:#data-all-users}
 This section applies to _all_ types of users of the App, those that are anonymous as well as those logged in.
@@ -133,16 +133,14 @@ For integration with Sentry's services all data is sent securely via TLS to an H
 * **Retention:** 90 days
 * **Place of processing:** United States
 
-### TBD/TODO: Email Service?
-We use <Company> (<Address>) for e-mail forwarding when you contact us as described on the [Contact](/contact) page.
+### Email Service forwarding
+We use the services provided by One.com (located in Denmark) for e-mail forwarding when you contact us as described on the [Contact](/contact) page.
 
-* **Basis of use:** Forwarding e-mails as part of contact interaction
-* **Personal data collected:** <TODO>
-* **Personal data usage:** <TODO>
-* **Retention:** <TODO>
-* **Place of processing:** <TODO>
-
-<Any additional information of what is logged or otherwise relevant here - any link?>
+* **Basis of use:** Forwarding e-mails as part of contact interaction to Gmail (described below)
+* **Personal data collected:** Your e-mail addresses, meta data and any personal data you explicitly provide in your mail
+* **Personal data usage:** Storage of received and sent e-mails
+* **Retention:** Deleted after forwarding
+* **Place of processing:** In any of One.com's data centers
 
 ### Gmail
 We use Gmail/Google Services provided by Google Ireland Limited (Gordon House, Barrow Street, Dublin 4, Ireland) for handling and storing any e-mail interaction between you and us.
@@ -167,4 +165,4 @@ If, for some reason, the automatic functions within the App don't allow you to a
 If you believe our processing of your personal data infringes data protection laws, you have a legal right to initiate a complaint with a supervisory authority responsible for data protection in accordance with [Article 77 of the GDPR](https://gdpr-info.eu/art-77-gdpr/).
 
 ***
-_Last updated: January 23, 2022_
+_Last updated: January 25, 2022_
