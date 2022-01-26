@@ -7,25 +7,29 @@ import "./SurveySetup.css";
 
 const SurveySetup = ({ teamId, onCreated }) => {
   //TBD: configurable defaults?
-  const [minAnswers, setMinAnswers] = useState(3);
-  const [maxAnswers, setMaxAnswers] = useState(3);
+  const minAnswers = 3;
+  const [expAnswers, setExpAnswers] = useState(3);
   const [hoursOpen, setHoursOpen] = useState(1);
   
   const {showAlert} = useAppContext();
 
+  const [initiated, setInitiated] = useState(false);
+
   const onEdit = (e) => {
     const value =
       isNaN(e.target.value) || e.target.value <= 0 ? "" : Number(e.target.value);
-    if (e.target.id === "min") setMinAnswers(value);
-    else if (e.target.id === "max") setMaxAnswers(value);
+    if (e.target.id === "exp") setExpAnswers(value);
     else if (e.target.id === "hours") setHoursOpen(value);
   };
 
   const startSurvey = async (e) => {
     e.preventDefault();
-
+    
+    if (initiated)
+      return; //should not happen thanks to button disabling... but just in case.
+    setInitiated(true);
     try {
-      const surveyId = await createSurvey(teamId, minAnswers, maxAnswers, hoursOpen)
+      const surveyId = await createSurvey(teamId, minAnswers, expAnswers, hoursOpen);
       onCreated(surveyId);
     } catch (e) {
       console.log(e);
@@ -34,38 +38,27 @@ const SurveySetup = ({ teamId, onCreated }) => {
   };
 
   const validSettings =
-    minAnswers && typeof minAnswers === "number" &&
-    maxAnswers && typeof maxAnswers === "number" &&
-    maxAnswers >= minAnswers &&
+    expAnswers && typeof expAnswers === "number" &&
+    expAnswers >= minAnswers &&
     hoursOpen && typeof hoursOpen === "number";
 
   return (
     <div className="SurveySetup">
       <form onSubmit={startSurvey}>
-        <fieldset className="param-list">
+        <fieldset disabled={initiated} className="param-list">
           <legend>Survey parameters</legend>
           <li className="param-list-entry">
-            <label htmlFor="min">Minimum number of responders:</label>
-            <input
-              type="number"
-              min="1"
-              value={minAnswers}
-              id="min"
-              onChange={onEdit}
-            />
-          </li>
-          <li className="param-list-entry">
-            <label htmlFor="min">Maximum number of responders:</label>
+            <label htmlFor="exp">Expected number of responders (≥3)</label>
             <input
               type="number"
               min={`${minAnswers}`}
-              value={maxAnswers}
-              id="max"
+              value={expAnswers}
+              id="exp"
               onChange={onEdit}
             />
           </li>
           <li className="param-list-entry">
-            <label htmlFor="hours">Hours before survey closes</label>
+            <label htmlFor="hours">Hours before survey closes:</label>
             <input
               type="number"
               min="1"
@@ -75,7 +68,7 @@ const SurveySetup = ({ teamId, onCreated }) => {
             />
           </li>
         </fieldset>
-        <AppBtn text="Start Survey" kind="accent" type="submit" id="start" disabled={!validSettings}/>
+        <AppBtn text="Start Survey" kind="accent" type="submit" id="start" disabled={!validSettings || initiated}/>
       </form>
     </div>
   );

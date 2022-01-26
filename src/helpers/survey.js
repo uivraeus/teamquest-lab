@@ -1,4 +1,4 @@
-import { db } from '../services/firebase';
+import { db}  from '../services/firebase';
 
 //Misc functions for accessing survey related data (e.g. meta-data or responses)
 //(very tuned to how we use Firebase)
@@ -9,7 +9,7 @@ export const load = async (surveyId) => {
     
     //Fetch entire survey node (meta-data and responses)
     try {
-      const snapshot = await db.ref(`surveys/${surveyId}`).once("value");
+      const snapshot = await db.once(`surveys/${surveyId}`);
       if (!snapshot.hasChild('meta/teamId'))
         throw new Error(`No meta-data found for survey ${surveyId}`);
       //Append to id to "raw" object content
@@ -26,18 +26,18 @@ export const load = async (surveyId) => {
 //Load (and subscribe for) all surveys for a specific team
 //Data will be provided to callback function as array with oldest first
 //- second argument is an "error" boolean, indicating issues during parsing
-//This function returns a "reference" that shall be provided to
+//This function returns an "unsubscribe function" that shall be provided to
 //cancelAll to end the subscription (at some point)
 export const getAll = (teamId, cb) => {
-  let dataRef = null; //default return value
+  let unsubscribeFn = null; //default return value
   try {
     if (!cb) //A "better" check would also cover type and signature etc.
       throw new Error("No callback function specified");
 
     //TODO: check that team (child) exists
     
-    const ref = db.ref("surveys").orderByChild("meta/teamId").equalTo(teamId);
-    dataRef = ref.on("value", snapshot => {
+    const query = db.query("surveys", db.orderByChild("meta/teamId"), db.equalTo(teamId))
+    unsubscribeFn = db.onValue(query, snapshot => {
       let surveys = [];
       let anyError = false;
       snapshot.forEach(snap => {
@@ -63,14 +63,13 @@ export const getAll = (teamId, cb) => {
     throw new Error(errMsg);
   }
 
-  return dataRef;
+  return unsubscribeFn;
 };
 
 //Cancel subscription for team data (see getAll above)
-export const cancelAll = (teamId, dbDataRef) => {
+export const cancelAll = (unsubscribeFn) => {
   try {
-    const ref = db.ref("surveys").orderByChild("meta/teamId").equalTo(teamId);
-    ref.off("value", dbDataRef);
+    unsubscribeFn();
   } catch(e) {
     const errMsg = "Could not cancel survey data subscription.";
     console.log(errMsg, e);
@@ -83,8 +82,8 @@ export const cancelAll = (teamId, dbDataRef) => {
 //(light-weight variant of getAll, without any subscription)
 export const fetchAllId = async (teamId) => {
   try {
-    const ref = db.ref("surveys").orderByChild("meta/teamId").equalTo(teamId);
-    const snapshot = await ref.once("value");
+    const query = db.query("surveys", db.orderByChild("meta/teamId"), db.equalTo(teamId)); 
+    const snapshot = await db.once(query);
     let surveyIds = [];
     snapshot.forEach(snap => {
       surveyIds.push(snap.key);
@@ -101,18 +100,18 @@ export const fetchAllId = async (teamId) => {
 //returns (promise of) {id, num}
 export const getLatestQuestionSet = async () => {
   try {
-    const snapshot = await db
-      .ref("question-sets")
-      .orderByChild("createTime")
-      .limitToLast(1)
-      .once("value");
-
-    if (snapshot.numChildren() !== 1)
+    const snapshot = await db.once(
+      db.query("question-sets",
+        db.orderByChild("createTime"),
+        db.limitToLast(1)
+      )
+    );
+    if (snapshot.size !== 1)
       throw new Error("No valid question-set found");
 
     let retVal = {}
     snapshot.forEach((snap) => {
-      retVal = { id: snap.key, num: snap.child("questions").numChildren() };
+      retVal = { id: snap.key, num: snap.child("questions").size };
     });
 
     return retVal;
@@ -136,14 +135,14 @@ export const loadQuestions = async (surveyObject) => {
     //Then read the actual questions for this question-set ID
     //Firebase only use "objects", i.e. not "arrays". But there should be one key for
     //each index in the intended array (not very robust parsing here).
-    const snapshot = await db.ref(`question-sets/${questionsId}`).orderByKey().once("value");
+    const snapshot = await db.once(db.query(`question-sets/${questionsId}`, db.orderByKey()));
     // {questions, answers}
     if (!(snapshot.hasChild("questions") && snapshot.hasChild("answers")))
       throw new Error("Question handle doesn't include questions and answers");
-    const numQuestions = snapshot.child("questions").numChildren();
+    const numQuestions = snapshot.child("questions").size;
     if (!numQuestions)
       throw new Error(`No questions found for question-set id: ${questionsId}.`);
-    const numAnswers = snapshot.child("answers").numChildren();
+    const numAnswers = snapshot.child("answers").size;
     if (numAnswers !== 5)
       throw new Error(`Unexpected number of answers found for question-set id: ${questionsId} (${numAnswers})`);
       
@@ -167,7 +166,7 @@ export const getServerTimeOffset = async () => {
     let sTimeOffset = null;
     
     try {
-      const snapshot = await db.ref('/.info/serverTimeOffset').once('value');
+      const snapshot = await db.once(".info/serverTimeOffset");
       sTimeOffset = snapshot.val();
     } catch (e) {
       const errMsg = "Could not read time offset from database.";
@@ -187,10 +186,8 @@ export const pushResponse = async (surveyId, answers) => {
     // - This is a workaround that is based on the fact that we know:
     //   - fixed number of 1-digit numbers (allows for "simple" firebase rule)
     //   - we must "array:ify" the response when we later extract it anyway
-    // TODO (?): obscure the insertion order to prevent fixed relation between
-    //           answers and answer-time order
     const answersStr = JSON.stringify(answers);
-    await db.ref(`surveys/${surveyId}/responses`).transaction(prev => 
+    await db.runTransaction(`surveys/${surveyId}/responses`, prev =>
       (prev ? `${prev},` : " ") + answersStr);
   } catch(e) {
     const errMsg = "Could not write response to database.";
@@ -383,13 +380,12 @@ export const getMeta = (surveyObj, respHandle = null) => {
 export const createSurvey = async (teamId, minAnswers, maxAnswers, hoursOpen) => {
   try {
     const questions = await getLatestQuestionSet();
-    
     //To make validation rules simpler the various "len" entires are in #characters (when stored)
     //E.g. for 3 questions the answer may be ",[1,4,2]" (i.e. length 8)
     const lenIncrement = questions.num * 2 + 2;
     const minLenAnswers = minAnswers * lenIncrement;
     const maxLenAnswers = maxAnswers * lenIncrement;
-    const result = await db.ref(`surveys`).push({
+    const result = await db.push(`surveys`, {
       meta: {
         ...{ teamId, minLenAnswers, maxLenAnswers, lenIncrement, hoursOpen },
         createTime: { ".sv": "timestamp" },
@@ -410,7 +406,7 @@ export const createSurvey = async (teamId, minAnswers, maxAnswers, hoursOpen) =>
 //NOTE: there is no "undo" for this
 export const deleteSurvey = async (surveyId) => {
   try {
-    await db.ref(`surveys/${surveyId}`).remove();
+    await db.remove(`surveys/${surveyId}`);
   } catch (e) {
     const errMsg = "Could not delete survey. " + e.message;
     console.log(errMsg, e);
@@ -424,7 +420,7 @@ export const setClosingTime = async (surveyId, createTime, hoursFromNow) => {
     const offset = await getServerTimeOffset();
     const closingTime = (new Date()).getTime() + offset + (hoursFromNow * 3600000);
     const newHoursOpen = (closingTime - createTime) / 3600000;
-    await db.ref(`surveys/${surveyId}/meta/hoursOpen`).set(newHoursOpen);
+    await db.set(`surveys/${surveyId}/meta/hoursOpen`, newHoursOpen);
   } catch (e) {
     const errMsg = "Could not update survey. " + e.message;
     console.log(errMsg, e);
@@ -438,11 +434,11 @@ export const addResponders = async (surveyId, numAdditional) => {
   //a single "transaction" on it (avoid separate readout of lenIncrement)
   try {
     //First get the lenIncrement
-    const snapshot = await db.ref(`surveys/${surveyId}/meta/lenIncrement`).once('value');
+    const snapshot = await db.once(`surveys/${surveyId}/meta/lenIncrement`);
     const lenIncrement = snapshot.val();
 
     //Now use a transaction to ensure atomic update
-    await db.ref(`surveys/${surveyId}/meta/maxLenAnswers`).transaction(prev => 
+    await db.runTransaction(`surveys/${surveyId}/meta/maxLenAnswers`, prev => 
       prev + (lenIncrement * numAdditional));
   } catch (e) {
     const errMsg = "Could not update survey. " + e.message;
@@ -457,7 +453,7 @@ export const markCompleted = async (surveyId) => {
   //a single "transaction" on it (avoid sequence of write/read/write)
   try {
     //First close the survey to avoid additional updates
-    await db.ref(`surveys/${surveyId}/meta/hoursOpen`).set(0);
+    await db.set(`surveys/${surveyId}/meta/hoursOpen`, 0);
     
     //Get the current number of responders
     const surveyObject = await load(surveyId);
@@ -465,7 +461,7 @@ export const markCompleted = async (surveyId) => {
     
     //Then update the expected maximum according the current value
     if (currentLen >= surveyObject.meta.minLenAnswers) {
-      await db.ref(`surveys/${surveyId}/meta/maxLenAnswers`).set(currentLen);
+      await db.set(`surveys/${surveyId}/meta/maxLenAnswers`, currentLen);
     } else {
       //Doesn't make sense to have a "max" set to less than "min". The completed survey
       //will not be "good enough" for deriving any result anyway so just let it be.

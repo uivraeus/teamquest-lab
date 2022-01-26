@@ -26,3 +26,5 @@ yarn-error.log*
 /private-notes
 
 debug.log
+
+/public/_headers

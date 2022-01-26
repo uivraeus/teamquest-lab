@@ -1,5 +1,4 @@
 import React from "react";
-import { matchedMaturityStages } from "../helpers/algorithm";
 
 const summaryInto = "Your team's result";
 const zeroStageSummary  = `${summaryInto} doesn't match any stage`; 
@@ -8,9 +7,7 @@ const twoStageSummary   = `${summaryInto} matches both stage`;
 const threeStageSummary = `${summaryInto} matches three different stages;`;
 const fourStageSummary  = `${summaryInto} matches all four stages`;
 
-const ResultInterpretation = ({ resultData }) => {
-  const matches = matchedMaturityStages(resultData);
-
+const ResultInterpretation = ({ matches }) => {
   //Derive the applicable summary string;
   let summary = zeroStageSummary;
   if (matches.length === 1) {

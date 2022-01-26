@@ -5,7 +5,7 @@ import {
   createNewTeam,
   deleteTeam,
   renameTeam,
-  initTransfer /*, removeTransfer, commitTransfer*/,
+  initTransfer,
   removeTransfer,
   commitTransfer,
 } from "../helpers/team";
@@ -14,7 +14,8 @@ import TextInputModal from "./TextInputModal";
 import useAppContext from "../hooks/AppContext";
 import useTeamTracker from "../hooks/TeamTracker";
 import useTransferTracker from "../hooks/TransferTracker";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { absCreatorPath } from "../RoutePaths";
 
 import { ReactComponent as RenameIcon } from "../icons/edit.svg";
 import { ReactComponent as TransferIcon } from "../icons/transferteam.svg";
@@ -32,7 +33,7 @@ import "./TeamAdmin.css";
 //"user" and "teams" always valid here, but teams may be [] (parent's responsibility)
 const TeamAdmin = ({ user, teams }) => {
   const { showAlert, queryConfirm } = useAppContext();
-  const history = useHistory();
+  const navigate = useNavigate();
 
   //What the user selects via the RouteSelect component
   const [selectedTeam, setSelectedTeam] = useState(null);
@@ -156,7 +157,7 @@ const TeamAdmin = ({ user, teams }) => {
         if (confirmed) {
           initTransfer(e.target.id, teamName, user)
             .then((transferId) => {
-              history.push(`/creator/transfer/${transferId}`);
+              navigate(`${absCreatorPath("transfer")}/${transferId}`);
             })
             .catch((err) => {
               showAlert("Data backend error", err.message, "Error");
@@ -222,7 +223,7 @@ const TeamAdmin = ({ user, teams }) => {
     if (!transferData) {
       return; // dito
     }
-    history.push(`/creator/transfer/${transferData.id}`);
+    navigate(`${absCreatorPath("transfer")}/${transferData.id}`);
   };
 
   //Render helpers

@@ -30,20 +30,21 @@
 
 /* Dirty short-cut for this "special" button* (will also affect the logo) */
 .AppHeader-home-logo svg {
-  fill: white !important;
+  stroke: white !important;
 }
 
 /* The "logo" */
 .AppHeader-home-logo > svg {
   /* border: 1px dotted red; */
   margin: 0 0 0 .25em;
+  stroke-width: .08em;
   width: calc(4.3 * var(--font-big));
   height:auto;
 }
 
 /* Keep Home button smaller to make it better fit next to the logo */
 .AppHeader-home-logo > button {
-  margin-bottom: .35em;
+  margin-bottom: .21em;
   width: 1.7em;
   height: 1.7em;
   min-width: 1.7em;

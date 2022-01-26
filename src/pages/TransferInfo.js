@@ -2,8 +2,9 @@ import React, { useEffect, useState } from "react";
 import AppBtn from "../components/AppBtn";
 import { loadTransferData } from "../helpers/team";
 import useAppContext from "../hooks/AppContext";
-import { Link, useParams, useHistory } from "react-router-dom";
+import { Link, useParams, useNavigate } from "react-router-dom";
 import QRCode from "qrcode.react";
+import { absCreatorPath } from "../RoutePaths";
 
 import { ReactComponent as CopyIcon } from "../icons/copy.svg";
 
@@ -18,11 +19,11 @@ const TransferInfo = () => {
   const [transferData, setTransferData] = useState(null);
   const { user, showAlert } = useAppContext();
   const [readError, setReadError] = useState(null);
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const teamName = transferData && transferData.alias;
   const myHost = `${window.location.protocol}//${window.location.host}`;
-  const fullUrl = `${myHost}/creator/inherit/${transferId}`;
+  const fullUrl = `${myHost}${absCreatorPath("inherit")}/${transferId}`;
 
   useEffect(() => {
     //Load the transfer object. (Don't subscribe to any exotic changes, cancellation etc.)
@@ -40,9 +41,9 @@ const TransferInfo = () => {
   useEffect(() => {
     if (readError && showAlert) {
       showAlert("Transfer data load error", readError, "Error");
-      history.replace("/creator/manage"); //just somewhere...
+      navigate(absCreatorPath("manage"), { replace: true }); //just somewhere...
     }
-  }, [readError, showAlert, history]);
+  }, [readError, showAlert, navigate]);
 
   const onCopy = async (e) => {
     try {
@@ -92,7 +93,7 @@ const TransferInfo = () => {
       </p>
       <p>
         Final confirmation and cancellation is managed via the{" "}
-        <Link to={"/creator/manage"}>Manage</Link> section
+        <Link to={absCreatorPath("manage")}>Manage</Link> section
       </p>
     </div>
   );

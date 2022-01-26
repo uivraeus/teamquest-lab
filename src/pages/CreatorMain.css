@@ -1,0 +1,23 @@
+.CreatorMain {
+  display: flex;
+  flex-direction: column;
+}
+
+.CreatorMain > ul {
+  margin: 0;
+  padding-left: 1em;
+}
+
+.CreatorMain li {
+  margin: 0 0 .5em 0;
+  list-style-type: none;
+}
+
+/* avoid too much space above*/
+.CreatorMain li:first-child {
+  margin-top: -.5em;
+}
+
+.CreatorMain > .InfoBlock {
+  margin-top: 2em;
+}

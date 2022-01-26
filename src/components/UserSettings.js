@@ -1,14 +1,15 @@
 import React from 'react';
 import AppBtn from "./AppBtn";
 import { logout } from '../helpers/auth';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+import { absCreatorPath } from '../RoutePaths';
 
 import { ReactComponent as UserIcon } from "../icons/user.svg"
 
 import './UserSettings.css';
 
 const UserSettings = ( {user} ) => {
-    const history = useHistory();
+    const navigate = useNavigate();
     
     const handleLogout = async () => {
         try {
@@ -20,7 +21,7 @@ const UserSettings = ( {user} ) => {
     return (
         <div className="UserSettings">
             <AppBtn text="Log out" kind="menu" id="logout" onClick={handleLogout} />
-            <AppBtn id="manage-user-account" onClick={() => history.push('/creator/manage')}>
+            <AppBtn id="manage-user-account" onClick={() => navigate(absCreatorPath("manage"))}>
                 <UserIcon />
             </AppBtn>
         </div>

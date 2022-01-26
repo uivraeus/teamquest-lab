@@ -51,7 +51,7 @@ const [infoFields, setInfoFields] = useState(["","",""]);
           (meta.ongoing
             ? `closes at ${new Date(meta.closingTime).toLocaleString()}`
             : "is currently closed");
-      const currentNumResponders = `Configured for max ${meta.maxNumResponders} responders`;
+      const currentNumResponders = `Configured for ${meta.maxNumResponders} responders`;
       setInfoFields([dateStr,currentOpenStatus, currentNumResponders]);      
     }
   }, [meta, fadingOut]);

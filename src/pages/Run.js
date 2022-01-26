@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import AnswerNav from '../components/AnswerNav';
 import { getTimeLeft, isOpen, isOpenById, load, loadQuestions, pushResponse } from '../helpers/survey';
 import { Link, useParams } from 'react-router-dom';
+import { absAppPath } from '../RoutePaths';
 
 import './Run.css';
 
@@ -108,7 +109,7 @@ const Run = () => {
               : <p>Loading...</p>      
         }
         {(submitted || !surveyOpen) && teamId  ?
-          <p>Visit the <Link to={`/results/${teamId}`}>Results and History</Link> page to see your team's status</p>
+          <p>Visit the <Link to={`${absAppPath("results")}/${teamId}`}>Results and History</Link> page to see your team's status</p>
           : null
         }
       </>} 

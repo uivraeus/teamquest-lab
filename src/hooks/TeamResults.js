@@ -15,6 +15,11 @@ const isValidForAnalysis = (survey) => {
   return survey.meta.compLev === CompLev.SOME || survey.meta.compLev === CompLev.ALL;
 }
 
+//The underlying algorithms produce output in % with 1pp resolution [0-100]
+//But when presented to the end-users it makes more sense to round to nearest 10pp
+const roundResult = value => 10 * Math.round(value/10);
+const roundResults = values => values.map(v => roundResult(v));
+
 const defaultResult =  { meta: null, maturity: null };
 
 //returns { results, latestResult, analysisError }
@@ -37,8 +42,8 @@ function useTeamResults(teamId) {
         const newResults = validSurveys.map((survey) => {
           verifyInput(survey.respHandle.responses);
           const resp = splitResponses(survey);
-          const efficiency = resp.efficiency ? analyzeEfficiency(resp.efficiency) : null;
-          const maturity = resp.maturity ? analyzeMaturity(resp.maturity) : null;
+          const efficiency = resp.efficiency ? roundResult(analyzeEfficiency(resp.efficiency)) : null;
+          const maturity = resp.maturity ? roundResults(analyzeMaturity(resp.maturity)) : null;
           return { meta: survey.meta, efficiency, maturity };
         });
 

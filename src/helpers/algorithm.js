@@ -63,8 +63,12 @@ const matchedMaturityStages = (maturityAnalysis) => {
   if (!maturityAnalysis || maturityAnalysis.length !==4) {
     return [];
   }
-  //A "match" is defined by a result value > 75
-  return maturityAnalysis.reduce((acc, v, i) => (v > 75) ? acc.concat(i + 1) : acc, []);
+  //A "match" is defined by a result value >= 75
+  //Special case: [3,4] -> [4]
+  //- Teams in stage 4 are expected to also match aspects of stage 3
+  const rawMatch = maturityAnalysis.reduce((acc, v, i) => (v >= 75) ? acc.concat(i + 1) : acc, []);    
+  const match34 = rawMatch.length === 2 && rawMatch[0] === 3;
+  return match34 ? [4] : rawMatch;
 }
 
 //Helper for summing specific questions for each responder

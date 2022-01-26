@@ -1,17 +1,17 @@
 //3rd-party
 import React, {Suspense, lazy} from 'react';
-import { Route, Redirect, Switch } from 'react-router-dom'
+import { Route, Navigate, Routes } from 'react-router-dom'
 
 //App framework components
-import { PrivateRoute, PublicRoute} from './components/AuthRoute';
+import { requireSignedIn, requireSignedOut} from './components/AuthRoute';
 import AppHeader from './components/AppHeader'
 import LoadingIndicator from './components/LoadingIndicator';
-
+import { appPaths as paths } from './RoutePaths';
 import './App.css';
 
 //Lazy loaded components for the sub-pages
 //(chunk names aren't required but makes it easier to analyze in dev tools )
-const Creator = lazy(() => import(/* webpackChunkName: 'Creator' */ './pages/Creator'));
+const CreatorApp = lazy(() => import(/* webpackChunkName: 'CreatorApp' */ './CreatorApp'));
 const Start = lazy(() => import(/* webpackChunkName: 'Start' */ './pages/Start'));
 const Run = lazy(() => import(/* webpackChunkName: 'Run' */ './pages/Run'));
 const Login = lazy(() => import(/* webpackChunkName: 'Login' */ './pages/Login'));
@@ -23,9 +23,8 @@ const MarkdownPage = lazy(() => import(/* webpackChunkName: 'MarkdownPage' */ '.
 const ResultsPagePromise = import(/* webpackChunkName: 'ResultsPage' */ './pages/ResultsPage');
 const ResultsPage = lazy(() => ResultsPagePromise);
 
-
 const App = () => {
-  //Note that the /result route is a bit special; the variant without any
+  //Note that the "results" route is a bit special; the variant without any
   //team-identifier is only available for users who are signed in (who can
   //select one of their teams)
   return (
@@ -34,20 +33,24 @@ const App = () => {
       
         <div className="App-content">
           <Suspense fallback={<LoadingIndicator />}>  
-            <Switch>
-              <PublicRoute exact path="/start" component={Start}></PublicRoute>
-              <PrivateRoute exact path="/results" component={ResultsPage}></PrivateRoute>
-              <Route path="/run/:surveyId" component={Run}></Route>
-              <Route path="/results/:teamId" component={ResultsPage}></Route>
-              <PublicRoute path="/signup" component={Signup}></PublicRoute>
-              <PublicRoute path="/login" component={Login}></PublicRoute>
-              <Route path="/contact" component={Contact}></Route>
-              <Route path="/privacy" render={() => <MarkdownPage mdFileName="privacy"/>}></Route>
-              <Route path="/terms" render={() => <MarkdownPage mdFileName="terms"/>}></Route>
-              <Route path="/reset" component={PasswordReset}></Route>
-              <PrivateRoute path="/creator" component={Creator}></PrivateRoute>
-              <Redirect from="/" to="/start" />
-            </Switch>
+            <Routes>
+
+              <Route path={paths.start} element = {requireSignedOut(<Start/>)}/>
+              <Route path={paths.signup} element = {requireSignedOut(<Signup/>)}/>
+
+              <Route path={paths.results} element = {requireSignedIn(<ResultsPage/>)}/>
+              <Route path={paths.creator + "/*"} element = {requireSignedIn(<CreatorApp/>)}/>
+
+              <Route path={paths.login} element = {<Login/>}/>
+              <Route path={paths.run + "/:surveyId"} element={<Run/>}/>
+              <Route path={paths.results +"/:teamId"} element={<ResultsPage/>}/>
+              <Route path={paths.contact} element={<Contact/>}/>
+              <Route path={paths.privacy} element={<MarkdownPage mdFileName="privacy"/>}/>
+              <Route path={paths.terms} element={<MarkdownPage mdFileName="terms"/>}/>
+              <Route path={paths.passwordReset} element={<PasswordReset/>}/>
+              
+              <Route path="/*" element={<Navigate replace to={paths.start} />}/>
+            </Routes>
           </Suspense>
         </div>
             

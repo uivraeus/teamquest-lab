@@ -1,6 +1,35 @@
-import firebase from "firebase/app";
-import "firebase/auth";
-import "firebase/database";
+import { initializeApp } from "firebase/app";
+import {
+  browserLocalPersistence,
+  browserSessionPersistence,
+  createUserWithEmailAndPassword,
+  deleteUser,
+  EmailAuthProvider,
+  indexedDBLocalPersistence,
+  initializeAuth,
+  onAuthStateChanged,
+  reauthenticateWithCredential,
+  sendEmailVerification,
+  sendPasswordResetEmail,
+  signInWithEmailAndPassword,
+  signOut,
+  updatePassword,
+} from "firebase/auth";
+import {
+  getDatabase,
+  equalTo,
+  limitToLast,
+  onValue,
+  orderByChild,
+  orderByKey,
+  push,
+  query,
+  ref,
+  remove,
+  runTransaction,
+  set,
+  update  
+} from "firebase/database";
 
 const config = {
   apiKey: process.env.REACT_APP_FIREBASE_KEY,
@@ -11,6 +40,76 @@ const config = {
   appId: process.env.REACT_APP_FIREBASE_APP_ID,
   databaseURL: process.env.REACT_APP_FIREBASE_DB_URL
 };
-firebase.initializeApp(config);
-export const auth = firebase.auth;
-export const db = firebase.database();
+const app = initializeApp(config);
+
+// Avoid unnecessary iframe on mobile/safari by not using getAuth()
+// 👉 https://github.com/firebase/firebase-js-sdk/issues/4946#issuecomment-87843361 
+const appAuth = initializeAuth(app, {
+  persistence: [indexedDBLocalPersistence, browserLocalPersistence, browserSessionPersistence]
+});
+
+//Exported (sometimes refined) auth functions
+export const auth = {
+  createUserWithEmailAndPassword: (email, password) => authWrap(createUserWithEmailAndPassword(appAuth, email, password)),
+  deleteUser: deleteUser,
+  onAuthStateChanged: (cb) => onAuthStateChanged(appAuth, cb),
+  sendPasswordResetEmail: (email, actionCodeSettings) => authWrap(sendPasswordResetEmail(appAuth, email, actionCodeSettings)),
+  signInWithEmailAndPassword: (email, password) => authWrap(signInWithEmailAndPassword(appAuth, email, password)),
+  signOut: () => signOut(appAuth),
+  updatePassword: updatePassword,
+  //The reauth-function is abstracted a bit instead of just exporting every detail 
+  reauthenticateCurrentUser: (password) => {
+    const user = appAuth.currentUser;
+    const cred = EmailAuthProvider.credential(user.email, password);
+    return authWrap(reauthenticateWithCredential(user, cred)); 
+  },
+  //The verification-function is abstracted to always operate on the current user
+  sendEmailVerification: (actionCodeSettings) => authWrap(sendEmailVerification(appAuth.currentUser, actionCodeSettings))
+}
+
+//Exported (sometimes refined) db functions
+export const db = {
+  equalTo: equalTo,
+  limitToLast: limitToLast,
+  once: (pathOrQuery) => new Promise((resolve, reject) =>
+    onValue(makeQuery(pathOrQuery), 
+      snap => resolve(snap), 
+      err => reject(err), 
+      { onlyOnce: true })),
+  onValue: onValue,
+  orderByChild: orderByChild,
+  orderByKey: orderByKey,
+  push: (pathOrRef, value) => push(makeQuery(pathOrRef), value),
+  query: (pathOrQuery, ...rest) => query(makeQuery(pathOrQuery), ...rest),
+  // ref: (path) => ref(getDatabase(app), path),
+  remove: (pathOrRef) => remove(makeQuery(pathOrRef)),
+  runTransaction: (pathOrRef, ...rest) => runTransaction(makeQuery(pathOrRef), ...rest),
+  set: (pathOrRef, value) => set(makeQuery(pathOrRef), value),
+  update: (pathOrRef, ...rest) => update(makeQuery(pathOrRef), ...rest)
+}
+
+//Helper for supporting ref/query-strings
+const dbRef = (path) => ref(getDatabase(app), path);
+const makeQuery = (pathOrQuery) => (typeof pathOrQuery === "string" ? dbRef(pathOrQuery) : pathOrQuery );
+
+//Helper for parsing and adjusting some "common" auth (user/usage) errors
+const userErrorSignatures = {
+  "auth/wrong-password": "Wrong password",
+  "auth/user-not-found": "User not recognized",
+  "auth/email-already-in-use": "User account already exists",
+  "auth/network-request-failed": "Network error"
+}
+const authWrap = (promise) => {
+  return promise.catch(err => {
+    if ("string" === typeof err.message) {
+      for (const [signature, message] of Object.entries(userErrorSignatures)) {
+        if (err.message.includes(signature)) {
+          throw new Error(message) // found a match -> replace the with translated error
+        }
+      }
+      //Don't translate the error but remove any explicit "Firebase" references
+      throw new Error(err.message.replace("Firebase", "Backend service"))
+    }
+    throw(new Error("Unexpected authentication error")) // plan-B;
+  })
+}

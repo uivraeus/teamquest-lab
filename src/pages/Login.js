@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import AppBtn from "../components/AppBtn";
 import InfoBlock from "../components/InfoBlock";
-import { Link } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { login } from "../helpers/auth";
+import { absAppPath } from "../RoutePaths";
 
 import "./Login.css";
 
@@ -11,7 +12,15 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const [response, setResponse] = useState(null);
   const [initiated, setInitiated] = useState(false);
-
+  const navigate = useNavigate();
+  
+  const location = useLocation();
+  useEffect(() => {
+    if (location.state && location.state.emailHint) {
+      setEmail(location.state.emailHint);
+    }
+  }, [location])
+  
   const handleChange = (e) => {
     if (e.target.name === "email") setEmail(e.target.value);
     else if (e.target.name === "password") setPassword(e.target.value);
@@ -27,6 +36,7 @@ const Login = () => {
     try {
       setInitiated(true);
       await login(email, password);
+      navigate(absAppPath("creator"), { replace: true });
     } catch (err) {
       setResponse(err.message);
     }
@@ -53,6 +63,7 @@ const Login = () => {
             placeholder="Email"
             name="email"
             type="email"
+            autoComplete="username"
             onChange={handleChange}
             value={email}
           ></input>
@@ -62,6 +73,7 @@ const Login = () => {
             placeholder="Password"
             name="password"
             type="password"
+            autoComplete="current-password"
             onChange={handleChange}
             value={password}
           ></input>
@@ -76,11 +88,11 @@ const Login = () => {
       </form>
       <InfoBlock>
         <p>
-          Forgot your password? <Link to="/reset">Reset</Link> it via email.
+          Forgot your password? <Link to={absAppPath("passwordReset")}>Reset</Link> it via email.
         </p>
         <hr></hr>
         <p>
-          No account? <Link to="/signup">Sign up</Link> to create one.
+          No account? <Link to={absAppPath("signup")}>Sign up</Link> to create one.
         </p>
       </InfoBlock>
     </div>

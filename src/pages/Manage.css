@@ -14,21 +14,8 @@
   list-style-type: none;
 }
 
-/* Special trick here to make the icons appear with equal spacing
- * regardless of 1 or 2 lines of text;
- * - Manage-link::min-height: 3.5em   -> room for two lines
- * - li:first-child::margin-top: -.5em -> avoid too much space above
- */
+/* avoid too much space above */
 .Manage-account li:first-child {
   margin-top: -.5em;
 }
 
-.Manage-account-link {
-  display: flex;
-  align-items: center;
-  min-height: 3.5em; /* see above */
-}
-
-.Manage-account-link > p {
-  margin-left: 1em;
-}

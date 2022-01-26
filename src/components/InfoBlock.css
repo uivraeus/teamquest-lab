@@ -15,8 +15,12 @@
   max-height: 2.2em;
   margin: .5em .5em;
   padding:0;
-  fill: var(--color-border-light);
   border: none;
+}
+
+.InfoBlock-icon > svg {
+  stroke: var(--color-border);
+  stroke-width: .2em;
 }
 
 .InfoBlock-content {
