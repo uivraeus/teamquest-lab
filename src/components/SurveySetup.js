@@ -9,7 +9,7 @@ const SurveySetup = ({ teamId, onCreated }) => {
   //TBD: configurable defaults?
   const minAnswers = 3;
   const [expAnswers, setExpAnswers] = useState(3);
-  const [hoursOpen, setHoursOpen] = useState(1);
+  const [hoursOpen, setHoursOpen] = useState(48);
   
   const {showAlert} = useAppContext();
 
