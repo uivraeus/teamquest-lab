@@ -55,9 +55,11 @@ const MyDot = (props) => {
 const HighlightBar = (props) => {
   const { background, payload, hoverId, selectedId } = props;
   
-  //don't allow too narrow bars (hard to click on)
-  const width = Math.max(9, background.width);
-  const xAdjust = width > background.width ? (width - background.width)/2 : 0;
+  const sampleX = background.x + background.width / 2;
+
+  //don't allow too narrow bars (hard to click on) or too wide (looks weird)
+  const rectWidth = Math.min(13, Math.max(9, background.width));
+  const rectX = sampleX - rectWidth / 2;
 
   //derive highlight-status
   const fill = selectedId === payload.id ? "var(--color-result-selected)" : (
@@ -66,9 +68,9 @@ const HighlightBar = (props) => {
 
   return (
     <rect
-      x={background.x - xAdjust}
+      x={rectX}
       y={background.y}
-      width={width}
+      width={rectWidth}
       height={background.height}
       fill={fill}
     />
