@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import useAppContext from './AppContext'
 import { db } from "../services/firebase";
 
 
@@ -19,8 +18,7 @@ import { db } from "../services/firebase";
  */
 
 const defaultResult = { teams: null, readError:null };
-const useOwnedTeams = () => {
-  const { user, validatedAccess } = useAppContext();
+const useOwnedTeams = (user, validatedAccess) => {
   const [result, setResult] = useState(defaultResult);
   
   const uid = user ? user.uid : null;

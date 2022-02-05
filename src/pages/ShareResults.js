@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import AppBtn from "../components/AppBtn";
-import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import QRCode from "qrcode.react";
 import BackBtnLink from "../components/BackBtnLink";
 import { absAppPath } from "../RoutePaths";
@@ -16,15 +16,8 @@ import './ShareResults.css';
 const ShareResults = ({teams}) => {
   const { teamId } = useParams();
   const navigate = useNavigate();
-  const location = useLocation();
   
-  //We are typically directed to this page from the ResultsPage, which is outside
-  //the "Creator scope". Instead of waiting for Creator to load the "teams" prop
-  //This page supports a null-teams scenario with hand-over of information via
-  //the history state as an interim solution (not the "cleanest" design but I want
-  //the results-url to be identical for authenticated and other users)
-  const ownedTeams = teams || (location.state && location.state.teams) || null;
-  const teamObj = (ownedTeams && ownedTeams.find(t => t.id === teamId));
+  const teamObj = (teams && teams.find(t => t.id === teamId));
   const teamName = teamObj ? teamObj.alias : null;
   useEffect(() => {
     //minimal error handling

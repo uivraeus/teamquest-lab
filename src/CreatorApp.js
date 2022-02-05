@@ -1,8 +1,7 @@
 //3rd-party
-import React, { lazy, useEffect } from 'react';
+import React, { lazy } from 'react';
 import { Navigate, Route, Routes } from 'react-router-dom'
 import { creatorPaths as paths } from './RoutePaths';
-import useOwnedTeams from './hooks/OwnedTeams';
 import useAppContext from './hooks/AppContext';
 import LoadingIndicator from './components/LoadingIndicator';
 
@@ -27,17 +26,7 @@ const SurveyCatalog = lazy(() => SurveyCatalogPromise);
 const SurveyInfo = lazy(() => SurveyInfoPromise);
 
 const CreatorApp = () => {
-  const { teams, readError } = useOwnedTeams();
-  const { showAlert } = useAppContext();
-  
-  //Alert on db read error
-  useEffect( () => {
-    if (readError && showAlert) {
-      showAlert("Data backend error", "Error reading user's team data", "Error", readError);
-      //Don't really know what to do in this case... something is wrong with
-      //the backend DB connection
-    }
-  }, [readError, showAlert])
+  const { teams } = useAppContext();
   
   /**
    * Internal render-helper for pages that require an _initialized_ "teams" prop
@@ -45,10 +34,7 @@ const CreatorApp = () => {
    * loaded/available (see *1* below)
    */
   const teamsPage = (Component ) => {
-    if (readError) {
-      return <p>Can't access user's team configuration</p>
-    }
-    else if (!teams) {
+    if (teams === null) {
       return <LoadingIndicator text="Loading user's team configuration"/>;
     } else {
       return <Component teams={teams}/>
@@ -68,7 +54,7 @@ const CreatorApp = () => {
       <Route path={`${paths.monitor}/:teamId`} element={teamsPage(SurveyCatalog)}/>
       <Route path={paths.new} element={ teamsPage(Create) }/>
       <Route path={`${paths.new}/:teamId`} element={teamsPage(Create) }/>
-      <Route path={`${paths.shareResults}/:teamId`} element={<ShareResults teams={teams}/>}/> {/*1*/}
+      <Route path={`${paths.shareResults}/:teamId`} element={teamsPage(ShareResults)}/>
       <Route path={paths.terminate} element={<TerminateAccount/>}/>
       <Route path={`${paths.transfer}/:transferId`} element={<TransferInfo/>}/>
       <Route path={paths.verify} element={<VerifyAccount/>}/>
