@@ -1,12 +1,9 @@
 import { initializeApp } from "firebase/app";
 import {
-  browserLocalPersistence,
-  browserSessionPersistence,
   createUserWithEmailAndPassword,
   deleteUser,
   EmailAuthProvider,
-  indexedDBLocalPersistence,
-  initializeAuth,
+  getAuth,
   onAuthStateChanged,
   reauthenticateWithCredential,
   sendEmailVerification,
@@ -42,29 +39,23 @@ const config = {
 };
 const app = initializeApp(config);
 
-// Avoid unnecessary iframe on mobile/safari by not using getAuth()
-// 👉 https://github.com/firebase/firebase-js-sdk/issues/4946#issuecomment-87843361 
-const appAuth = initializeAuth(app, {
-  persistence: [indexedDBLocalPersistence, browserLocalPersistence, browserSessionPersistence]
-});
-
 //Exported (sometimes refined) auth functions
 export const auth = {
-  createUserWithEmailAndPassword: (email, password) => authWrap(createUserWithEmailAndPassword(appAuth, email, password)),
+  createUserWithEmailAndPassword: (email, password) => authWrap(createUserWithEmailAndPassword(getAuth(app), email, password)),
   deleteUser: deleteUser,
-  onAuthStateChanged: (cb) => onAuthStateChanged(appAuth, cb),
-  sendPasswordResetEmail: (email, actionCodeSettings) => authWrap(sendPasswordResetEmail(appAuth, email, actionCodeSettings)),
-  signInWithEmailAndPassword: (email, password) => authWrap(signInWithEmailAndPassword(appAuth, email, password)),
-  signOut: () => signOut(appAuth),
+  onAuthStateChanged: (cb) => onAuthStateChanged(getAuth(app), cb),
+  sendPasswordResetEmail: (email, actionCodeSettings) => authWrap(sendPasswordResetEmail(getAuth(app), email, actionCodeSettings)),
+  signInWithEmailAndPassword: (email, password) => authWrap(signInWithEmailAndPassword(getAuth(app), email, password)),
+  signOut: () => signOut(getAuth(app)),
   updatePassword: updatePassword,
   //The reauth-function is abstracted a bit instead of just exporting every detail 
   reauthenticateCurrentUser: (password) => {
-    const user = appAuth.currentUser;
+    const user = getAuth(app).currentUser;
     const cred = EmailAuthProvider.credential(user.email, password);
     return authWrap(reauthenticateWithCredential(user, cred)); 
   },
   //The verification-function is abstracted to always operate on the current user
-  sendEmailVerification: (actionCodeSettings) => authWrap(sendEmailVerification(appAuth.currentUser, actionCodeSettings))
+  sendEmailVerification: (actionCodeSettings) => authWrap(sendEmailVerification(getAuth(app).currentUser, actionCodeSettings))
 }
 
 //Exported (sometimes refined) db functions
