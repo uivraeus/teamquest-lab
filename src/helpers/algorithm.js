@@ -94,14 +94,13 @@ const rangeRatio = (val, min, max) => {
 
 //The normalization is simplified by linear interpolation within
 //a specific percentile interval, with different values for
-//different categories (based on study results from 2.5K+ teams)
+//different categories (based on 142 cases per 2022-02-03)
 //The array order is: [min, 16th, 25th, mean, 75th, 84th, max]
 const indexValues = [0, 16, 25, 50, 75, 84, 100];
-const interval0 = [ 4.00,  7.80,  8.30,  9.65, 11.00, 11.61, 20.00];
-const interval1 = [ 3.00,  5.29,  5.92,  7.37,  8.75,  9.60, 15.00];
-const interval2 = [ 3.00,  8.83,  9.50, 10.65, 12.00, 12.57, 15.00];
-const interval3 = [ 3.00,  9.93, 10.50, 11.34, 12.50, 13.00, 15.00];
-
+const interval0 = [ 4.00,  7.00,  8.00, 10.00, 12.00, 12.00, 20.00];
+const interval1 = [ 3.00,  4.00,  5.00,  7.00,  8.00,  8.00, 15.00];
+const interval2 = [ 3.00, 12.00, 12.00, 13.00, 14.00, 14.00, 15.00];
+const interval3 = [ 3.00, 11.00, 11.25, 13.00, 14.00, 14.00, 15.00];
 
 //Helper for determining the applicable interval index for a value
 //- interval must an sorted array

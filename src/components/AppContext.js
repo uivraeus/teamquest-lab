@@ -3,9 +3,11 @@ import AlertModal from './AlertModal';
 import { errorTracking } from '../services/sentry';
 import QueryModal from './QueryModal';
 import { onValidatedAccess, validateAccess } from '../helpers/user';
+import useOwnedTeams from '../hooks/OwnedTeams';
 
 //Auth backend
 import { auth } from '../services/firebase'
+import { logout } from '../helpers/auth';
 
 /**
  * The application context provides a set of "global" attributes and
@@ -19,6 +21,7 @@ const AppContext = createContext({
   user: null,
   verifiedAccount: false,
   validatedAccess: null, // null until status fetched from backend (then true/false)
+  teams: null, //teams owned by the user (if logged in), null until known ([] if none)
   queryConfirm: (heading, text, resultCb, type) => {},
   showAlert: (heading, text, type, code) => {},
   skipVerification: () => {}
@@ -71,6 +74,7 @@ const AppContextProvider = ({ children }) => {
     user: null,
     verifiedAccount: false,
     validatedAccess: null, // null until status fetched from backend (then true/false)
+    teams: null,
     ...fixedContext
   });
 
@@ -85,6 +89,7 @@ const AppContextProvider = ({ children }) => {
         user,
         verifiedAccount: !!user && (user.emailVerified || prev.verifiedAccount),
         validatedAccess: !!user ? prev.validatedAccess : null,
+        teams: prev.teams,
         ...fixedContext
       }));
     });
@@ -132,6 +137,19 @@ const AppContextProvider = ({ children }) => {
         unsubscribeFn();
     };      
   }, [context.user, fixedContext])
+
+  //Keep track of teams owned by the logged in user
+  const { teams, readError } = useOwnedTeams(context.user, context.validatedAccess);
+  useEffect( () => {
+    setContext(prev => ({ ...prev, teams }))
+  }, [teams])
+  useEffect( () => {
+    if (readError) {
+      fixedContext.showAlert("Data backend error", "Error reading user's team data", "Error", readError);
+      //Don't really know what to do in this case... something is wrong with the backend DB connection
+      logout()
+    }
+  }, [readError, fixedContext])
   
   //Basically render all possible modals and then the actual (wrapped) components
   //if the initial authentication check has completed.

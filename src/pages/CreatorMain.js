@@ -24,9 +24,7 @@ const menuItems = [
 
 const CreatorMain = ({ teams }) => {
   //Make sub-pages know where they came from (what "back" implies) 
-  //Also include "teams" (if available) for jump-starting ownership check for
-  //"dual private/public use" pages                    
-  const historyState = {prevPage: "Main menu", teams};
+  const historyState = {prevPage: "Main menu"};
   
   //If we enter the signed in part of the app without any team(s), then help the
   //user understand that the first thing to do is to create a team.

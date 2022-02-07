@@ -31,95 +31,95 @@ describe("Analyze maturity matching", () => {
     expect(analyzeMaturity(inputResponses)).toEqual(expAnalysisResult);
   });
 
-  test("Approx Mean: Dependency and Inclusion", () => {
+  test("Just above Mean: Dependency and Inclusion", () => {
     //questions 1,5,9 and 13
-    //Mean corresponds to avg of 9.65 
-    //-> 3x10 + 2x9 -> avg 9.6 -> just below mean (49.07...)
+    //Mean corresponds to avg of 10.00 
+    //-> 4x11 + 1x8 -> avg 10.40 -> { 5 = 25*0.4/2 } -> 55%
     const inputResponses = dbFormat([
     /* |       |       |       | */
-      [1,1,1,1,5,1,1,1,1,1,1,1,3],
-      [2,1,1,1,4,1,1,1,3,1,1,1,1],
-      [3,1,1,1,3,1,1,1,2,1,1,1,2],
-      [4,1,1,1,2,1,1,1,2,1,1,1,1],
-      [5,1,1,1,1,1,1,1,1,1,1,1,2]
+      [1,1,1,1,5,1,1,1,2,1,1,1,3],
+      [2,1,1,1,4,1,1,1,4,1,1,1,1],
+      [3,1,1,1,3,1,1,1,3,1,1,1,2],
+      [4,1,1,1,2,1,1,1,4,1,1,1,1],
+      [5,1,1,1,1,1,1,1,1,1,1,1,1]
     ]);
-    const expAnalysisResult = [49,0,0,0];
+    const expAnalysisResult = [55,0,0,0];
     const result = analyzeMaturity(inputResponses); 
     result.forEach((r,i) => {
       expect(r).toBeCloseTo(expAnalysisResult[i]);
     });
   });
 
-  test("Approx 25% Counter-Dependency and Fight", () => {
+  test("Just below 25%: Counter-Dependency and Fight", () => {
     //questions 2,6 and 10
-    //25% corresponds to avg of 5.92
-    //-> 3x5 + 1x8 + 1x7 -> avg 6 -> just above 25% (26.38) 
+    //25% corresponds to avg of 5.00
+    //-> 3x5 + 1x4 + 1x3 -> avg 4.40 -> { 3.6 = 9*0.4/1 } -> 19.6% = 20% (rounded)
     const inputResponses = dbFormat([
     /*   |       |       |       */
       [1,1,1,1,1,2,1,1,1,2,1,1,1],
       [1,3,1,1,1,1,1,1,1,1,1,1,1],
       [1,2,1,1,1,1,1,1,1,2,1,1,1],
-      [1,4,1,1,1,3,1,1,1,1,1,1,1],
-      [1,5,1,1,1,1,1,1,1,1,1,1,1]
+      [1,1,1,1,1,2,1,1,1,1,1,1,1],
+      [1,1,1,1,1,1,1,1,1,1,1,1,1]
     ]);
-    const expAnalysisResult = [0,26,0,0];
+    const expAnalysisResult = [0,20,0,0];
     const result = analyzeMaturity(inputResponses); 
     result.forEach((r,i) => {
       expect(r).toBeCloseTo(expAnalysisResult[i]);
     });
   });
 
-  test("75% Trust and Structure", () => {
+  test("A bit below 75%: Trust and Structure", () => {
     //questions 3,7 and 11
-    //75% corresponds to avg of 12.00
-    //-> 12 + 13 + 11 + 14 + 10-> avg 12 -> 75% 
+    //75% corresponds to avg of 14.00
+    //-> 13 + 14 + 14 + 15 + 12-> avg 13.6 -> { 15 = 25*0.6/1} -> 65%
     const inputResponses = dbFormat([
     /*     |       |       |     */
-      [1,1,5,1,1,1,5,1,1,1,2,1,1],
-      [1,1,4,1,1,1,4,1,1,1,5,1,1],
-      [1,1,3,1,1,1,4,1,1,1,4,1,1],
-      [1,1,5,1,1,1,5,1,1,1,4,1,1],
-      [1,1,2,1,1,1,5,1,1,1,3,1,1]
+      [1,1,5,1,1,1,5,1,1,1,3,1,1],
+      [1,1,4,1,1,1,5,1,1,1,5,1,1],
+      [1,1,5,1,1,1,4,1,1,1,5,1,1],
+      [1,1,5,1,1,1,5,1,1,1,5,1,1],
+      [1,1,4,1,1,1,5,1,1,1,3,1,1]
     ]);
-    const expAnalysisResult = [0,0,75,0];
+    const expAnalysisResult = [0,0,65,0];
     const result = analyzeMaturity(inputResponses); 
     result.forEach((r,i) => {
       expect(r).toBeCloseTo(expAnalysisResult[i]);
     });
   });
 
-  test("84% Work and Productivity", () => {
+  test("A bit above 84%: Work and Productivity", () => {
     //questions 4,8 and 12
-    //84% corresponds to avg of 13.00
-    //-> 13 + 12 + 14 + 11 + 15-> avg 13 -> 84% 
+    //84% corresponds to avg of 14.00
+    //-> 15 + 14 + 15 + 13 + 15-> avg 14.4 -> { 6.4 = 16*0.4/1} -> 90.4% (90 rounded)
     const inputResponses = dbFormat([
     /*       |       |       |   */
-      [1,1,1,4,1,1,1,4,1,1,1,5,1],
-      [1,1,1,3,1,1,1,5,1,1,1,4,1],
-      [1,1,1,5,1,1,1,4,1,1,1,5,1],
-      [1,1,1,4,1,1,1,3,1,1,1,4,1],
+      [1,1,1,5,1,1,1,5,1,1,1,5,1],
+      [1,1,1,4,1,1,1,5,1,1,1,5,1],
+      [1,1,1,5,1,1,1,5,1,1,1,5,1],
+      [1,1,1,3,1,1,1,5,1,1,1,5,1],
       [1,1,1,5,1,1,1,5,1,1,1,5,1]
     ]);
-    const expAnalysisResult = [0,0,0,84];
+    const expAnalysisResult = [0,0,0,90];
     const result = analyzeMaturity(inputResponses); 
     result.forEach((r,i) => {
       expect(r).toBeCloseTo(expAnalysisResult[i]);
     });
   });
   
-  test("Approx 16% Work and Productivity", () => {
+  test("Just below 16% Work and Productivity", () => {
     //questions 4,8 and 12
-    //16% corresponds to avg of 9.93
-    //-> 4x10 + 1x9-> avg 9.8 -> just below 16% (15.70) 
+    //16% corresponds to avg of 11.00
+    //-> 4x11 + 1x9-> avg 10.6 -> { 15.2 = 16*7.6/8 } -> 15.2% (15 rounded) 
     const inputResponses = dbFormat([
     /*       |       |       |   */
-      [1,1,1,4,1,1,1,4,1,1,1,2,1],
-      [1,1,1,3,1,1,1,2,1,1,1,5,1],
-      [1,1,1,2,1,1,1,5,1,1,1,3,1],
-      [1,1,1,1,1,1,1,5,1,1,1,4,1],
+      [1,1,1,4,1,1,1,4,1,1,1,3,1],
+      [1,1,1,3,1,1,1,3,1,1,1,5,1],
+      [1,1,1,2,1,1,1,5,1,1,1,4,1],
+      [1,1,1,1,1,1,1,5,1,1,1,5,1],
       [1,1,1,3,1,1,1,3,1,1,1,3,1]
     ]);
-    const expAnalysisResult = [0,0,0,16];
+    const expAnalysisResult = [0,0,0,15];
     const result = analyzeMaturity(inputResponses); 
     result.forEach((r,i) => {
       expect(r).toBeCloseTo(expAnalysisResult[i]);

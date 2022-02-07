@@ -35,6 +35,15 @@ async function main() {
     headersContent = headersContent.replace(/CSP_PLACEHOLDER_RTDB_PATTERN/g, cspRtdbPattern)
     console.log("- Configured CSP headers for RTDB access")
 
+    // Firebase auth seems to (sometime on mobile?) require loading an iframe from the
+    // auth-domain, so add a rule for that.
+    // Assume/require that frame-src starts with 'self' in the template
+    const authDomain = process.env.REACT_APP_FIREBASE_AUTH_DOMAIN
+    if (!authDomain) throw new Error("REACT_APP_FIREBASE_AUTH_DOMAIN not defined (or zero-length)")
+    const replaceResult = `frame-src 'self' https://${authDomain}`
+    headersContent = headersContent.replace(/frame-src 'self'/, replaceResult)
+    console.log("- Configured CSP headers for auth iframe")
+
     // For Sentry, explicit and complete domain names are used (incl protocol)
     const useSentry = !!process.env.REACT_APP_SENTRY_DSN
     if (useSentry) {
