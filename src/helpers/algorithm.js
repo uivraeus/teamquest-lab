@@ -97,10 +97,10 @@ const rangeRatio = (val, min, max) => {
 //different categories (based on 142 cases per 2022-02-03)
 //The array order is: [min, 16th, 25th, mean, 75th, 84th, max]
 const indexValues = [0, 16, 25, 50, 75, 84, 100];
-const interval0 = [ 4.00,  7.00,  8.00, 10.00, 12.00, 12.00, 20.00];
-const interval1 = [ 3.00,  4.00,  5.00,  7.00,  8.00,  8.00, 15.00];
-const interval2 = [ 3.00, 12.00, 12.00, 13.00, 14.00, 14.00, 15.00];
-const interval3 = [ 3.00, 11.00, 11.25, 13.00, 14.00, 14.00, 15.00];
+const interval0 = [ 4.000,  8.000,  8.458,  9.878, 11.511, 12.000, 20.000];
+const interval1 = [ 3.000,  5.250,  5.486,  6.589,  7.637,  8.170, 15.000];
+const interval2 = [ 3.000, 11.060, 12.363, 12.702, 13.762, 13.936, 15.000];
+const interval3 = [ 3.000, 11.160, 11.950, 12.434, 13.350, 13.723, 15.000];
 
 //Helper for determining the applicable interval index for a value
 //- interval must an sorted array
