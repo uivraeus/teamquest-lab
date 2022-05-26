@@ -1,9 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import AppBtn from "./AppBtn";
-import { Modal } from 'react-responsive-modal'
+import Modal from 'react-modal'
 
-//use default class names and styling, with a few overrides
-import 'react-responsive-modal/styles.css'
 import './QueryModal.css'
 
 
@@ -44,7 +42,12 @@ const QueryModal = ({ query, onClose = () => {} }) => {
     cb && cb(positive);
   }
   return (
-    <Modal open={!!query} onClose={() => onResponse(false)} closeOnOverlayClick={false} center>
+    <Modal
+      isOpen={!!query}
+      onRequestClose={() => onResponse(false)}
+      className="ModalDefaults-Content QueryModal"
+      overlayClassName="ModalDefaults-Overlay QueryModal-Overlay" //override defaults to ensure proper z-index
+    >
       <div className="QueryModal">
         <h3>{content.heading}</h3>
         <p>{content.text}</p>

@@ -1,4 +1,5 @@
 import React, { createContext, useEffect, useState } from 'react';
+import Modal from 'react-modal'
 import AlertModal from './AlertModal';
 import { errorTracking } from '../services/sentry';
 import QueryModal from './QueryModal';
@@ -8,6 +9,12 @@ import useOwnedTeams from '../hooks/OwnedTeams';
 //Auth backend
 import { auth } from '../services/firebase'
 import { logout } from '../helpers/auth';
+
+//Default settings for all modals in the app (see http://reactcommunity.org/react-modal/accessibility/)
+Modal.setAppElement('#root');
+Modal.defaultProps.closeTimeoutMS=300
+Modal.defaultProps.shouldCloseOnOverlayClick=false
+Modal.defaultProps.overlayClassName="ModalDefaults-Overlay ModalDefaults-Overlay-z-index"
 
 /**
  * The application context provides a set of "global" attributes and

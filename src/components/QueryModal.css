@@ -1,3 +1,7 @@
+.QueryModal-Overlay {
+  z-index: 2000; /*Larger than default (1000) but smaller than alert-modals (3000) */
+}
+
 .QueryModal {
   max-width: 480px;
 }
