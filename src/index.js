@@ -1,5 +1,5 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
+import { createRoot } from 'react-dom/client';
 import './index.css';
 import App from './App';
 import { AppContextProvider } from './components/AppContext'
@@ -9,7 +9,8 @@ import { errorTracking } from './services/sentry'
 
 errorTracking.init();
 
-ReactDOM.render(
+const root = createRoot(document.getElementById('root'));
+root.render(
   <React.StrictMode>
     <errorTracking.ErrorBoundary fallback={<ErrorFallback/>}>
       <BrowserRouter>
@@ -18,6 +19,5 @@ ReactDOM.render(
         </AppContextProvider>
       </BrowserRouter>
     </errorTracking.ErrorBoundary>
-  </React.StrictMode>,
-  document.getElementById('root')
+  </React.StrictMode>
 );

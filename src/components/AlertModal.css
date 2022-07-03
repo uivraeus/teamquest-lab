@@ -1,3 +1,7 @@
+.AlertModal-Overlay {
+  z-index: 3000; /*Larger than default (1000) and query-modals (2000) */
+}
+
 .Alert-Heading {
   display: flex;
   align-items: center;

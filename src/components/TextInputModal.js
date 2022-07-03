@@ -1,12 +1,10 @@
 import React, { useEffect, useState } from "react";
 import AppBtn from "./AppBtn";
-import { Modal } from "react-responsive-modal";
+import Modal from "react-modal";
 
 import { ReactComponent as CancelIcon } from "../icons/cancel.svg";
 import { ReactComponent as ConfirmIcon } from "../icons/confirmation.svg";
 
-//use default class names and styling, with a few overrides
-import "react-responsive-modal/styles.css";
 import "./TextInputModal.css";
 
 //id: null -> modal disabled
@@ -30,8 +28,8 @@ const TextInputModal = ({
 
   //Ensure input reset if id changes
   useEffect(() => {
-    setValue("");
     if (id) {
+      setValue("");
       setActive(true);
     }
   }, [id]);
@@ -54,13 +52,9 @@ const TextInputModal = ({
 
   return (
     <Modal
-      open={active}
-      onClose={onCancel}
-      closeOnOverlayClick={false}
-      center
-      classNames={{ modal: "TextInputModal" }}
-      onAnimationEnd={() => setValue("")}
-      showCloseIcon={false}
+      isOpen={active}
+      onRequestClose={onCancel}
+      className="ModalDefaults-Content TextInputModal"
     >
       <h4>{label}</h4>
       <form onSubmit={onCommit}>

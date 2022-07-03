@@ -1,12 +1,10 @@
 import React, { useEffect, useState } from "react";
 import AppBtn from "./AppBtn";
-import { Modal } from "react-responsive-modal";
+import Modal from "react-modal";
 
 import { ReactComponent as InfoIcon } from "../icons/info.svg";
 import { ReactComponent as WarningIcon } from "../icons/warning.svg";
 
-//use default class names and styling, with a few overrides
-import "react-responsive-modal/styles.css";
 import "./AlertModal.css";
 
 export const Alert = {
@@ -39,11 +37,10 @@ const AlertModal = ({ alert, onClose = () => {} }) => {
   const alertTypeClass = `AlertModal Alert-${content.type}`;
   return (
     <Modal
-      open={!!alert}
-      onClose={() => onClose()}
-      closeOnOverlayClick={false}
-      center
-      showCloseIcon={false}
+      isOpen={!!alert}
+      onRequestClose={() => onClose()}
+      className="ModalDefaults-Content AlertModal"
+      overlayClassName="ModalDefaults-Overlay AlertModal-Overlay" //override defaults to ensure proper z-index
     >
       <div className={alertTypeClass}>
         <div className="Alert-Heading">

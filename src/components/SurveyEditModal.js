@@ -9,10 +9,8 @@ import {
   markCompleted,
   setClosingTime,
 } from "../helpers/survey";
-import { Modal } from "react-responsive-modal";
+import Modal from "react-modal";
 
-//use default class names and styling, with a few overrides
-import "react-responsive-modal/styles.css";
 import "./SurveyEditModal.css";
 
 const SurveyEditModal = ({ meta, onClose }) => {
@@ -111,13 +109,10 @@ const [infoFields, setInfoFields] = useState(["","",""]);
   const allowComplete = editMeta && editMeta.compLev === CompLev.SOME;
   return (
     <Modal
-      open={!!editMeta}
-      onClose={onClosing}
-      closeOnOverlayClick={false}
-      showCloseIcon={false}
-      center
-      classNames={{ modal: "SurveyEditModal" }}
-      onAnimationEnd={()=>setFadingOut(false)}
+      isOpen={!!editMeta}
+      onRequestClose={onClosing}
+      className="ModalDefaults-Content SurveyEditModal"
+      onAfterClose={()=>setFadingOut(false)}
     >
       <h3>{infoFields[0]}</h3>
       <p>{infoFields[1]}</p>
