@@ -92,6 +92,7 @@ const userErrorSignatures = {
 }
 const authWrap = (promise) => {
   return promise.catch(err => {
+    console.log("@authWrap/catch, err =", err)
     if ("string" === typeof err.message) {
       for (const [signature, message] of Object.entries(userErrorSignatures)) {
         if (err.message.includes(signature)) {

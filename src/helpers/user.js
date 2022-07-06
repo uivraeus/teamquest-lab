@@ -58,8 +58,10 @@ export const confirmPassword = async (password) => {
 
 // Update user's entry in the validated-users list (keep track of latest access)
 export const validateAccess = async (user) => {
+  console.log("@validateAccess")
   // No check w.r.t. security rules here. Will throw if misused.
   await db.set(`v_users/${user.uid}`, {".sv": "timestamp"});
+  console.log("@ <- validateAccess") 
 }
 
 // Subscribe to changes in the user's entry in the validated-users list
@@ -67,9 +69,13 @@ export const validateAccess = async (user) => {
 // ie. true if validated
 // Returns an unsubscribe-function
 export const onValidatedAccess = (user, callback) => {
+  console.log("@onValidatedAccess")
   const unsubscribeFn = db.onValue(db.query(`v_users/${user.uid}`), snapshot => {
-    callback(!!snapshot.val());
+    const value = !!snapshot.val()
+    console.log("@onValidatedAccess: onValue,", user.email, value)
+    callback(value);
   }, error => {
+    console.log("@onValidatedAccess: onValue/error for", user.email)
     callback(false, error);
   });
   return unsubscribeFn;

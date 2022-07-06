@@ -23,11 +23,16 @@ const VerifyAccount = () => {
   const triggerVerification = async (e) => {
     setPending(true);
     try {
+      console.log("@triggerVerification, before verify()")
       await verify();
+      console.log("@triggerVerification, after verify()")
       showAlert("E-mail sent", "Check your in-box for an e-mail with further instructions.\nAfter following those, you can login again.");
       //The user must log in again to sync the (verified) authentication state
+      console.log("@triggerVerification, call navigate()")
       navigate(absAppPath("login"), { replace: true, state: { emailHint: user.email } });
+      console.log("@triggerVerification, call logout()")
       logout();
+      console.log("@triggerVerification, done")
     } catch(e) {
       setPending(false);
       showAlert("Operation failed", "Could not initiate sending of verification e-mail", "Error", e.message);

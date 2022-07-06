@@ -24,6 +24,7 @@ export function update(oldPassword, password) {
 
 export function verify(redirectUrl = null) {
   var actionCodeSettings = redirectUrl ? { url: redirectUrl } : undefined;
+  console.log("@verify")
   return auth.sendEmailVerification(actionCodeSettings);
 }
 

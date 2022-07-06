@@ -90,7 +90,9 @@ const AppContextProvider = ({ children }) => {
     //Given that "fixedContext" really is fixed, there should only be one (1)
     //invocation of this function... but keep track of and apply "unsubscribe"
     //anyway as some kind of extra (/over) defensive measure 
+    console.log("@AppContext/useEffect, fixedContext =", JSON.stringify(fixedContext))
     const unsubscribe = auth.onAuthStateChanged((user) => {
+      console.log("@AppContext/useEffect, onAuthStateChanged, user =", JSON.stringify(user))
       setContext(prev => ({
         initialAuthChecked: true, //one-time toggling false->true
         user,
@@ -122,6 +124,7 @@ const AppContextProvider = ({ children }) => {
   //- keep track of local action and ignore the first callback-response
   //- (TODO: Think of multiple devices...)
   useEffect( () => {
+    console.log("@AppContext/useEffect, verifiedAccount =", context.verifiedAccount)
     if (context.verifiedAccount) {
       validateAccess(context.user)
       .catch(e => {
@@ -132,6 +135,7 @@ const AppContextProvider = ({ children }) => {
   useEffect( () => {
     let unsubscribeFn = null;
     if (context.user) {
+      console.log("@AppContext/useEffect user: subscribe to validatedAccess for", context.user.email)
       unsubscribeFn = onValidatedAccess(context.user, (validated, e) => {
         if (e) {
           fixedContext.showAlert("Data backend error", "Couldn't retrieve access validation status", "Error", e.message || e);
@@ -140,8 +144,10 @@ const AppContextProvider = ({ children }) => {
       });
     }        
     return () => {
-      if (unsubscribeFn)
+      if (unsubscribeFn) {
+        console.log("@AppContext/useEffect user: unsubscribe from validatedAccess for", context.user.email)
         unsubscribeFn();
+      }
     };      
   }, [context.user, fixedContext])
 
