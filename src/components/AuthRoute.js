@@ -2,6 +2,7 @@ import React, {useEffect} from "react";
 import useAppContext from "../hooks/AppContext";
 import { Navigate, useLocation, useNavigate } from "react-router-dom";
 import { absAppPath, absCreatorPath } from "../RoutePaths";
+import { flushSync } from "react-dom";
 
 /**
  * Exported helper functions for wrapping the target element with components
@@ -46,7 +47,10 @@ const RequireSignedIn = ({ children }) => {
   const navigate = useNavigate();
   useEffect(()=> {
     if (redirectViaEffect) {
-      navigate(redirect, { replace: true })
+      console.log("@redirect vi useEffect")
+      flushSync(() => 
+        navigate(redirect, { replace: true })
+      );
     }
   });
 

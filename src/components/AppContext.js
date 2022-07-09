@@ -1,4 +1,5 @@
 import React, { createContext, useEffect, useState } from 'react';
+import { flushSync } from 'react-dom';
 import Modal from 'react-modal'
 import AlertModal from './AlertModal';
 import { errorTracking } from '../services/sentry';
@@ -90,19 +91,22 @@ const AppContextProvider = ({ children }) => {
     //Given that "fixedContext" really is fixed, there should only be one (1)
     //invocation of this function... but keep track of and apply "unsubscribe"
     //anyway as some kind of extra (/over) defensive measure 
-    console.log("@AppContext/useEffect, fixedContext =", JSON.stringify(fixedContext))
     const unsubscribe = auth.onAuthStateChanged((user) => {
-      console.log("@AppContext/useEffect, onAuthStateChanged, user =", JSON.stringify(user))
-      setContext(prev => ({
-        initialAuthChecked: true, //one-time toggling false->true
-        user,
-        verifiedAccount: !!user && (user.emailVerified || prev.verifiedAccount),
-        validatedAccess: !!user ? prev.validatedAccess : null,
-        teams: prev.teams,
-        ...fixedContext
-      }));
+      console.log("@AppContext/useEffect, onAuthStateChanged, user =", user ? `${user.email}/${user.emailVerified}` : "<null>")
+      //@@@ justify...
+      flushSync(() => 
+        setContext(prev => ({
+          initialAuthChecked: true, //one-time toggling false->true
+          user,
+          verifiedAccount: !!user && (user.emailVerified || prev.verifiedAccount),
+          validatedAccess: !!user ? prev.validatedAccess : null,
+          teams: prev.teams,
+          ...fixedContext
+        }))
+      );
     });
     return () => {
+      console.log("@@@ ??? DOES THIS EVER RUN?")
       unsubscribe();
     }
   }, [fixedContext]);
@@ -124,7 +128,7 @@ const AppContextProvider = ({ children }) => {
   //- keep track of local action and ignore the first callback-response
   //- (TODO: Think of multiple devices...)
   useEffect( () => {
-    console.log("@AppContext/useEffect, verifiedAccount =", context.verifiedAccount)
+    console.log("@AppContext/useEffect, user =", context.user ? `${context.user.email}/${context.user.emailVerified}` : "<null>", "verifiedAccount =", context.verifiedAccount)
     if (context.verifiedAccount) {
       validateAccess(context.user)
       .catch(e => {
@@ -140,7 +144,10 @@ const AppContextProvider = ({ children }) => {
         if (e) {
           fixedContext.showAlert("Data backend error", "Couldn't retrieve access validation status", "Error", e.message || e);
         }
-        setContext(prev => ({ ...prev, validatedAccess: validated }))
+        //@@@ justify ...
+        flushSync(() =>
+          setContext(prev => ({ ...prev, validatedAccess: validated }))
+        );
       });
     }        
     return () => {
@@ -154,7 +161,10 @@ const AppContextProvider = ({ children }) => {
   //Keep track of teams owned by the logged in user
   const { teams, readError } = useOwnedTeams(context.user, context.validatedAccess);
   useEffect( () => {
-    setContext(prev => ({ ...prev, teams }))
+    //@@@ justify...
+    flushSync(()=>
+      setContext(prev => ({ ...prev, teams }))
+    );
   }, [teams])
   useEffect( () => {
     if (readError) {

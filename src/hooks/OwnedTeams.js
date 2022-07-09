@@ -27,6 +27,7 @@ const useOwnedTeams = (user, validatedAccess) => {
     let unsubscribeFn = null; 
     if (uid && validatedAccess) {
       //Subscribe to teams data for the user;
+      console.log("@useOwnedTeams, user:", uid)
       query = db.query("teams", db.orderByChild("uid"), db.equalTo(uid));
       try {
         unsubscribeFn = db.onValue(query, (snapshot) => {
@@ -39,13 +40,14 @@ const useOwnedTeams = (user, validatedAccess) => {
             //TODO: sort teams by "alias"?
             setResult({ ...defaultResult, teams: dbTeams });
           } catch (e) {
+            console.log("@useOwnedTeams/onValue (inner) error:", e.message)
             setResult({ ...defaultResult, readError: e.message });
           }
         }, e => {
           setResult({ ...defaultResult, readError: e.message });
         });
       } catch (e) {
-        console.log(e);
+        console.log("@useOwnedTeams/onValue (outer) error:", e.message)
         setResult({ ...defaultResult, readError: e.message });
       }
     } else {
@@ -54,6 +56,7 @@ const useOwnedTeams = (user, validatedAccess) => {
 
     return () => {
       if (unsubscribeFn) {
+        console.log("@useOwnedTeams unsubscribe for user:", uid)
         unsubscribeFn();
       }          
     };

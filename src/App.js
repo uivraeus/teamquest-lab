@@ -14,11 +14,13 @@ import './App.css';
 const CreatorApp = lazy(() => import(/* webpackChunkName: 'CreatorApp' */ './CreatorApp'));
 const Start = lazy(() => import(/* webpackChunkName: 'Start' */ './pages/Start'));
 const Run = lazy(() => import(/* webpackChunkName: 'Run' */ './pages/Run'));
-const Login = lazy(() => import(/* webpackChunkName: 'Login' */ './pages/Login'));
 const Signup = lazy(() => import(/* webpackChunkName: 'Signup' */ './pages/Signup'));
 const PasswordReset = lazy(() => import(/* webpackChunkName: 'PasswordReset' */ './pages/PasswordReset'));
 const Contact = lazy(() => import(/* webpackChunkName: 'Contact' */ './pages/Contact'));
 const MarkdownPage = lazy(() => import(/* webpackChunkName: 'MarkdownPage' */ './pages/MarkdownPage'));
+//Preload the Login page to ensure it's available during the signup/verify flow (better user experience)
+const LoginPromise = import(/* webpackChunkName: 'Login' */ './pages/Login');
+const Login = lazy(() => LoginPromise);
 //The ResultsPage is very "popular" (and somewhat big), so let's preload it
 const ResultsPagePromise = import(/* webpackChunkName: 'ResultsPage' */ './pages/ResultsPage');
 const ResultsPage = lazy(() => ResultsPagePromise);
