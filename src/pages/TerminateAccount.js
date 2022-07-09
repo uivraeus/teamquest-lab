@@ -22,6 +22,7 @@ const TerminateAccount = () => {
   const [terminating, setTerminating] = useState(false);
   const [confirmed, setConfirmed] = useState(false);
   const [queryPassword, setQueryPassword] = useState(false);
+  const [initiated, setInitiated] = useState(false);
   
   //No need to subscribe to real-time updates of teams/surveys here. The reason
   //for collecting the summary is just "for information"
@@ -69,6 +70,8 @@ const TerminateAccount = () => {
               showAlert("Data backend error", err.message, "Error");
               navigate(absCreatorPath("manage")); // just go somewhere...
             });
+        } else {
+          setInitiated(false);
         }
       },
       "Continue/Abort"
@@ -76,6 +79,7 @@ const TerminateAccount = () => {
   };
 
   const onInitiateTermination = (e) => {
+    setInitiated(true)
     setQueryPassword(true);
   }
 
@@ -87,7 +91,10 @@ const TerminateAccount = () => {
       .catch(() => { 
         showAlert("Authentication error", "Aborting termination of user account", "Info");
         setConfirmed(false);
+        setInitiated(false)
       })
+    } else {
+      setInitiated(false)
     }
   }
 
@@ -161,7 +168,7 @@ const TerminateAccount = () => {
               ) : null}
               <AppBtn
                 text="Terminate account"
-                disabled={!!error || terminating || !confirmed}
+                disabled={!!error || terminating || !confirmed || initiated}
                 onClick={onInitiateTermination}
               />
             </>
