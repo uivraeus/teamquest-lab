@@ -9,6 +9,7 @@ import useOwnedTeams from '../hooks/OwnedTeams';
 //Auth backend
 import { auth } from '../services/firebase'
 import { logout } from '../helpers/auth';
+import { flushSync } from 'react-dom';
 
 //Default settings for all modals in the app (see http://reactcommunity.org/react-modal/accessibility/)
 Modal.setAppElement('#root');
@@ -72,10 +73,15 @@ const AppContextProvider = ({ children }) => {
   const [ fixedContext ] = useState({
     queryConfirm: (...args) => openQuery(...args),
     showAlert: (...args) => openAlert(...args),
-    skipVerification: () => setContext(prev => ({ ...prev, verifiedAccount: !!prev.user }))
+    skipVerification: () => setContextSync(prev => ({ ...prev, verifiedAccount: !!prev.user }))
   });
 
   //The exported context (variable and fixed parts together)
+  //It is essential that any updates of the login- or verification/validation status is
+  //updated without any batching (React 18+). Otherwise there is a risk of triggering
+  //backend security rule violations due to races for some data base operations.
+  //This is why a setContextSync is defined to be used for those kind of updates.
+  //(Probably an indication of a fragile design solution but it's what we do for now)
   const [ context, setContext ] = useState({
     initialAuthChecked: false,
     user: null,
@@ -84,14 +90,16 @@ const AppContextProvider = ({ children }) => {
     teams: null,
     ...fixedContext
   });
-
+  // wrap in setTimeout to enable usage inside useEffects
+  const setContextSync = arg => setTimeout(()=> flushSync(() => setContext(arg)), 0);
+  
   //Setup detection of authentication changes
   useEffect ( () => {
     //Given that "fixedContext" really is fixed, there should only be one (1)
     //invocation of this function... but keep track of and apply "unsubscribe"
     //anyway as some kind of extra (/over) defensive measure 
     const unsubscribe = auth.onAuthStateChanged((user) => {
-      setContext(prev => ({
+      setContextSync(prev => ({
         initialAuthChecked: true, //one-time toggling false->true
         user,
         verifiedAccount: !!user && (user.emailVerified || prev.verifiedAccount),
@@ -136,7 +144,7 @@ const AppContextProvider = ({ children }) => {
         if (e) {
           fixedContext.showAlert("Data backend error", "Couldn't retrieve access validation status", "Error", e.message || e);
         }
-        setContext(prev => ({ ...prev, validatedAccess: validated }))
+        setContextSync(prev => ({ ...prev, validatedAccess: validated }))
       });
     }        
     return () => {
