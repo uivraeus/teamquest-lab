@@ -31,7 +31,7 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "create-headers": "node ./create-headers.js",
-    "serve": "npm run serve -s build"
+    "serve": "serve -s build"
   },
   "eslintConfig": {
     "extends": [
