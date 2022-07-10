@@ -1,6 +1,6 @@
 //3rd-party
-import React, {Suspense, lazy} from 'react';
-import { Route, Navigate, Routes } from 'react-router-dom'
+import React, {Suspense, lazy } from 'react';
+import { Route, Navigate, Routes, useLocation } from 'react-router-dom'
 
 //App framework components
 import { requireSignedIn, requireSignedOut} from './components/AuthRoute';
@@ -26,6 +26,10 @@ const ResultsPagePromise = import(/* webpackChunkName: 'ResultsPage' */ './pages
 const ResultsPage = lazy(() => ResultsPagePromise);
 
 const App = () => {
+  const { pathname } = useLocation();
+  console.log("@App (render):", pathname)
+  
+
   //Note that the "results" route is a bit special; the variant without any
   //team-identifier is only available for users who are signed in (who can
   //select one of their teams)
@@ -37,11 +41,11 @@ const App = () => {
           <Suspense fallback={<LoadingIndicator />}>  
             <Routes>
 
-              <Route path={paths.start} element = {requireSignedOut(<Start/>)}/>
-              <Route path={paths.signup} element = {requireSignedOut(<Signup/>)}/>
+              <Route path={paths.start} element = {requireSignedOut(<Start/>, "Start")}/>
+              <Route path={paths.signup} element = {requireSignedOut(<Signup/>, "Signup")}/>
 
-              <Route path={paths.results} element = {requireSignedIn(<ResultsPage/>)}/>
-              <Route path={paths.creator + "/*"} element = {requireSignedIn(<CreatorApp/>)}/>
+              <Route path={paths.results} element = {requireSignedIn(<ResultsPage/>, "ResultsPage")}/>
+              <Route path={paths.creator + "/*"} element = {requireSignedIn(<CreatorApp/>, "CreatorApp")}/>
 
               <Route path={paths.login} element = {<Login/>}/>
               <Route path={paths.run + "/:surveyId"} element={<Run/>}/>

@@ -1,6 +1,6 @@
-import React, {useEffect} from "react";
+import React from "react";
 import useAppContext from "../hooks/AppContext";
-import { Navigate, useLocation, useNavigate } from "react-router-dom";
+import { Navigate, useLocation } from "react-router-dom";
 import { absAppPath, absCreatorPath } from "../RoutePaths";
 
 /**
@@ -10,17 +10,17 @@ import { absAppPath, absCreatorPath } from "../RoutePaths";
  * to the proper fallback pages when the requirements are not fulfilled.
  */ 
 
-export const requireSignedIn = (element) => {
+export const requireSignedIn = (element, label="<unknown>") => {
   return(
-    <RequireSignedIn>
+    <RequireSignedIn debugLabel={label}>
       {element}
     </RequireSignedIn>
   )
 }
 
-export const requireSignedOut = (element) => {
+export const requireSignedOut = (element, label="<unknown>") => {
   return(
-    <RequireSignedOut>
+    <RequireSignedOut debugLabel={label}>
       {element}
     </RequireSignedOut>
   )
@@ -31,32 +31,26 @@ export const requireSignedOut = (element) => {
  * The internal (non-exported) components and related logic
  */
 
-const RequireSignedIn = ({ children }) => {
+const RequireSignedIn = ({ debugLabel, children }) => {
   const { user, verifiedAccount } = useAppContext();
   const { pathname } = useLocation();
   const redirect = requireSignedInRedirect(!!user, verifiedAccount, pathname);
 
-  //For some reason the redirects between creator-paths causes re-mounting of CreatorApp
-  //when done via <Navigate>. That is unfortunate as it triggers a re-fetch of "teams".
-  //A work-around (because I haven't understood the root-cause) is to redirect via the
-  //navigate-function as a side-effect instead. I think it would be possible to always
-  //do that but I really prefer the <Navigate> version so I stick to it when it doesn't
-  //hurt.
-  const redirectViaEffect = redirect && redirect.includes(absAppPath("creator"));
-  const navigate = useNavigate();
-  useEffect(()=> {
-    if (redirectViaEffect) {
-      navigate(redirect, { replace: true })
-    }
-  });
+  if (redirect) {
+    console.log(`@RequireSignedIn (render) for ${debugLabel}: user=${user ? user.email+"/"+verifiedAccount : "<null>"}, redirect ${pathname} -> ${redirect}`)
+  }
 
-  return (redirect && !redirectViaEffect ? <Navigate to={redirect} replace /> : children );
+  return (redirect ? <Navigate to={redirect} replace /> : children );
 }
 
 
-const RequireSignedOut = ({ children }) => {
+const RequireSignedOut = ({ debugLabel, children }) => {
   const { user } = useAppContext();
   const redirect = requireSignedOutRedirect(!!user);
+
+  if (redirect) {
+    console.log(`@RequireSignedOut (render) for ${debugLabel}: redirect to ${redirect}`)
+  }
 
   return (redirect ? <Navigate to={redirect} replace /> : children );
 }

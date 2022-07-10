@@ -40,9 +40,10 @@ export const deleteAccountAndData = async (user, password) => {
     //Also, note that clearing v_users is always OK, also when the users wasn't listed
     //there in the first place (never validated)
     await db.set(`x_users/${user.uid}`, {".sv": "timestamp"});
-    await db.set(`v_users/${user.uid}`, null);  
+    await db.set(`v_users/${user.uid}`, null);
+    console.log("@@@ call deleteAccount()")
     await deleteAccount(password);
-
+    console.log("@@@ deleteAccount() completed")
   } catch (e) {
     const errMsg = "Error during deletion of account. " + e.message;
     throw new Error(errMsg);
