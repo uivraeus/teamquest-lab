@@ -27,7 +27,7 @@ const VerifyAccount = () => {
       showAlert("E-mail sent", "Check your in-box for an e-mail with further instructions.\nAfter following those, you can login again.");
       //The user must log in again to sync the (verified) authentication state
       navigate(absAppPath("login"), { replace: true, state: { emailHint: user.email } });
-      logout();
+      //@@@logout();
     } catch(e) {
       setPending(false);
       showAlert("Operation failed", "Could not initiate sending of verification e-mail", "Error", e.message);
