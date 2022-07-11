@@ -142,7 +142,12 @@ const AppContextProvider = ({ children }) => {
     if (context.user) {
       unsubscribeFn = onValidatedAccess(context.user, (validated, e) => {
         if (e) {
-          fixedContext.showAlert("Data backend error", "Couldn't retrieve access validation status", "Error", e.message || e);
+          //In some (rare?) cases thee is a race when logging out or terminating the account causing
+          //an "access error" before the unsubscribe function has had a chance to run. So, "hide"
+          //this error (and hope that it doesn't appear during other circumstances). 
+          //TODO: replace this work-around with a proper (robust) solution
+          //fixedContext.showAlert("Data backend error", "Couldn't retrieve access validation status", "Error", e.message || e);
+          console.warn(`Data backend error - Couldn't retrieve access validation status. Error: ${e.message || e}`)
         }
         setContextSync(prev => ({ ...prev, validatedAccess: validated }))
       });
