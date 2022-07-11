@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import AppBtn from "../components/AppBtn";
 import InfoBlock from "../components/InfoBlock";
 import LoadingIndicator from '../components/LoadingIndicator';
-import { logout, verify } from "../helpers/auth";
+import { verify } from "../helpers/auth";
 import useAppContext from "../hooks/AppContext";
 import { Link, useNavigate } from 'react-router-dom'
 import { absAppPath } from "../RoutePaths";
@@ -27,8 +27,7 @@ const VerifyAccount = () => {
       showAlert("E-mail sent", "Check your in-box for an e-mail with further instructions.\nAfter following those, you can login again.");
       //The user must log in again to sync the (verified) authentication state
       navigate(absAppPath("login"), { replace: true, state: { emailHint: user.email } });
-      //Delay actual logout a bit to avoid race (on some device types) causing no-auth re-route to /start
-      setTimeout(() => logout(), 0);
+      //@@@logout();
     } catch(e) {
       setPending(false);
       showAlert("Operation failed", "Could not initiate sending of verification e-mail", "Error", e.message);
