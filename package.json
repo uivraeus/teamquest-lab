@@ -20,11 +20,6 @@
     "@testing-library/user-event": "^13.5.0",
     "serve": "^13.0.2"
   },
-  "overrides": {
-    "recharts": {
-      "react-resize-detector": "7.1.1"
-    }
-  },
   "scripts": {
     "start": "react-scripts start",
     "build": "npm run create-headers && react-scripts build",
