@@ -3,7 +3,7 @@ import AppBtn from "../components/AppBtn";
 import InfoBlock from "../components/InfoBlock";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { login } from "../helpers/auth";
-import { absAppPath } from "../RoutePaths";
+import { absAppPath, absCreatorPath } from "../RoutePaths";
 
 import "./Login.css";
 
@@ -36,7 +36,9 @@ const Login = () => {
     try {
       setInitiated(true);
       await login(email, password);
-      navigate(absAppPath("creator"), { replace: true });
+      // Defer actual navigation to avoid (almost unnoticeable) route toggling between
+      // creator/start until AppContext's auth-state is updated 
+      setTimeout(() => navigate(absCreatorPath("main"), { replace: true }), 0);
     } catch (err) {
       setResponse(err.message);
     }
