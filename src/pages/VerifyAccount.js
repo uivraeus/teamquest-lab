@@ -24,7 +24,11 @@ const VerifyAccount = () => {
     setPending(true);
     try {
       await verify();
-      showAlert("E-mail sent", "Check your in-box for an e-mail with further instructions.\nAfter following those, you can login again.");
+      const message = 
+        "Check your in-box for an e-mail with further instructions.\n" +
+        "After following those, you can login again.\n\n" +
+        "Didn't receive the mail? Check your spam/junk mail folder.";
+      showAlert("E-mail sent", message);
       //The user must log in again to sync the (verified) authentication state
       navigate(absAppPath("login"), { replace: true, state: { emailHint: user.email } });
       //Delay actual logout a bit to avoid race (on some device types) causing no-auth re-route to /start

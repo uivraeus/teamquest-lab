@@ -52,7 +52,10 @@ const PasswordReset = () => {
         //log in using the new password.
         await logout();
       }
-      showAlert("Email sent", "Check your in-box for an email with further instructions");
+      const message = 
+        "Check your in-box for an e-mail with further instructions.\n\n" +
+        "Didn't receive the mail? Check your spam/junk mail folder.";
+      showAlert("E-mail sent", message);
       navigate(absAppPath("login"), { replace: true });
     } catch (err) {
       setResponse(err.message);
