@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import AppBtn from "../components/AppBtn";
 import InfoBlock from "../components/InfoBlock";
 import LoadingIndicator from '../components/LoadingIndicator';
-import { verify } from "../helpers/auth";
+import { logout, verify } from "../helpers/auth";
 import useAppContext from "../hooks/AppContext";
 import { Link, useNavigate } from 'react-router-dom'
 import { absAppPath } from "../RoutePaths";
