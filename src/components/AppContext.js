@@ -3,13 +3,10 @@ import Modal from 'react-modal'
 import AlertModal from './AlertModal';
 import { errorTracking } from '../services/sentry';
 import QueryModal from './QueryModal';
-import { onValidatedAccess, validateAccess } from '../helpers/user';
 import useOwnedTeams from '../hooks/OwnedTeams';
 
-//Auth backend
-import { auth } from '../services/firebase'
 import { logout } from '../helpers/auth';
-import { flushSync } from 'react-dom';
+import useAuthState from '../hooks/AuthState';
 
 //Default settings for all modals in the app (see http://reactcommunity.org/react-modal/accessibility/)
 Modal.setAppElement('#root');
@@ -69,102 +66,42 @@ const AppContextProvider = ({ children }) => {
     setAlert(null);
   }
 
+  //The auth state is more than just logged in/out. Use dedicated hook for managing it.
+  const [skipVerification, setSkipVerification] = useState(false); //support for legacy users w/o verifiable addresses
+  const authState = useAuthState(setAlert, skipVerification);
+  
   //The fixed (constant) part of the context, i.e. the functions
   const [ fixedContext ] = useState({
     queryConfirm: (...args) => openQuery(...args),
     showAlert: (...args) => openAlert(...args),
-    skipVerification: () => setContextSync(prev => ({ ...prev, verifiedAccount: !!prev.user }))
+    skipVerification: () => setSkipVerification(true) 
   });
 
   //The exported context (variable and fixed parts together)
-  //It is essential that any updates of the login- or verification/validation status is
-  //updated without any batching (React 18+). Otherwise there is a risk of triggering
-  //backend security rule violations due to races for some data base operations.
-  //This is why a setContextSync is defined to be used for those kind of updates.
-  //(Probably an indication of a fragile design solution but it's what we do for now)
   const [ context, setContext ] = useState({
-    initialAuthChecked: false,
-    user: null,
-    verifiedAccount: false,
-    validatedAccess: null, // null until status fetched from backend (then true/false)
+    ...authState,
     teams: null,
     ...fixedContext
   });
-  // wrap in setTimeout to enable usage inside useEffects
-  const setContextSync = arg => setTimeout(()=> flushSync(() => setContext(arg)), 0);
   
-  //Setup detection of authentication changes
-  useEffect ( () => {
-    //Given that "fixedContext" really is fixed, there should only be one (1)
-    //invocation of this function... but keep track of and apply "unsubscribe"
-    //anyway as some kind of extra (/over) defensive measure 
-    const unsubscribe = auth.onAuthStateChanged((user) => {
-      setContextSync(prev => ({
-        initialAuthChecked: true, //one-time toggling false->true
-        user,
-        verifiedAccount: !!user && (user.emailVerified || prev.verifiedAccount),
-        validatedAccess: !!user ? prev.validatedAccess : null,
-        teams: prev.teams,
-        ...fixedContext
+  //Setup detection of user's auth status changes
+  useEffect(() => {
+    console.log(`@AppContext/authState; initialAuthChecked: ${authState.initialAuthChecked}, user: ${authState.user ? authState.user.email : "<none>"}, verifiedAccount: ${authState.verifiedAccount}, validatedAccess: ${authState.validatedAccess}`)
+    setContext(prev => ({
+        ...prev,
+        ...authState,
       }));
-    });
-    return () => {
-      unsubscribe();
-    }
-  }, [fixedContext]);
-  
-  //In addition to "auth" status, access to private data also relies on an explicit
-  //validation entry (/field) for the user account. For a verified account it shall
-  //be possible to validate the access. For an unverified account, any attempt to
-  //validate the access shall result in rejection (due to backend security policies).
-  //There is a known "issue" here:
-  //If, for some reason, `validateAccess` fails, there will be a successful (true)
-  //indication via the `onValidatedAccess`-callback (probably because of local
-  //caching in the Firebase SDK). Then, a short moment later the truth is reviled
-  //and the callback will trigger again with "false". So the `validatedAccess`
-  //property in the context will "lie" for a while. This means that there will be
-  //a subsequent access issue when fetching of "private" data is attempted.
-  //(Not so nice but not a big issue either)
-  //Possible solutions:
-  //- only set `validatedAccess=true` in a `.then` of `validateAccess`, OR
-  //- keep track of local action and ignore the first callback-response
-  //- (TODO: Think of multiple devices...)
-  useEffect( () => {
-    if (context.verifiedAccount) {
-      validateAccess(context.user)
-      .catch(e => {
-        fixedContext.showAlert("Data backend error", "Couldn't validate access to private data", "Error", e.message || e);
-      });
-    }
-  }, [context.verifiedAccount, context.user, fixedContext])
-  useEffect( () => {
-    let unsubscribeFn = null;
-    if (context.user) {
-      unsubscribeFn = onValidatedAccess(context.user, (validated, e) => {
-        if (e) {
-          //In some (rare?) cases thee is a race when logging out or terminating the account causing
-          //an "access error" before the unsubscribe function has had a chance to run. So, "hide"
-          //this error (and hope that it doesn't appear during other circumstances). 
-          //TODO: replace this work-around with a proper (robust) solution
-          //fixedContext.showAlert("Data backend error", "Couldn't retrieve access validation status", "Error", e.message || e);
-          console.warn(`Data backend error - Couldn't retrieve access validation status. Error: ${e.message || e}`)
-        }
-        setContextSync(prev => ({ ...prev, validatedAccess: validated }))
-      });
-    }        
-    return () => {
-      if (unsubscribeFn)
-        unsubscribeFn();
-    };      
-  }, [context.user, fixedContext])
+  }, [authState])
 
   //Keep track of teams owned by the logged in user
   const { teams, readError } = useOwnedTeams(context.user, context.validatedAccess);
   useEffect( () => {
+    console.log("@AppContext/teams;", teams)
     setContext(prev => ({ ...prev, teams }))
   }, [teams])
   useEffect( () => {
     if (readError) {
+      console.log("Data backend error - Error reading user's team data:", readError)
       fixedContext.showAlert("Data backend error", "Error reading user's team data", "Error", readError);
       //Don't really know what to do in this case... something is wrong with the backend DB connection
       logout()
@@ -177,7 +114,7 @@ const AppContextProvider = ({ children }) => {
     <AppContext.Provider value={context} >
       <QueryModal query={query} onClose={onCloseQuery} />
       <AlertModal alert={alert} onClose={onCloseAlert} />
-      {context.initialAuthChecked ? children : null }
+      {authState.initialAuthChecked ? children : null }
     </AppContext.Provider>
   );
 };

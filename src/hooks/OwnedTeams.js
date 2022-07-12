@@ -29,6 +29,7 @@ const useOwnedTeams = (user, validatedAccess) => {
       //Subscribe to teams data for the user;
       query = db.query("teams", db.orderByChild("uid"), db.equalTo(uid));
       try {
+        console.log("@OwnedTeams/subscribe")
         unsubscribeFn = db.onValue(query, (snapshot) => {
           try {
             let dbTeams = [];
@@ -54,6 +55,7 @@ const useOwnedTeams = (user, validatedAccess) => {
 
     return () => {
       if (unsubscribeFn) {
+        console.log("@OwnedTeams/unsubscribe")
         unsubscribeFn();
       }          
     };
