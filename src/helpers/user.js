@@ -62,13 +62,20 @@ export const validateAccess = async (user) => {
   await db.set(`v_users/${user.uid}`, {".sv": "timestamp"});
 }
 
-// Subscribe to changes in the user's entry in the validated-users list
+// Subscribe to changes in the (verdict of the) user's entry in the validated-users list
 // Expects a callback-function with signature (bool, error|undefined) => {},
 // ie. true if validated
 // Returns an unsubscribe-function
 export const onValidatedAccess = (user, callback) => {
+  let lastVerdict = null; //unknown
   const unsubscribeFn = db.onValue(db.query(`v_users/${user.uid}`), snapshot => {
-    callback(!!snapshot.val());
+    const value = snapshot.val()
+    const verdict = !!value
+    console.log("@onValidatedAccess/onValue;", new Date(value))
+    if (verdict !== lastVerdict) {
+      lastVerdict = verdict
+      callback(!!value);
+    }
   }, error => {
     callback(false, error);
   });

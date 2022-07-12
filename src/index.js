@@ -11,7 +11,7 @@ errorTracking.init();
 
 const root = createRoot(document.getElementById('root'));
 root.render(
-  <React.StrictMode>
+  // <React.StrictMode>
     <errorTracking.ErrorBoundary fallback={<ErrorFallback/>}>
       <BrowserRouter>
         <AppContextProvider>
@@ -19,5 +19,5 @@ root.render(
         </AppContextProvider>
       </BrowserRouter>
     </errorTracking.ErrorBoundary>
-  </React.StrictMode>
+  // </React.StrictMode>
 );
