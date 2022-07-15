@@ -38,8 +38,7 @@ const AppContextProvider = ({ children }) => {
   const [ alert, setAlert ] = useState(null);
 
   //Helper for handling open/closing of modals
-  //TODO: use history to make "navigate back" close the modal
-  //(really nice on Android with its "back-button")
+  //TODO: This is broken (see openAlert below)
   const openQuery = (heading, text, resultCb, type ) => {
     if (!query) {
       setQuery({ heading, text, resultCb, type });
@@ -52,8 +51,12 @@ const AppContextProvider = ({ children }) => {
     setQuery(null);
   }
 
+  //TODO: This is broken  (or never worked)... the "else" will never trigger when openAlert is
+  //      invoked via fixedContext ("alert" is always null in that closure)
+  //      (also openQuery above)
   const openAlert = (heading, text, type, code ) => {
     if (!alert) {
+      console.log(`@openAlert: ${heading},${text},${type}`)
       setAlert({ heading, text, type, code });
       if (type === "Error") {
         errorTracking.captureMessage(`${heading}: ${text}${code ? " | " + code : ""}`);
@@ -66,16 +69,16 @@ const AppContextProvider = ({ children }) => {
     setAlert(null);
   }
 
-  //The auth state is more than just logged in/out. Use dedicated hook for managing it.
-  const [skipVerification, setSkipVerification] = useState(false); //support for legacy users w/o verifiable addresses
-  const authState = useAuthState(setAlert, skipVerification);
-  
   //The fixed (constant) part of the context, i.e. the functions
   const [ fixedContext ] = useState({
     queryConfirm: (...args) => openQuery(...args),
     showAlert: (...args) => openAlert(...args),
     skipVerification: () => setSkipVerification(true) 
   });
+
+  //The auth state is more than just logged in/out. Use dedicated hook for managing it.
+  const [skipVerification, setSkipVerification] = useState(false); //support for legacy users w/o verifiable addresses
+  const authState = useAuthState(fixedContext.showAlert, skipVerification);
 
   //The exported context (variable and fixed parts together)
   const [ context, setContext ] = useState({

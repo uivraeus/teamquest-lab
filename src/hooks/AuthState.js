@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { flushSync } from 'react-dom';
 
 import { auth } from '../services/firebase'
-import { onValidatedAccess, validateAccess } from '../helpers/user';
+import { checkValidatedAccess, onTerminating, validateAccess } from '../helpers/user';
 
 
 const defaultState = { 
@@ -44,53 +44,56 @@ const useAuthState = (alertFn = () => {}, skipVerification = false ) => {
   //validation entry (/field) for the user account. For a verified account it shall
   //be possible to validate the access. For an unverified account, any attempt to
   //validate the access shall result in rejection (due to backend security policies).
-  //There is a known "issue" here:
-  //If, for some reason, `validateAccess` fails, there will be a successful (true)
-  //indication via the `onValidatedAccess`-callback (probably because of local
-  //caching in the Firebase SDK). Then, a short moment later the truth is reviled
-  //and the callback will trigger again with "false". So the `validatedAccess`
-  //property in the context will "lie" for a while. This means that there will be
-  //a subsequent access issue when fetching of "private" data is attempted.
-  //(Not so nice but not a big issue either... validateAccess shall not fail unless
-  //the logic for invoking it or the security rules are broken)
-  //Possible solutions:
-  //- only set `validatedAccess=true` in a `.then` of `validateAccess`, OR
-  //- keep track of local action and ignore the first callback-response
-  //- (TODO: Think of multiple devices...)
+  //The exception (may) be "legacy" accounts, which are not verified but where an
+  //db-admin has (manually) updated the validation status.
   useEffect( () => {
-    if (authState.verifiedAccount) {
-      console.log(`@AuthState/verifiedAccount; ${authState.user.email}`)
-      validateAccess(authState.user)
+    if (authState.user) {
+      // Always start by checking the current status. Actually only needed for legacy users but
+      // it doesn't hurt and it keeps the code simpler
+      console.log("@AuthState/verifyAccount; call checkValidatedAccess()")
+      checkValidatedAccess(authState.user)
+      .then(validated => {
+        console.log("@AuthState/verifyAccount; checkValidatedAccess returned", validated)  
+        if (validated || authState.verifiedAccount) {
+          validateAccess(authState.user)
+          .then(() => {
+              console.log(`@AuthState/verifiedAccount; validateAccess() completed w/o errors`)
+              setAuthStateSync(prev => ({ ...prev, validatedAccess: true }))
+            })
+          .catch(e => {
+            alertFn("Data backend error", "Couldn't validate access to private data", "Error", e.message || e);
+          });
+        } else {
+          setAuthStateSync(prev => ({ ...prev, validatedAccess: false }))
+        }
+      })
       .catch(e => {
-        alertFn("Data backend error", "Couldn't validate access to private data", "Error", e.message || e);
+        alertFn("Data backend error", "Couldn't obtain the user's validation status", "Error", e.message || e);
       });
-    }
+    }    
   }, [authState.verifiedAccount, authState.user, alertFn])
 
+  // Subscribe to account termination indication (just before the account is deleted)
   useEffect( () => {
     let unsubscribeFn = null;
-    if (authState.user) {
-      console.log("@AuthState/user; subscribe")
-      unsubscribeFn = onValidatedAccess(authState.user, (validated, e) => {
-        console.log(`@AuthState/onValidatedAccess; ${authState.user.email}, validated: ${validated}`)
+    if (authState.user && authState.validatedAccess) {
+      console.log("@AuthState/user; subscribe to termination indication")
+      unsubscribeFn = onTerminating(authState.user, e => {
+        console.log(`@AuthState/onTerminating; ${authState.user.email}`)
         if (e) {
-          //In some (rare?) cases thee is a race when logging out or terminating the account causing
-          //an "access error" before the unsubscribe function has had a chance to run. So, "hide"
-          //this error (and hope that it doesn't appear during other circumstances). 
-          //TODO: replace this work-around with a proper (robust) solution
-          //alertFn("Data backend error", "Couldn't retrieve access validation status", "Error", e.message || e);
-          console.warn(`Data backend error - Couldn't retrieve access validation status. Error: ${e.message || e}`)
+          alertFn("Data backend error", "Couldn't retrieve termination indication", "Error", e.message || e);
+          console.warn(`Data backend error - Couldn't retrieve termination indication. Error: ${e.message || e}`)
         }
-        setAuthStateSync(prev => ({ ...prev, validatedAccess: validated }))
+        setAuthStateSync(prev => ({ ...prev, validatedAccess: false }));
       });
     }        
     return () => {
       if (unsubscribeFn) {
-        console.log("@AuthState/user; unsubscribe")
+        console.log("@AuthState/user; unsubscribe from termination indication")
         unsubscribeFn();
       }
     };      
-  }, [authState.user])
+  }, [authState.user, authState.validatedAccess, alertFn])
 
   return authState
 }

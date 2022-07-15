@@ -20,6 +20,7 @@ export const deleteAccountAndData = async (user, password) => {
     //from other devices where the user might be logged in
     //TODO: await ...
     //(or maybe trigger logout on those via some user-meta-variable?)
+    //See note on "x_users" below... maybe that is what we should do here?
 
     //Then, delete all surveys of this team
     const teamIds = await fetchAllTeamId(user);
@@ -39,9 +40,14 @@ export const deleteAccountAndData = async (user, password) => {
     //2. remove from v_users
     //Also, note that clearing v_users is always OK, also when the users wasn't listed
     //there in the first place (never validated)
-    await db.set(`x_users/${user.uid}`, {".sv": "timestamp"});
+    await db.set(`x_users/${user.uid}`, {".sv": "timestamp"}); //TBD? Move to beginning of sequence? Prevent any update (this and other clients)
     await db.set(`v_users/${user.uid}`, null);  
-    await deleteAccount(password);
+    
+    // Short delay to allow allow all active clients time to unsubscribe from user-private data
+    console.log("@deleteAccountAndData; sleep 5s...")
+    await new Promise(resolve => setTimeout(() => resolve(), 5000))
+    console.log("@deleteAccountAndData; deleteAccount")
+    await deleteAccount(password); //@@@ TODO: hmmm... another session is not (always?) logged out automatically (no auth state change)... maybe need to solve that (conditional) logic in onTerminating?
 
   } catch (e) {
     const errMsg = "Error during deletion of account. " + e.message;
@@ -62,22 +68,30 @@ export const validateAccess = async (user) => {
   await db.set(`v_users/${user.uid}`, {".sv": "timestamp"});
 }
 
-// Subscribe to changes in the (verdict of the) user's entry in the validated-users list
-// Expects a callback-function with signature (bool, error|undefined) => {},
-// ie. true if validated
+// Check (once) user's entry in the validated-users list, returns true if validated
+export const checkValidatedAccess = async (user) => {
+  // No check w.r.t. security rules here. Will throw access is denied.
+  const snapshot = await db.once(db.query(`v_users/${user.uid}`));
+  const value = snapshot.val();
+  console.log("@checkValidatedAccess, obtained value =", value)
+  return !!value;
+}
+
+// Subscribe to user termination indications
+// Expects a callback-function with signature (error|undefined) => {}
 // Returns an unsubscribe-function
-export const onValidatedAccess = (user, callback) => {
+export const onTerminating = (user, callback) => {
   let lastVerdict = null; //unknown
-  const unsubscribeFn = db.onValue(db.query(`v_users/${user.uid}`), snapshot => {
+  const unsubscribeFn = db.onValue(db.query(`x_users/${user.uid}`), snapshot => {
     const value = snapshot.val()
     const verdict = !!value
-    console.log("@onValidatedAccess/onValue;", new Date(value))
-    if (verdict !== lastVerdict) {
+    console.log("@onTerminating/onValue;", value)
+    if (verdict && !lastVerdict) { // one-time toggle false->true
       lastVerdict = verdict
-      callback(!!value);
+      callback();
     }
   }, error => {
-    callback(false, error);
+    callback(error);
   });
   return unsubscribeFn;
 }
