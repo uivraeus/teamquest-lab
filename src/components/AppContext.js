@@ -36,44 +36,29 @@ const AppContext = createContext({
 });
 
 const AppContextProvider = ({ children }) => {
-  //Internal states to control modal activation
-  const [ query, setQuery ] = useState(null);
-  const [ alert, setAlert ] = useState(null);
+  //Internal states to control modal activation, last element is always the latest/top-most
+  const [ queries, setQueries ] = useState([]);
+  const [ alerts, setAlerts ] = useState([]);
 
-  //Helper for handling open/closing of modals
-  //TODO: use history to make "navigate back" close the modal
-  //(really nice on Android with its "back-button")
-  const openQuery = (heading, text, resultCb, type ) => {
-    if (!query) {
-      setQuery({ heading, text, resultCb, type });
-    } else {
-      console.log("TODO/TBD: multiple concurrent queries?");
-      resultCb && resultCb(false);
-    }
-  };
   const onCloseQuery = () => {
-    setQuery(null);
+    setQueries(queries.slice(0, -1));
   }
-
-  const openAlert = (heading, text, type, code ) => {
-    if (!alert) {
-      setAlert({ heading, text, type, code });
-      if (type === "Error") {
-        errorTracking.captureMessage(`${heading}: ${text}${code ? " | " + code : ""}`);
-      }
-    } else {
-      console.log("TODO/TBD: multiple concurrent or queued alerts?");
-    }
-  };
   const onCloseAlert = () => {
-    setAlert(null);
+    setAlerts(alerts.slice(0, -1));
   }
 
   //The fixed (constant) part of the context, i.e. the functions
   const [ fixedContext ] = useState({
-    queryConfirm: (...args) => openQuery(...args),
-    showAlert: (...args) => openAlert(...args),
-    skipVerification: () => setContextSync(prev => ({ ...prev, verifiedAccount: !!prev.user }))
+    queryConfirm: (heading, text, resultCb, type ) => {
+      setQueries(prev => [...prev, { heading, text, resultCb, type }]);
+    },
+    showAlert: (heading, text, type, code ) => {
+      setAlerts(prev => [...prev, { heading, text, type, code }]);
+      if (type === "Error") {
+        errorTracking.captureMessage(`${heading}: ${text}${code ? " | " + code : ""}`);
+      }
+    },
+    skipVerification: () => setContextSync(prev => ({ ...prev, verifiedAccount: !!prev.user })) 
   });
 
   //The exported context (variable and fixed parts together)
@@ -171,12 +156,25 @@ const AppContextProvider = ({ children }) => {
     }
   }, [readError, fixedContext])
   
+  //Use fix-length arrays for rendered modals (with null-entries for unused slots)
+  //Closing a modal shall correspond to rendering of it with a null value. Limit to a history-depth
+  //of 3 probably never exceeded but if that happens the ones at the bottom of the deck will not show.
+  const [renderedQueries, setRenderedQueries] = useState([null, null, null])
+  const [renderedAlerts, setRenderedAlerts] = useState([null, null, null])
+  const lastThreeWithNullPad = array => [...array.slice(-3), null, null, null].slice(0,3)
+  useEffect(() => {
+    setRenderedQueries(lastThreeWithNullPad(queries))
+  }, [queries])
+  useEffect(() => {
+    setRenderedAlerts(lastThreeWithNullPad(alerts))
+  }, [alerts])
+
   //Basically render all possible modals and then the actual (wrapped) components
   //if the initial authentication check has completed.
   return (
     <AppContext.Provider value={context} >
-      <QueryModal query={query} onClose={onCloseQuery} />
-      <AlertModal alert={alert} onClose={onCloseAlert} />
+      {renderedQueries.map((q,ix) => <QueryModal key={`query-modal-${ix}`} query={q} onClose={onCloseQuery} />)}
+      {renderedAlerts.map((a,ix) => <AlertModal key={`alert-modal-${ix}`} alert={a} onClose={onCloseAlert} />)}
       {context.initialAuthChecked ? children : null }
     </AppContext.Provider>
   );
